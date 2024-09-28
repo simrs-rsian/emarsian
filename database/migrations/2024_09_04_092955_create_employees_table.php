@@ -6,41 +6,36 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('nik_karyawan')->unique(); // NIK karyawan
-            $table->string('password')->unique(); // NIK karyawan
-            $table->string('nama_lengkap'); // NAMA lengkap KARYAWAN
-            $table->enum('jenis_kelamin', ['L', 'P']); // Jenis Kelamin (L = Laki-laki, P = Perempuan)
-            $table->string('tempat_lahir'); // TEMPAT LAHIR
-            $table->date('tanggal_lahir'); // TANGGAL LAHIR
-            $table->date('tmt'); // TMT (Tanggal Mulai Tugas)
-            $table->date('tmta'); // TMT (Tanggal Mulai Tugas Akhir)
-            $table->string('masa_kerja')->nullable(); // MASA kerja (Dalam tahun)
-            $table->string('pendidikan'); // PENDIDIKAN
-            $table->string('profesi'); // PROFESI
-            $table->string('pendidikan_diakui')->nullable(); // PENDIDIKAN yang diakui
-            $table->string('status_karyawan'); // STATUS karyawan
-            $table->string('status_keluarga'); // STATUS keluarga
-            $table->string('jabatan_struktural'); // JABATAN STRUKTURAL
-            $table->string('golongan'); // GOLongan
-            $table->text('alamat_lengkap'); // ALAMAT lengkap
-            $table->string('kelompok_usia'); // KELOMPOK Usia
-            $table->integer('umur'); // UMUR (Dalam tahun)
+            $table->string('nik_karyawan')->unique();
+            $table->string('password')->unique();
+            $table->string('nama_lengkap');
+            $table->enum('jenis_kelamin', ['L', 'P']);
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
+            $table->date('tmt');
+            $table->date('tmta');
+            $table->string('masa_kerja')->nullable();
+            $table->string('pendidikan');
+            $table->foreignId('profesi')->constrained('profesis');
+            $table->foreignId('pendidikan_diakui')->nullable()->constrained('pendidikans');
+            $table->foreignId('status_karyawan')->constrained('status_karyawans');
+            $table->foreignId('status_keluarga')->constrained('status_keluargas');
+            $table->foreignId('jabatan_struktural')->constrained('jabatans');
+            $table->foreignId('golongan')->constrained('golongans');
+            $table->text('alamat_lengkap');
+            $table->timestamp('telepon')->nullable();
+            $table->string('photo', 100)->nullable();
+            $table->string('kelompok_usia');
+            $table->integer('umur');
             $table->timestamps();
         });
     }
-    
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('employees');
     }
