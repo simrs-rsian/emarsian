@@ -28,8 +28,20 @@
             </div>
         </div>
         <!-- Sidebar navigation-->
-        @include('includeView.navbar')
+        <!-- Sidebar navigation-->
+        @if(session()->has('user_id'))
+            @if(session('role') == 1)
+                @include('includeView.navbar')
+            @else
+                @include('includeView.navbaradminuser')
+            @endif
+        @else
+            @include('includeView.navbaremployee')
+        @endif
         <!-- End Sidebar navigation -->
+
+        <!-- End Sidebar navigation -->
+
       </div>
       <!-- End Sidebar scroll-->
     </aside>

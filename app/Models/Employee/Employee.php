@@ -3,15 +3,16 @@
 namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class Employee extends Model
+class Employee extends Authenticatable
 {
     use HasFactory;
 
     protected $fillable = [
         'nik_karyawan', 'nip_karyawan', 'photo', 'password', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir',
-        'tanggal_lahir', 'tmt', 'tmta', 'masa_kerja', 'pendidikan', 'profesi',
+        'tanggal_lahir', 'tmt', 'tmta', 'masa_kerja', 'pendidikan','jurusan', 'profesi',
         'pendidikan_diakui', 'status_karyawan', 'status_keluarga', 'jabatan_struktural',
         'golongan', 'alamat_lengkap', 'telepon', 'photo', 'kelompok_usia', 'umur', 'telepon', 'golongan_darah', 'bpjs_kesehatan', 'bpjs_ketenagakerjaan', 'npwp'
     ];

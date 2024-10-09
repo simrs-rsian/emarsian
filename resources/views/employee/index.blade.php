@@ -31,6 +31,7 @@
                                     <th>TMTA</th>
                                     <th>Masa Kerja</th>
                                     <th>Pendidikan</th>
+                                    <th>Jurusan</th>
                                     <th>Profesi</th>
                                     <th>Status Karyawan</th>
                                     <th>Status Keluarga</th>
@@ -41,7 +42,7 @@
                                     <th>Photo</th>
                                     <th>Kelompok Usia</th>
                                     <th>Umur</th>
-                                    <th>Action</th>
+                                    <th style="width: 100px;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,6 +58,7 @@
                                         <td>{{ $employee->tmta }}</td>
                                         <td>{{ $employee->masa_kerja }}</td>
                                         <td>{{ $employee->nama_pendidikan ?? '-' }}</td>
+                                        <td>{{ $employee->jurusan }}</td>
                                         <td>{{ $employee->nama_profesi ?? '-' }}</td>
                                         <td>{{ $employee->namastatuskar ?? '-' }}</td>
                                         <td>{{ $employee->namastatuskel ?? '-' }}</td>
@@ -73,9 +75,9 @@
                                         </td>
                                         <td>{{ $employee->nama_kelompok }}</td>
                                         <td>{{ $employee->umur }} Tahun</td>
-                                        <td>
-                                            <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-warning btn-sm">Edit Pegawai</a>
-
+                                        <td style="width: 100px;">
+                                            <a href="{{ route('employee.show', $employee->id) }}" class="btn btn-primary btn-sm">Detail</a>
+                                            <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                             <form action="{{ route('employee.destroy', $employee->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')

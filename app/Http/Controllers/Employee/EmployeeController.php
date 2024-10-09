@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\EmployeeImport; // Import class EmployeeImport
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -62,6 +63,7 @@ class EmployeeController extends Controller
             'tmt' => 'required|date',
             'tmta' => 'nullable|date',
             'pendidikan' => 'required|exists:pendidikans,id',
+            'jurusan' => 'required',
             'profesi' => 'required|exists:profesis,id',
             'status_karyawan' => 'required|exists:status_karyawans,id',
             'status_keluarga' => 'required|exists:status_keluargas,id',
@@ -70,9 +72,9 @@ class EmployeeController extends Controller
             'alamat_lengkap' => 'required',
             'nomor_hp' => 'nullable|regex:/^08[0-9]{9,11}$/',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // validasi untuk file photo
-            'bpjs_kesehatan' => '',
-            'bpjs_ketenagakerjaan' => '',
-            'npwp' => '',
+            'bpjs_kesehatan' => 'nullable',
+            'bpjs_ketenagakerjaan' => 'nullable',
+            'npwp' => 'nullable',
         ], [
             'nip_karyawan.required' => 'NIP Karyawan harus diisi.',
             'nik_karyawan.unique' => 'NIK Karyawan sudah digunakan.',
@@ -88,6 +90,7 @@ class EmployeeController extends Controller
             'tmta.required' => 'Tanggal Masa Tugas Akhir (TMTA) harus diisi.',
             'tmta.date' => 'Tanggal Masa Tugas Akhir (TMTA) harus berupa tanggal yang valid.',
             'pendidikan.required' => 'Pendidikan harus diisi.',
+            'jurusan.required' => 'Jurusan harus diisi.',
             'pendidikan.exists' => 'Pendidikan tidak ditemukan.',
             'profesi.required' => 'Profesi harus diisi.',
             'profesi.exists' => 'Profesi tidak ditemukan.',
@@ -136,23 +139,6 @@ class EmployeeController extends Controller
         return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil ditambahkan');
     }
 
-    // Menentukan kelompok usia berdasarkan umur
-    private function getKelompokUsia($umur)
-    {
-        if ($umur >= 18 && $umur <= 19) return '1';
-        if ($umur >= 20 && $umur <= 22) return '2';
-        if ($umur >= 23 && $umur <= 25) return '3';
-        if ($umur >= 26 && $umur <= 30) return '4';
-        if ($umur >= 31 && $umur <= 35) return '5';
-        if ($umur >= 36 && $umur <= 40) return '6';
-        if ($umur >= 41 && $umur <= 45) return '7';
-        if ($umur >= 46 && $umur <= 50) return '8';
-        if ($umur >= 51 && $umur <= 55) return '9';
-        if ($umur >= 56 && $umur <= 60) return '10';
-        if ($umur >= 61 && $umur <= 65) return '11';
-        return 'Tidak Diketahui';
-    }
-
     public function edit(Employee $employee)
     {
         $pendidikans = Pendidikan::all();
@@ -179,8 +165,9 @@ class EmployeeController extends Controller
             'telepon' => 'required',
             'golongan_darah' => 'nullable',
             'tmt' => 'required|date',
-            'tmta' => 'required|date',
+            'tmta' => 'nullable|date',
             'pendidikan' => 'required|exists:pendidikans,id',
+            'jurusan' => 'required',
             'profesi' => 'required|exists:profesis,id',
             'status_karyawan' => 'required|exists:status_karyawans,id',
             'status_keluarga' => 'required|exists:status_keluargas,id',
@@ -188,9 +175,9 @@ class EmployeeController extends Controller
             'golongan' => 'required|exists:golongans,id',
             'nomor_hp' => 'nullable|regex:/^08[0-9]{9,11}$/',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'bpjs_kesehatan' => '',
-            'bpjs_ketenagakerjaan' => '',
-            'npwp' => '',
+            'bpjs_kesehatan' => 'nullable',
+            'bpjs_ketenagakerjaan' => 'nullable',
+            'npwp' => 'nullable',
         ], [
             // Custom error messages
             'nik_karyawan.required' => 'NIK Karyawan harus diisi.',
@@ -207,6 +194,7 @@ class EmployeeController extends Controller
             'tmta.required' => 'Tanggal Masa Tugas Akhir (TMTA) harus diisi.',
             'tmta.date' => 'Tanggal Masa Tugas Akhir (TMTA) harus berupa tanggal yang valid.',
             'pendidikan.required' => 'Pendidikan harus diisi.',
+            'jurusan.required' => 'Pendidikan harus diisi.',
             'pendidikan.exists' => 'Pendidikan tidak ditemukan.',
             'profesi.required' => 'Profesi harus diisi.',
             'profesi.exists' => 'Profesi tidak ditemukan.',
@@ -259,10 +247,71 @@ class EmployeeController extends Controller
         return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil diperbarui');
     }
 
+    // Menentukan kelompok usia berdasarkan umur
+    private function getKelompokUsia($umur)
+    {
+        if ($umur >= 18 && $umur <= 19) return '1';
+        if ($umur >= 20 && $umur <= 22) return '2';
+        if ($umur >= 23 && $umur <= 25) return '3';
+        if ($umur >= 26 && $umur <= 30) return '4';
+        if ($umur >= 31 && $umur <= 35) return '5';
+        if ($umur >= 36 && $umur <= 40) return '6';
+        if ($umur >= 41 && $umur <= 45) return '7';
+        if ($umur >= 46 && $umur <= 50) return '8';
+        if ($umur >= 51 && $umur <= 55) return '9';
+        if ($umur >= 56 && $umur <= 60) return '10';
+        if ($umur >= 61 && $umur <= 65) return '11';
+        return '12';
+    }
+
     public function destroy(Employee $employee)
     {
         $employee->delete();
         return redirect()->route('employee.index')->with('success', 'Employee deleted successfully');
+    }
+    
+    public function show(Employee $employee)
+    {
+        // Ambil data employee beserta join tabel terkait
+        $employee = Employee::select('employees.*', 
+                                    'status_karyawans.nama_status AS namastatuskar', 
+                                    'status_keluargas.nama_status AS namastatuskel', 
+                                    'pendidikans.nama_pendidikan', 
+                                    'profesis.nama_profesi', 
+                                    'units.nama_unit', 
+                                    'golongans.nama_golongan', 
+                                    'kelompok_umurs.nama_kelompok')
+                            ->join('status_karyawans', 'employees.status_karyawan', '=', 'status_karyawans.id')
+                            ->join('status_keluargas', 'employees.status_keluarga', '=', 'status_keluargas.id')
+                            ->join('profesis', 'employees.profesi', '=', 'profesis.id')
+                            ->join('pendidikans', 'employees.pendidikan', '=', 'pendidikans.id')
+                            ->join('units', 'employees.jabatan_struktural', '=', 'units.id')
+                            ->join('golongans', 'employees.golongan', '=', 'golongans.id')
+                            ->join('kelompok_umurs', 'employees.kelompok_usia', '=', 'kelompok_umurs.id')
+                            ->where('employees.id', $employee->id)  // Filter by the employee ID
+                            ->firstOrFail();  // Ambil satu data atau fail
+        $pendidikan = DB::table('riwayat_pendidikans as p')
+                            ->leftJoin('employees as e', 'p.id_employee', '=', 'e.id')
+                            ->select('p.*')
+                            ->where('e.id', $employee->id)
+                            ->get();
+        $pelatihan = DB::table('riwayat_pelatihans as p')
+                            ->leftJoin('employees as e', 'p.id_employee', '=', 'e.id')
+                            ->select('p.*')
+                            ->where('e.id', $employee->id)
+                            ->get();
+        $jabatan = DB::table('riwayat_jabatans as j')
+                            ->leftJoin('employees as e', 'j.id_employee', '=', 'e.id')
+                            ->select('j.*')
+                            ->where('e.id', $employee->id)
+                            ->get();
+        $keluarga = DB::table('riwayat_keluargas as k')
+                            ->leftJoin('employees as e', 'k.id_employee', '=', 'e.id')
+                            ->select('k.*')
+                            ->where('e.id', $employee->id)
+                            ->get();
+                            
+        return view('employee.show', compact('employee','pendidikan','pelatihan','jabatan','keluarga'));
     }
 
     public function viewImport(){

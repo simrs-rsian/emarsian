@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('status_keluargas', function (Blueprint $table) {
+        Schema::create('riwayat_pendidikans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_status');
+            $table->integer('id_employee');
+            $table->string('tahun_masuk');
+            $table->string('tahun_lulus');
+            $table->string('nama_sekolah');
+            $table->string('lokasi');
+            $table->string('dokumen');
             $table->timestamps();
         });
     }
@@ -23,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('status_keluargas');
+        Schema::dropIfExists('riwayat_pendidikans');
     }
 };

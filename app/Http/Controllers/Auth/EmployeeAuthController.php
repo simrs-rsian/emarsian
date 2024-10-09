@@ -1,49 +1,48 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
+use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\Session;
 
-class AdminAuthController extends Controller
+class EmployeeAuthController extends Controller
 {
     public function login() {
         if (Auth::check()){
-            return redirect('dashboard');
+            return redirect('dashboardEmployee');
         }else {
-            return view('auth/adminauth');
+            return view('auth/employeeauth');
         }
     }
 
     public function actionlogin(Request $request){
-        $username = $request->input('username');
+        $nip_karyawan = $request->input('nip_karyawan');
         $password = md5($request->input('password')); // Mengenkripsi password menggunakan md5
     
         // Periksa apakah username ditemukan di database
-        $user = User::where('username', $username)->first();
+        $employee = Employee::where('nip_karyawan', $nip_karyawan)->first();
 
-        if ($user) {
+        if ($employee) {
             // Periksa apakah password cocok
-            if ($user->password === $password) {
+            if ($employee->password === $password) {
                 // Autentikasi berhasil, login pengguna
-                Auth::login($user);
+                Auth::login($employee);
 
                 // Set session data jika diperlukan
-                session(['user_id' => $user->id]);
-                session(['user_name' => $user->username]);
-                session(['user_fullname' => $user->fullname]);
-                session(['role' => $user->role]);
+                session(['id' => $employee->id]);
+                session(['nip_pegawai' => $employee->username]);
+                session(['nama_lengkap' => $employee->nama_lengkap]);
 
-                return redirect('dashboard');
+                return redirect('dashboardEmployee');
             }
         }
     
         // Autentikasi gagal, tampilkan pesan kesalahan
-        Session::flash('error', 'Email atau Password Salah');
+        Session::flash('error', 'Username atau Password Salah');
         return redirect('/');
     }
     

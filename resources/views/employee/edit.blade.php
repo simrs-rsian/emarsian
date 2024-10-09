@@ -173,6 +173,15 @@
 
                     <div class="col-md-6">
                         <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Jurusan</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="jurusan" class="form-control" placeholder="Jurusan dari Pendidikan" value="{{ $employee->jurusan }}" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Profesi</label>
                             <div class="col-sm-9">
                                 <select class="form-select" style="color: black;" name="profesi">
@@ -186,26 +195,24 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="row">
 
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Status Karyawan</label>
-                        <div class="col-sm-9">
-                            <select class="form-select" style="color: black;" name="status_karyawan">
-                                <option value="">Pilih Status</option>
-                                @foreach($statuskaryawans as $status)
-                                    <option value="{{ $status->id }}" {{ $employee->status_karyawan == $status->id ? 'selected' : '' }}>
-                                        {{ $status->nama_status }}
-                                    </option>
-                                @endforeach
-                            </select>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Status Karyawan</label>
+                            <div class="col-sm-9">
+                                <select class="form-select" style="color: black;" name="status_karyawan">
+                                    <option value="">Pilih Status</option>
+                                    @foreach($statuskaryawans as $status)
+                                        <option value="{{ $status->id }}" {{ $employee->status_karyawan == $status->id ? 'selected' : '' }}>
+                                            {{ $status->nama_status }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6">
+
+                    <div class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Jabatan Struktural</label>
                             <div class="col-sm-9">

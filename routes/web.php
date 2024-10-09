@@ -11,6 +11,13 @@ use App\Http\Controllers\Master\StatusKaryawanController;
 use App\Http\Controllers\Master\StatusKeluargaController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Auth\EmployeeAuthController;
+use App\Http\Controllers\Dashboard\DashboardEmployeeController;
+use App\Http\Controllers\Riwayat\RiwayatJabatanController;
+use App\Http\Controllers\Riwayat\RiwayatKeluargaController;
+use App\Http\Controllers\Riwayat\RiwayatPelatihanController;
+use App\Http\Controllers\Riwayat\RiwayatPendidikanController;
+
 Route::get('/', [AdminAuthController::class, 'login'])->name('login');
 Route::post('actionlogin', [AdminAuthController::class, 'actionlogin'])->name('actionlogin');
 
@@ -32,3 +39,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/download-import-template', [EmployeeController::class, 'downloadImportTemplate'])->name('employee.download.import.template');
 
 });
+
+Route::get('employeelogin', [EmployeeAuthController::class, 'login'])->name('login');
+Route::post('actionloginemployee', [EmployeeAuthController::class, 'actionloginemployee'])->name('actionloginemployee');
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('dashboardEmployee', [DashboardEmployeeController::class, 'index'])->name('dashboardEmployee');
+    Route::get('actionlogout', [AdminAuthController::class, 'actionlogout'])->name('actionlogout');
+});
+
+Route::resource('riwayat/riwayat_pendidikan', RiwayatPendidikanController::class);
+Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
+Route::resource('riwayat/riwayat_jabatan', RiwayatJabatanController::class);
+Route::resource('riwayat/riwayat_keluarga', RiwayatKeluargaController::class);

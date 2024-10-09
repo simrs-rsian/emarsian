@@ -181,6 +181,20 @@
 
                     <div class="col-md-6">
                         <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Jurusan</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="jurusan" class="form-control" value="{{ old('jurusan') }}" required/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Karyawan, Jabatan Struktural, Golongan -->
+                <div class="row">
+                    
+
+                <div class="col-md-6">
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Profesi</label>
                             <div class="col-sm-9">
                                 <select class="form-select" style="color: black;"   name="profesi" required>
@@ -194,10 +208,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Status Karyawan, Jabatan Struktural, Golongan -->
-                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Status Karyawan</label>
@@ -214,6 +225,11 @@
                         </div>
                     </div>
 
+                    
+                </div>
+
+                <!-- Golongan -->
+                <div class="row">
                     <!-- Jabatan Struktural -->
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -230,10 +246,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Golongan -->
-                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Golongan</label>
@@ -250,6 +263,11 @@
                         </div>
                     </div>
 
+                    
+                </div>
+
+                <!-- BPJS Ketenagakerjaan -->
+                <div class="row">
                     <!-- BPJS Kesehatan -->
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -259,10 +277,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- BPJS Ketenagakerjaan -->
-                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">BPJS Ketenagakerjaan</label>
@@ -272,6 +287,8 @@
                         </div>
                     </div>
 
+                </div>
+                <div class="row">
                     <!-- NPWP -->
                     <div class="col-md-6">
                         <div class="form-group row">
