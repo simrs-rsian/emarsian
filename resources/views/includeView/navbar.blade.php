@@ -84,6 +84,27 @@
 
         <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
+            <span class="hide-menu">Setting</span>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-warning rounded-3">
+                    <i class="ti ti-login fs-7 text-warning"></i>
+                </span>
+                <span class="hide-menu ms-2 ps-1">Role</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-warning rounded-3">
+                    <i class="ti ti-login fs-7 text-warning"></i>
+                </span>
+                <span class="hide-menu ms-2 ps-1">Setting User</span>
+            </a>
+        </li>
+
+        <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
             <span class="hide-menu">Auth</span>
         </li>
         <li class="sidebar-item">

@@ -23,7 +23,7 @@
                 <div class="text-nowrap logo-img text-center d-block py-3 w-100">
                   <center><img src="rsia.png" style="width: 200px;" alt="logo"></center>
                 </div>
-                <p class="text-center"><h5><center>Login E-SDI</center></h5></p>
+                <p class="text-center"><h5><center>Login Admin E-SDI</center></h5></p>
                 @if(session('error'))
                   <div class="alert alert-danger">
                     <b>Opps!</b> {{ session('error') }}

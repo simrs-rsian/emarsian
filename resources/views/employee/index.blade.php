@@ -42,7 +42,7 @@
                                     <th>Photo</th>
                                     <th>Kelompok Usia</th>
                                     <th>Umur</th>
-                                    <th style="width: 100px;">Action</th>
+                                    <th style="width: 200px;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,8 +75,11 @@
                                         </td>
                                         <td>{{ $employee->nama_kelompok }}</td>
                                         <td>{{ $employee->umur }} Tahun</td>
-                                        <td style="width: 100px;">
-                                            <a href="{{ route('employee.show', $employee->id) }}" class="btn btn-primary btn-sm">Detail</a>
+                                        <td style="width: 200px;">
+                                            <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#ubahPassword{{ $employee->id }}">
+                                                Ubah Password
+                                            </button>
+                                            <a href="{{ route('employee.show', $employee->id) }}" class="btn btn-info btn-sm">Detail</a>
                                             <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                             <form action="{{ route('employee.destroy', $employee->id) }}" method="POST" class="d-inline">
                                                 @csrf
@@ -85,6 +88,36 @@
                                             </form>
                                         </td>
                                     </tr>
+                                    <div class="modal fade" id="ubahPassword{{ $employee->id }}" tabindex="-1" aria-labelledby="ubahPasswordLabel{{ $employee->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-md">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="ubahPasswordLabel{{ $employee->id }}">Ubah Password Pegawai</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="{{ route('employee.update_password', $employee->id) }}" method="POST" enctype="multipart/form-data">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="id" value="{{ $employee->id }}">
+
+                                                        <div class="mb-3">
+                                                            <label for="passnew{{ $employee->id }}" class="form-label">Password Baru</label>
+                                                            <input type="password" class="form-control" id="passnew{{ $employee->id }}" name="passnew" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="passconf{{ $employee->id }}" class="form-label">Konfirmasi Password Baru</label>
+                                                            <input type="password" class="form-control" id="passconf{{ $employee->id }}" name="passconf" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endforeach
                             </tbody>
                         </table>

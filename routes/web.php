@@ -18,7 +18,9 @@ use App\Http\Controllers\Riwayat\RiwayatKeluargaController;
 use App\Http\Controllers\Riwayat\RiwayatPelatihanController;
 use App\Http\Controllers\Riwayat\RiwayatPendidikanController;
 
-Route::get('/', [AdminAuthController::class, 'login'])->name('login');
+Route::view('/', 'indexs');
+
+Route::get('adminlogin', [AdminAuthController::class, 'adminlogin'])->name('adminlogin');
 Route::post('actionlogin', [AdminAuthController::class, 'actionlogin'])->name('actionlogin');
 
 Route::middleware(['auth'])->group(function () {
@@ -34,19 +36,20 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('master/statuskeluarga', StatusKeluargaController::class);
     Route::resource('employee/employee', EmployeeController::class);
     Route::get('employees/data', [EmployeeController::class, 'getEmployees'])->name('employee.getEmployees');
+    Route::put('/employee/{id}/update-password', [EmployeeController::class, 'updatePassword'])->name('employee.update_password');
     Route::post('/employee/import', [EmployeeController::class, 'import'])->name('employee.import');
     Route::get('/employee/viewImport', [EmployeeController::class, 'viewImport'])->name('employee.viewImport');
     Route::get('/download-import-template', [EmployeeController::class, 'downloadImportTemplate'])->name('employee.download.import.template');
 
 });
 
-Route::get('employeelogin', [EmployeeAuthController::class, 'login'])->name('login');
+Route::get('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->name('employeelogin');
 Route::post('actionloginemployee', [EmployeeAuthController::class, 'actionloginemployee'])->name('actionloginemployee');
 
 Route::middleware(['auth'])->group(function () {
 
     Route::get('dashboardEmployee', [DashboardEmployeeController::class, 'index'])->name('dashboardEmployee');
-    Route::get('actionlogout', [AdminAuthController::class, 'actionlogout'])->name('actionlogout');
+    Route::get('actionlogout', [EmployeeAuthController::class, 'actionlogout'])->name('actionlogout');
 });
 
 Route::resource('riwayat/riwayat_pendidikan', RiwayatPendidikanController::class);

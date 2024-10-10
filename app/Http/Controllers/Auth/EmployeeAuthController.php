@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 
 class EmployeeAuthController extends Controller
 {
-    public function login() {
+    public function employeelogin() {
         if (Auth::check()){
             return redirect('dashboardEmployee');
         }else {
@@ -19,7 +19,7 @@ class EmployeeAuthController extends Controller
         }
     }
 
-    public function actionlogin(Request $request){
+    public function actionloginemployee(Request $request){
         $nip_karyawan = $request->input('nip_karyawan');
         $password = md5($request->input('password')); // Mengenkripsi password menggunakan md5
     

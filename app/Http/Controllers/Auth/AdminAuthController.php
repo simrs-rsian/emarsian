@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 
 class AdminAuthController extends Controller
 {
-    public function login() {
+    public function adminlogin() {
         if (Auth::check()){
             return redirect('dashboard');
         }else {

@@ -314,6 +314,30 @@ class EmployeeController extends Controller
         return view('employee.show', compact('employee','pendidikan','pelatihan','jabatan','keluarga'));
     }
 
+    public function updatePassword(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'passnew' => 'required|min:8',
+            'passconf' => 'required|same:passnew',
+        ], [
+            'passnew.required' => 'Password baru wajib diisi.',
+            'passnew.min' => 'Password baru minimal 8 karakter.',
+            'passconf.required' => 'Konfirmasi password wajib diisi.',
+            'passconf.same' => 'Konfirmasi password harus sama dengan password baru.',
+        ]);
+
+        // Cari pegawai berdasarkan ID
+        $employee = Employee::findOrFail($id);
+
+        // Update password pegawai menggunakan MD5
+        $employee->password = md5($request->passnew);
+        $employee->save();
+
+        // Redirect atau berikan respon sesuai kebutuhan
+        return redirect()->back()->with('success', 'Password berhasil diubah.');
+    }
+
     public function viewImport(){
         return view('employee.viewImport');
     }  

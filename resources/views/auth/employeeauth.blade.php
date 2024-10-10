@@ -29,7 +29,7 @@
                     <b>Opps!</b> {{ session('error') }}
                   </div>
                 @endif
-                <form action="{{ route('actionlogin') }}" method="post">
+                <form action="{{ route('actionloginemployee') }}" method="post">
                   @csrf
                   <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">NIP Pegawai</label>
