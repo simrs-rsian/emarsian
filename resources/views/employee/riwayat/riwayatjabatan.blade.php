@@ -21,7 +21,7 @@
                             <td>{{ $riwayatJabatan->tahun_selesai }}</td>
                             <td>{{ $riwayatJabatan->keterangan }}</td>
                             <td>
-                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRiwayatModal{{ $riwayatJabatan->id }}">
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRiwayatJabatanModal{{ $riwayatJabatan->id }}">
                                     Edit
                                 </button>
                                 <form action="{{ route('riwayat_jabatan.destroy', $riwayatJabatan->id) }}" method="POST" class="d-inline">
@@ -41,11 +41,11 @@
 <!-- Edit dan menampilkan gambar dengan cara terpisah -->
 @foreach($jabatan as $key => $riwayatJabatan)
 <!-- Edit Riwayat Jabatan -->
-<div class="modal fade" id="editRiwayatModal{{ $riwayatJabatan->id }}" tabindex="-1" aria-labelledby="editRiwayatModalLabel{{ $riwayatJabatan->id }}" aria-hidden="true">
+<div class="modal fade" id="editRiwayatJabatanModal{{ $riwayatJabatan->id }}" tabindex="-1" aria-labelledby="editRiwayatJabatanModalLabel{{ $riwayatJabatan->id }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editRiwayatModalLabel{{ $riwayatJabatan->id }}">Edit Riwayat Jabatan</h5>
+                <h5 class="modal-title" id="editRiwayatJabatanModalLabel{{ $riwayatJabatan->id }}">Edit Riwayat Jabatan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('riwayat_jabatan.update', $riwayatJabatan->id) }}" method="POST" enctype="multipart/form-data">

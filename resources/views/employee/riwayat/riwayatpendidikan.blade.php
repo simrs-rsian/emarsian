@@ -33,7 +33,7 @@
                                 @endif
                             </td>
                             <td>
-                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRiwayatModal{{ $riwayatPendidikan->id }}">
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRiwayatPendidikanModal{{ $riwayatPendidikan->id }}">
                                     Edit
                                 </button>
                                 <form action="{{ route('riwayat_pendidikan.destroy', $riwayatPendidikan->id) }}" method="POST" class="d-inline">
@@ -53,11 +53,11 @@
 <!-- Edit dan menampilkan gambar dengan cara terpisah -->
 @foreach($pendidikan as $key => $riwayatPendidikan)
 <!-- Edit Riwayat Pendidikan -->
-<div class="modal fade" id="editRiwayatModal{{ $riwayatPendidikan->id }}" tabindex="-1" aria-labelledby="editRiwayatModalLabel{{ $riwayatPendidikan->id }}" aria-hidden="true">
+<div class="modal fade" id="editRiwayatPendidikanModal{{ $riwayatPendidikan->id }}" tabindex="-1" aria-labelledby="editRiwayatPendidikanModalLabel{{ $riwayatPendidikan->id }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editRiwayatModalLabel{{ $riwayatPendidikan->id }}">Edit Riwayat Pendidikan</h5>
+                <h5 class="modal-title" id="editRiwayatPendidikanModalLabel{{ $riwayatPendidikan->id }}">Edit Riwayat Pendidikan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('riwayat_pendidikan.update', $riwayatPendidikan->id) }}" method="POST" enctype="multipart/form-data">
@@ -112,9 +112,9 @@
                     @endphp
                     
                     @if(in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
-                        <img src="{{ asset('storage/' . $riwayatPendidikan->dokumen) }}" alt="Dokumen" class="img-fluid">
+                        <img src="{{ url($riwayatPendidikan->dokumen) }}" alt="Dokumen" class="img-fluid">
                     @elseif($extension == 'pdf')
-                        <iframe src="{{ asset('storage/' . $riwayatPendidikan->dokumen) }}" width="100%" height="500px"></iframe>
+                        <iframe src="{{ url($riwayatPendidikan->dokumen) }}" width="100%" height="500px"></iframe>
                     @else
                         <p>Tipe dokumen tidak didukung.</p>
                     @endif

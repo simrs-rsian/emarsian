@@ -68,7 +68,7 @@
                                         <td>{{ $employee->telepon ?? '-' }}</td>
                                         <td>
                                             @if($employee->photo)
-                                                <img src="{{ asset('storage/' . $employee->photo) }}" alt="Photo" width="50">
+                                                <img src="{{ url($employee->photo) }}" alt="Photo" width="50">
                                             @else
                                                 Tidak ada photo
                                             @endif

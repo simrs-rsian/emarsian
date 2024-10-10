@@ -9,7 +9,7 @@
                 <div class="col-md-6 text-center">
                     <div class="form-group">
                         <!-- Display current or uploaded image -->
-                        <img src="{{ $employee->photo ? url('storage/' . $employee->photo) : url('src/assets/images/user.png') }}" 
+                        <img src="{{ $employee->photo ? url($employee->photo) : url('src/assets/images/user.png') }}" 
                              alt="Foto Karyawan" 
                              class="img-thumbnail mb-3" 
                              style="max-width: 200px; height: auto;">

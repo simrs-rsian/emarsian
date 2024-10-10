@@ -24,16 +24,17 @@
                             <td>{{ $riwayatKeluarga->pekerjaan_keluarga }}</td>
                             <td>{{ $riwayatKeluarga->pendidikan_keluarga }}</td>
                             <td>
+                            <td>
                                 @if($riwayatKeluarga->dokumen)
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenModal{{ $riwayatKeluarga->id }}">
-                                        Tampilkan Dokumen
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenKeluargaModal{{ $riwayatKeluarga->id }}">
+                                        Tampilalkan Dokumen
                                     </button>
                                 @else
                                     -
                                 @endif
                             </td>
                             <td>
-                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRiwayatModal{{ $riwayatKeluarga->id }}">
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRiwayatKeluargaModal{{ $riwayatKeluarga->id }}">
                                     Edit
                                 </button>
                                 <form action="{{ route('riwayat_keluarga.destroy', $riwayatKeluarga->id) }}" method="POST" class="d-inline">
@@ -52,11 +53,11 @@
 
 <!-- Edit Riwayat Keluarga Modal -->
 @foreach($keluarga as $riwayatKeluarga)
-<div class="modal fade" id="editRiwayatModal{{ $riwayatKeluarga->id }}" tabindex="-1" aria-labelledby="editRiwayatModalLabel{{ $riwayatKeluarga->id }}" aria-hidden="true">
+<div class="modal fade" id="editRiwayatKeluargaModal{{ $riwayatKeluarga->id }}" tabindex="-1" aria-labelledby="editRiwayatKeluargaModalLabel{{ $riwayatKeluarga->id }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editRiwayatModalLabel{{ $riwayatKeluarga->id }}">Edit Riwayat Keluarga</h5>
+                <h5 class="modal-title" id="editRiwayatKeluargaModalLabel{{ $riwayatKeluarga->id }}">Edit Riwayat Keluarga</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('riwayat_keluarga.update', $riwayatKeluarga->id) }}" method="POST" enctype="multipart/form-data">
@@ -111,6 +112,37 @@
                     <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<!-- Modal untuk menampilkan gambar dokumen -->
+<div class="modal fade" id="viewDokumenKeluargaModal{{ $riwayatKeluarga->id }}" tabindex="-1" aria-labelledby="viewDokumenKeluargaModalLabel{{ $riwayatKeluarga->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewDokumenKeluargaModalLabel{{ $riwayatKeluarga->id }}">Dokumen Nama {{ $riwayatKeluarga->nama_keluarga }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                @if($riwayatKeluarga->dokumen)
+                    @php
+                        $extension = pathinfo($riwayatKeluarga->dokumen, PATHINFO_EXTENSION);
+                    @endphp
+                    
+                    @if(in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+                        <img src="{{ url($riwayatKeluarga->dokumen) }}" alt="Dokumen" class="img-fluid">
+                    @elseif($extension == 'pdf')
+                        <iframe src="{{ url($riwayatKeluarga->dokumen) }}" width="100%" height="500px"></iframe>
+                    @else
+                        <p>Tipe dokumen tidak didukung.</p>
+                    @endif
+                @else
+                    <p>Dokumen tidak tersedia.</p>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
         </div>
     </div>
 </div>

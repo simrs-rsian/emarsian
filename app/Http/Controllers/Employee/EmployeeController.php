@@ -129,8 +129,9 @@ class EmployeeController extends Controller
 
         // Menyimpan photo jika diupload
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('photos/karyawan', 'public');
-            $employeeData['photo'] = $photoPath;
+            // Menyimpan gambar ke folder public/images/karyawan
+            $photoPath = $request->file('photo')->move(public_path('images/karyawan'), $request->file('photo')->getClientOriginalName());
+            $employeeData['photo'] = 'images/karyawan/' . $request->file('photo')->getClientOriginalName();
         }
 
         // dd($employeeData);
@@ -233,12 +234,13 @@ class EmployeeController extends Controller
         // Menyimpan photo baru jika diupload
         if ($request->hasFile('photo')) {
             // Hapus photo lama jika ada
-            if ($employee->photo && Storage::disk('public')->exists($employee->photo)) {
-                Storage::disk('public')->delete($employee->photo);
+            if ($employee->photo && file_exists(public_path($employee->photo))) {
+                unlink(public_path($employee->photo));
             }
 
-            $photoPath = $request->file('photo')->store('photos/karyawan', 'public');
-            $employeeData['photo'] = $photoPath;
+            // Menyimpan gambar ke folder public/images/karyawan
+            $photoPath = $request->file('photo')->move(public_path('images/karyawan'), $request->file('photo')->getClientOriginalName());
+            $employeeData['photo'] = 'images/karyawan/' . $request->file('photo')->getClientOriginalName();
         }
 
         // Memperbarui data karyawan

@@ -82,7 +82,7 @@
             </div>
         </li>
 
-        <li class="nav-small-cap">
+        <!-- <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
             <span class="hide-menu">Setting</span>
         </li>
@@ -101,7 +101,7 @@
                 </span>
                 <span class="hide-menu ms-2 ps-1">Setting User</span>
             </a>
-        </li>
+        </li> -->
 
         <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
