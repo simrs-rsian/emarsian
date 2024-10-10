@@ -114,7 +114,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Status Keluarga</label>
                         <div class="col-sm-9">
-                            <p class="form-control-static">{{ $employee->status_keluarga }}</p>
+                            <p class="form-control-static">{{ $employee->namastatuskel }}</p>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Pendidikan</label>
                         <div class="col-sm-9">
-                            <p class="form-control-static">{{ $employee->pendidikan }}</p>
+                            <p class="form-control-static">{{ $employee->nama_pendidikan }}</p>
                         </div>
                     </div>
                 </div>
@@ -144,7 +144,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Profesi</label>
                         <div class="col-sm-9">
-                            <p class="form-control-static">{{ $employee->profesi }}</p>
+                            <p class="form-control-static">{{ $employee->nama_profesi }}</p>
                         </div>
                     </div>
                 </div>
@@ -153,7 +153,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Status Karyawan</label>
                         <div class="col-sm-9">
-                            <p class="form-control-static">{{ $employee->status_karyawan }}</p>
+                            <p class="form-control-static">{{ $employee->namastatuskar }}</p>
                         </div>
                     </div>
                 </div>
