@@ -15,8 +15,13 @@ use App\Http\Controllers\Auth\EmployeeAuthController;
 use App\Http\Controllers\Dashboard\DashboardEmployeeController;
 use App\Http\Controllers\Riwayat\RiwayatJabatanController;
 use App\Http\Controllers\Riwayat\RiwayatKeluargaController;
+use App\Http\Controllers\Riwayat\RiwayatKontrakController;
+use App\Http\Controllers\Riwayat\RiwayatLainController;
 use App\Http\Controllers\Riwayat\RiwayatPelatihanController;
 use App\Http\Controllers\Riwayat\RiwayatPendidikanController;
+use App\Http\Controllers\Riwayat\RiwayatSippController;
+use App\Http\Controllers\Setting\RoleController;
+use App\Http\Controllers\Setting\UserController;
 
 Route::view('/', 'indexs');
 
@@ -41,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employee/viewImport', [EmployeeController::class, 'viewImport'])->name('employee.viewImport');
     Route::get('/download-import-template', [EmployeeController::class, 'downloadImportTemplate'])->name('employee.download.import.template');
 
+    Route::resource('setting/role', RoleController::class);
+    Route::resource('setting/user', UserController::class);
 });
 
 Route::get('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->name('employeelogin');
@@ -56,3 +63,6 @@ Route::resource('riwayat/riwayat_pendidikan', RiwayatPendidikanController::class
 Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
 Route::resource('riwayat/riwayat_jabatan', RiwayatJabatanController::class);
 Route::resource('riwayat/riwayat_keluarga', RiwayatKeluargaController::class);
+Route::resource('riwayat/riwayat_sipp', RiwayatSippController::class);
+Route::resource('riwayat/riwayat_kontrak', RiwayatKontrakController::class);
+Route::resource('riwayat/riwayat_lain', RiwayatLainController::class);

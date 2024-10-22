@@ -115,6 +115,7 @@
                             <div class="col-sm-9">
                                 <select class="form-select" style="color: black;" name="golongan_darah">
                                     <option value="">Pilih Golongan Darah</option>
+                                    <option value="-" {{ $employee->golongan_darah == '-' ? 'selected' : '' }}>-</option>
                                     <option value="A" {{ $employee->golongan_darah == 'A' ? 'selected' : '' }}>A</option>
                                     <option value="B" {{ $employee->golongan_darah == 'B' ? 'selected' : '' }}>B</option>
                                     <option value="O" {{ $employee->golongan_darah == 'O' ? 'selected' : '' }}>O</option>
@@ -141,7 +142,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Status Keluarga</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;" name="status_keluarga">
+                                <select class="form-select select2-keluarga" style="color: black;" name="status_keluarga">
                                     <option value="">Pilih Status</option>
                                     @foreach($statuskeluargas as $status)
                                         <option value="{{ $status->id }}" {{ $employee->status_keluarga == $status->id ? 'selected' : '' }}>
@@ -159,7 +160,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Pendidikan</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;" name="pendidikan">
+                                <select class="form-select select2-pendidikan" style="color: black;" name="pendidikan">
                                     <option value="">Pilih Pendidikan Terakhir</option>
                                     @foreach($pendidikans as $pendidikan)
                                         <option value="{{ $pendidikan->id }}" {{ $employee->pendidikan == $pendidikan->id ? 'selected' : '' }}>
@@ -184,7 +185,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Profesi</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;" name="profesi">
+                                <select class="form-select select2-profesi" style="color: black;" name="profesi">
                                     <option value="">Pilih Profesi</option>
                                     @foreach($profesis as $profesi)
                                         <option value="{{ $profesi->id }}" {{ $employee->profesi == $profesi->id ? 'selected' : '' }}>
@@ -200,7 +201,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Status Karyawan</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;" name="status_karyawan">
+                                <select class="form-select select2-status" style="color: black;" name="status_karyawan">
                                     <option value="">Pilih Status</option>
                                     @foreach($statuskaryawans as $status)
                                         <option value="{{ $status->id }}" {{ $employee->status_karyawan == $status->id ? 'selected' : '' }}>
@@ -216,7 +217,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Jabatan Struktural</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;" name="jabatan_struktural">
+                                <select class="form-select select2-jabatan" style="color: black;" name="jabatan_struktural">
                                     <option value="">Pilih Unit</option>
                                     @foreach($units as $unit)
                                         <option value="{{ $unit->id }}" {{ $employee->jabatan_struktural == $unit->id ? 'selected' : '' }}>
@@ -232,7 +233,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Golongan</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;" name="golongan">
+                                <select class="form-select select2-golongan" style="color: black;" name="golongan">
                                     <option value="">Pilih Golongan</option>
                                     @foreach($golongans as $golongan)
                                         <option value="{{ $golongan->id }}" {{ $employee->golongan == $golongan->id ? 'selected' : '' }}>

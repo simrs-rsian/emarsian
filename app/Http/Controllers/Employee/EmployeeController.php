@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee\Employee;
 use App\Models\Master\Golongan;
-use App\Models\Master\unit;
+use App\Models\Master\Unit;
 use App\Models\Master\Pendidikan;
 use App\Models\Master\Profesi;
 use App\Models\Master\StatusKeluarga;
@@ -312,8 +312,23 @@ class EmployeeController extends Controller
                             ->select('k.*')
                             ->where('e.id', $employee->id)
                             ->get();
+        $sipp = DB::table('riwayat_sipps as s')
+                            ->leftJoin('employees as e', 's.id_employee', '=', 'e.id')
+                            ->select('s.*')
+                            ->where('e.id', $employee->id)
+                            ->get();
+        $kontrak = DB::table('riwayat_kontraks as k')
+                            ->leftJoin('employees as e', 'k.id_employee', '=', 'e.id')
+                            ->select('k.*')
+                            ->where('e.id', $employee->id)
+                            ->get();
+        $lain = DB::table('riwayat_lains as l')
+                            ->leftJoin('employees as e', 'l.id_employee', '=', 'e.id')
+                            ->select('l.*')
+                            ->where('e.id', $employee->id)
+                            ->get();
                             
-        return view('employee.show', compact('employee','pendidikan','pelatihan','jabatan','keluarga'));
+        return view('employee.show', compact('employee','pendidikan','pelatihan','jabatan','keluarga','sipp','kontrak','lain'));
     }
 
     public function updatePassword(Request $request, $id)

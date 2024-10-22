@@ -13,17 +13,17 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('employee.index') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-article fs-7 text-warning"></i>
+            <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('employee.index') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-primary rounded-3">
+                    <i class="ti ti-article fs-7 text-primary"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Data Pegawai</span>
             </a>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link danger-hover-bg" href="#ui-basic" data-bs-toggle="collapse" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-danger rounded-3">
-                    <i class="ti ti-alert-circle fs-7 text-danger"></i>
+            <a class="sidebar-link sidebar-link primary-hover-bg" href="#ui-basic" data-bs-toggle="collapse" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-primary rounded-3">
+                    <i class="ti ti-alert-circle fs-7 text-primary"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Master Data</span>
                 <i class="ti ti-chevron-down float-end"></i>
@@ -35,7 +35,7 @@
                             <span class="aside-icon p-2 me-2 bg-light-success rounded-3">
                                 <i class="ti ti-building fs-7 text-success"></i>
                             </span>
-                            <span class="dropdown-item">Unit Kerja</span>
+                            <span class="dropdown-item">Jabatan Pegawai</span>
                         </a>
                     </li>
                     <li class="nav-item ms-3">
@@ -82,35 +82,44 @@
             </div>
         </li>
 
-        <!-- <li class="nav-small-cap">
+        <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
             <span class="hide-menu">Setting</span>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
+            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('role.index') }}" aria-expanded="false">
                 <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-login fs-7 text-warning"></i>
+                    <i class="ti ti-drone fs-7 text-warning"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Role</span>
             </a>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
+            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('user.index') }}" aria-expanded="false">
                 <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-login fs-7 text-warning"></i>
+                    <i class="ti ti-user-circle fs-7 text-warning"></i>
                 </span>
-                <span class="hide-menu ms-2 ps-1">Setting User</span>
+                <span class="hide-menu ms-2 ps-1">Data User</span>
             </a>
-        </li> -->
+        </li>
+
+        <li class="sidebar-item">
+            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('user.show', ['user' => session('user_id')]) }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-warning rounded-3">
+                    <i class="ti ti-settings fs-7 text-warning"></i>
+                </span>
+                <span class="hide-menu ms-2 ps-1">Setting Akun</span>
+            </a>
+        </li>
 
         <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
             <span class="hide-menu">Auth</span>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-login fs-7 text-warning"></i>
+            <a class="sidebar-link sidebar-link danger-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-danger rounded-3">
+                    <i class="ti ti-login fs-7 text-danger"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Log Out</span>
             </a>

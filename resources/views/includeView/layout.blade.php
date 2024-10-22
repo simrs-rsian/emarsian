@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="{{ url('src/assets/css/styles.min.css') }}" />
   <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap5.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -81,14 +83,6 @@
                       <i class="ti ti-user fs-6"></i>
                       <p class="mb-0 fs-3">My Profile</p>
                     </a>
-                    <!-- <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-mail fs-6"></i>
-                      <p class="mb-0 fs-3">My Account</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-list-check fs-6"></i>
-                      <p class="mb-0 fs-3">My Task</p> -->
-                    </a>
                     <a href="{{ 'actionlogout' }}" class="btn btn-outline-primary mx-3 mt-2 d-block shadow-none">Logout</a>
                   </div>
                 </div>
@@ -130,7 +124,7 @@
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.colVis.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script>
       $(document).ready(function() {
           $('#employeesTable').DataTable({
@@ -171,6 +165,54 @@
     setInterval(function() {
       document.getElementById('currentDateTime').innerHTML = getCurrentDateTime();
     }, 1000);
+  </script>
+  <script>
+    $(document).ready(function() {
+        $('.select2-profesi').select2({
+            theme: 'bootstrap-5', 
+            width: '100%' 
+        });
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+        $('.select2-pendidikan').select2({
+            theme: 'bootstrap-5', 
+            width: '100%' 
+        });
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+        $('.select2-jabatan').select2({
+            theme: 'bootstrap-5', 
+            width: '100%' 
+        });
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+        $('.select2-keluarga').select2({
+            theme: 'bootstrap-5', 
+            width: '100%' 
+        });
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+        $('.select2-status').select2({
+            theme: 'bootstrap-5', 
+            width: '100%' 
+        });
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+        $('.select2-golongan').select2({
+            theme: 'bootstrap-5', 
+            width: '100%' 
+        });
+    });
   </script>
 </body>
 

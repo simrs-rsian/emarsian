@@ -199,6 +199,18 @@
             <!-- Riwayat Keluarga -->
             @include('employee.riwayat.riwayatkeluarga')
             
+<!-- ===================================================================================================++++++++++++++++ -->
+            <!-- Riwayat Sipp -->
+            @include('employee.riwayat.riwayatsipp')
+
+<!-- ===================================================================================================++++++++++++++++ -->
+            <!-- Riwayat Kontrak -->
+            @include('employee.riwayat.riwayatkontrak')
+            
+<!-- ===================================================================================================++++++++++++++++ -->
+            <!-- Riwayat Lainnya -->
+            @include('employee.riwayat.riwayatlain')
+            
 
         </div>
     </div>

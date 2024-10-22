@@ -6,7 +6,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Data Unit Kerja</h4>
+                    <h4 class="card-title">Data Jabatan Pegawai</h4>
                     <p class="card-description">
                         <button type="button" class="btn btn-sm btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createUnitModal">
                             TAMBAH DATA
@@ -16,8 +16,8 @@
                         <table id="dataTable" class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID Unit</th>
-                                    <th>Nama Unit</th>
+                                    <th>ID Jabatan</th>
+                                    <th>Nama Jabatan</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

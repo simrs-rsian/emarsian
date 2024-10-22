@@ -119,8 +119,9 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Golongan Darah</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;"   name="golongan_darah" required>
+                                <select class="form-select " style="color: black;"   name="golongan_darah" required>
                                     <option value="">Pilih Golongan Darah</option>
+                                    <option value="-">-</option>
                                     <option value="A" {{ old('golongan_darah') == 'A' ? 'selected' : '' }}>A</option>
                                     <option value="B" {{ old('golongan_darah') == 'B' ? 'selected' : '' }}>B</option>
                                     <option value="O" {{ old('golongan_darah') == 'O' ? 'selected' : '' }}>O</option>
@@ -148,7 +149,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Status Keluarga</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;"   name="status_keluarga" required>
+                                <select class="form-select select2-keluarga" style="color: black;"   name="status_keluarga" required>
                                     <option value="">Pilih Status</option>
                                     @foreach($statuskeluargas as $status)
                                         <option value="{{ $status->id }}" {{ old('status_keluarga') == $status->id ? 'selected' : '' }}>
@@ -167,7 +168,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Pendidikan</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;"   name="pendidikan" required>
+                                <select class="form-select select2-pendidikan" style="color: black;"   name="pendidikan" required>
                                     <option value="">Pilih Pendidikan Terakhir</option>
                                     @foreach($pendidikans as $pendidikan)
                                         <option value="{{ $pendidikan->id }}" {{ old('pendidikan') == $pendidikan->id ? 'selected' : '' }}>
@@ -191,13 +192,11 @@
 
                 <!-- Status Karyawan, Jabatan Struktural, Golongan -->
                 <div class="row">
-                    
-
-                <div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Profesi</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;"   name="profesi" required>
+                                <select class="form-select select2-profesi" name="profesi" required>
                                     <option value="">Pilih Profesi</option>
                                     @foreach($profesis as $profesi)
                                         <option value="{{ $profesi->id }}" {{ old('profesi') == $profesi->id ? 'selected' : '' }}>
@@ -213,7 +212,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Status Karyawan</label>
                             <div class="col-sm-9">
-                            <select class="form-select" style="color: black;"   name="status_karyawan" required>
+                            <select class="form-select select2-status" style="color: black;"   name="status_karyawan" required>
                                     <option value="">Pilih Status Karyawan</option>
                                     @foreach($statuskaryawans as $status)
                                         <option value="{{ $status->id }}" {{ old('status_karyawan') == $status->id ? 'selected' : '' }}>
@@ -235,7 +234,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Jabatan Struktural</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;"   name="jabatan_struktural" required>
+                                <select class="form-select select2-jabatan" style="color: black;"   name="jabatan_struktural" required>
                                     <option value="">Pilih Jabatan Struktural</option>
                                     @foreach($units as $jabatan)
                                         <option value="{{ $jabatan->id }}" {{ old('jabatan_struktural') == $jabatan->id ? 'selected' : '' }}>
@@ -251,7 +250,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Golongan</label>
                             <div class="col-sm-9">
-                                <select class="form-select" style="color: black;"   name="golongan" required>
+                                <select class="form-select select2-golongan" style="color: black;"   name="golongan" required>
                                     <option value="">Pilih Golongan</option>
                                     @foreach($golongans as $golongan)
                                         <option value="{{ $golongan->id }}" {{ old('golongan') == $golongan->id ? 'selected' : '' }}>

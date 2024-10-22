@@ -25,7 +25,7 @@
                             <td>{{ $riwayatPendidikan->lokasi }}</td>
                             <td>
                                 @if($riwayatPendidikan->dokumen)
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenModal{{ $riwayatPendidikan->id }}">
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenPendidikanModal{{ $riwayatPendidikan->id }}">
                                         Tampilalkan Dokumen
                                     </button>
                                 @else
@@ -98,11 +98,11 @@
     </div>
 </div>
     <!-- Modal untuk menampilkan gambar dokumen -->
-    <div class="modal fade" id="viewDokumenModal{{ $riwayatPendidikan->id }}" tabindex="-1" aria-labelledby="viewDokumenModalLabel{{ $riwayatPendidikan->id }}" aria-hidden="true">
+    <div class="modal fade" id="viewDokumenPendidikanModal{{ $riwayatPendidikan->id }}" tabindex="-1" aria-labelledby="viewDokumenPendidikanModalLabel{{ $riwayatPendidikan->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewDokumenModalLabel{{ $riwayatPendidikan->id }}">Dokumen riwayat Sekolah/Universitas {{ $riwayatPendidikan->nama_sekolah }}</h5>
+                <h5 class="modal-title" id="viewDokumenPendidikanModalLabel{{ $riwayatPendidikan->id }}">Dokumen riwayat Sekolah/Universitas {{ $riwayatPendidikan->nama_sekolah }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
