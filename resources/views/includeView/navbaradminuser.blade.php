@@ -84,6 +84,37 @@
 
         <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
+            <span class="hide-menu">Pelatihan/Diklat</span>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link sidebar-link danger-hover-bg" href="{{ route('jenispelatihan.index') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-danger rounded-3">
+                    <i class="ti ti-bookmarks fs-7 text-danger"></i>
+                </span>
+                <span class="hide-menu ms-2 ps-1">Jenis Pelatihan</span>
+            </a>
+        </li>
+
+        <li class="sidebar-item">
+            <a class="sidebar-link sidebar-link danger-hover-bg" href="{{ route('pelatihan.index') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-danger rounded-3">
+                    <i class="ti ti-books fs-7 text-danger"></i>
+                </span>
+                <span class="hide-menu ms-2 ps-1">Data Pelatihan</span>
+            </a>
+        </li>
+
+        <li class="sidebar-item">
+            <a class="sidebar-link sidebar-link danger-hover-bg" href="" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-danger rounded-3">
+                    <i class="ti ti-file-analytics fs-7 text-danger"></i>
+                </span>
+                <span class="hide-menu ms-2 ps-1">Rekap Pelatihan</span>
+            </a>
+        </li>
+
+        <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
             <span class="hide-menu">Setting</span>
         </li>
 

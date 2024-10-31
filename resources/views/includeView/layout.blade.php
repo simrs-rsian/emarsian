@@ -11,6 +11,16 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.css">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+  <style>
+      /* Mengatur z-index untuk Select2 dropdown agar muncul di depan modal */
+      .select2-container {
+          z-index: 1055; /* Sesuaikan dengan z-index modal Bootstrap */
+      }
+      .select2-dropdown {
+          z-index: 1056; /* Pastikan lebih tinggi dari modal */
+      }
+  </style>
+
 </head>
 
 <body>
@@ -213,6 +223,27 @@
             width: '100%' 
         });
     });
+  </script>
+  <script>
+    $(document).ready(function() {
+        $('.select2-form').select2({
+            theme: 'bootstrap-5', 
+            width: '100%' 
+        });
+    });
+  </script>
+  <script>
+      $(document).ready(function() {
+          $('#createPesertaPelatihanModal').on('shown.bs.modal', function() {
+              $('.pesertaMultiple').select2({
+                  tags: true,
+                  width: '100%',
+                  placeholder: "Pilih Pegawai atau Tambah Baru",
+                  allowClear: true,
+                  dropdownParent: $('#createPesertaPelatihanModal') 
+              });
+          });
+      });
   </script>
 </body>
 

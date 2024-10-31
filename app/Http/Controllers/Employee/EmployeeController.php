@@ -11,6 +11,7 @@ use App\Models\Master\Pendidikan;
 use App\Models\Master\Profesi;
 use App\Models\Master\StatusKeluarga;
 use App\Models\Master\StatusKaryawan;
+use App\Models\Pelatihan\Pelatihan;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -297,10 +298,12 @@ class EmployeeController extends Controller
                             ->select('p.*')
                             ->where('e.id', $employee->id)
                             ->get();
-        $pelatihan = DB::table('riwayat_pelatihans as p')
-                            ->leftJoin('employees as e', 'p.id_employee', '=', 'e.id')
-                            ->select('p.*')
-                            ->where('e.id', $employee->id)
+        $pelatihan = DB::table('riwayat_pelatihans as a')
+                            ->leftJoin('pelatihans as b', 'a.id_pelatihan', '=', 'b.id')
+                            ->leftJoin('employees as c', 'a.id_employee', '=', 'c.id')
+                            ->leftJoin('jenis_pelatihans as d', 'b.jenis_pelatihan_id', '=', 'd.id')
+                            ->select('a.*','b.*','d.nama_jenis')
+                            ->where('c.id', $employee->id)
                             ->get();
         $jabatan = DB::table('riwayat_jabatans as j')
                             ->leftJoin('employees as e', 'j.id_employee', '=', 'e.id')
@@ -327,8 +330,10 @@ class EmployeeController extends Controller
                             ->select('l.*')
                             ->where('e.id', $employee->id)
                             ->get();
+        
+        $pelatihans = Pelatihan::all();
                             
-        return view('employee.show', compact('employee','pendidikan','pelatihan','jabatan','keluarga','sipp','kontrak','lain'));
+        return view('employee.show', compact('employee','pendidikan','pelatihan','jabatan','keluarga','sipp','kontrak','lain','pelatihans'));
     }
 
     public function updatePassword(Request $request, $id)

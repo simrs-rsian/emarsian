@@ -12,6 +12,8 @@
                         <th scope="col">Tanggal Selesai</th>
                         <th scope="col">Penyelenggara</th>
                         <th scope="col">Lokasi</th>
+                        <th scope="col">Poin</th>
+                        <th scope="col">Jenis</th>
                         <th scope="col">Dokumen</th>
                         <th scope="col">Aksi</th>
                     </tr>
@@ -21,10 +23,12 @@
                         <tr>
                             <td>{{ $riwayatPelatihan->id }}</td>
                             <td>{{ $riwayatPelatihan->nama_pelatihan }}</td>
-                            <td>{{ $riwayatPelatihan->mulai }}</td>
-                            <td>{{ $riwayatPelatihan->selesai }}</td>
+                            <td>{{ $riwayatPelatihan->tanggal_mulai }}</td>
+                            <td>{{ $riwayatPelatihan->tanggal_selesai }}</td>
                             <td>{{ $riwayatPelatihan->penyelenggara }}</td>
                             <td>{{ $riwayatPelatihan->lokasi }}</td>
+                            <td>{{ $riwayatPelatihan->poin }}</td>
+                            <td>{{ $riwayatPelatihan->nama_jenis }}</td>
                             <td>
                                 @if($riwayatPelatihan->dokumen)
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenPelatihanModal{{ $riwayatPelatihan->id }}">
@@ -38,7 +42,7 @@
                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRiwayatPelatihanModal{{ $riwayatPelatihan->id }}">
                                     Edit
                                 </button>
-                                <form action="{{ route('riwayat_pendidikan.destroy', $riwayatPelatihan->id) }}" method="POST" class="d-inline">
+                                <form action="{{ route('riwayat_pelatihan.destroy', $riwayatPelatihan->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
@@ -71,23 +75,14 @@
                     
                     <div class="mb-3">
                         <label for="nama_pelatihan{{ $riwayatPelatihan->id }}" class="form-label">Nama Pelatihan</label>
-                        <input type="text" class="form-control" id="nama_pelatihan{{ $riwayatPelatihan->id }}" name="nama_pelatihan" value="{{ $riwayatPelatihan->nama_pelatihan }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="mulai{{ $riwayatPelatihan->id }}" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="mulai{{ $riwayatPelatihan->id }}" name="mulai" value="{{ $riwayatPelatihan->mulai }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="selesai{{ $riwayatPelatihan->id }}" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="selesai{{ $riwayatPelatihan->id }}" name="selesai" value="{{ $riwayatPelatihan->selesai }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="penyelenggara{{ $riwayatPelatihan->id }}" class="form-label">Penyelenggara</label>
-                        <input type="text" class="form-control" id="penyelenggara{{ $riwayatPelatihan->id }}" name="penyelenggara" value="{{ $riwayatPelatihan->penyelenggara }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lokasi{{ $riwayatPelatihan->id }}" class="form-label">Lokasi</label>
-                        <input type="text" class="form-control" id="lokasi{{ $riwayatPelatihan->id }}" name="lokasi" value="{{ $riwayatPelatihan->lokasi }}" required>
+                        <select class="form-select select2-keluarga" style="color: black;"   name="id_pelatihan" required>
+                            <option value="">Pilih Nama Pelatihan</option>
+                            @foreach($pelatihans as $pelatihan)
+                                <option value="{{ $pelatihan->id }}" {{ $riwayatPelatihan->id_pelatihan == $pelatihan->id ? 'selected' : '' }}>
+                                    {{ $pelatihan->nama_pelatihan }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="dokumen{{ $riwayatPelatihan->id }}" class="form-label">Dokumen</label>
@@ -152,23 +147,14 @@
 
                     <div class="mb-3">
                         <label for="nama_pelatihan" class="form-label">Nama Pelatihan</label>
-                        <input type="text" class="form-control" id="nama_pelatihan" name="nama_pelatihan" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="mulai" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="mulai" name="mulai" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="selesai" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="selesai" name="selesai" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="penyelenggara" class="form-label">Penyelenggara</label>
-                        <input type="text" class="form-control" id="penyelenggara" name="penyelenggara" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lokasi" class="form-label">Lokasi</label>
-                        <input type="text" class="form-control" id="lokasi" name="lokasi" required>
+                        <select class="form-select select2-keluarga" style="color: black;"   name="id_pelatihan" required>
+                            <option value="">Pilih Nama Pelatihan</option>
+                            @foreach($pelatihans as $pelatihan)
+                                <option value="{{ $pelatihan->id }}" {{ old('id_pelatihan') == $pelatihan->id ? 'selected' : '' }}>
+                                    {{ $pelatihan->nama_pelatihan }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="dokumen" class="form-label">Dokumen</label>

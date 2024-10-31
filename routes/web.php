@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\EmployeeAuthController;
 use App\Http\Controllers\Dashboard\DashboardEmployeeController;
+use App\Http\Controllers\Pelatihan\JenisPelatihanController;
+use App\Http\Controllers\Pelatihan\PelatihanController;
 use App\Http\Controllers\Riwayat\RiwayatJabatanController;
 use App\Http\Controllers\Riwayat\RiwayatKeluargaController;
 use App\Http\Controllers\Riwayat\RiwayatKontrakController;
@@ -48,6 +50,19 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('setting/role', RoleController::class);
     Route::resource('setting/user', UserController::class);
+    Route::resource('pelatihan/jenispelatihan', JenisPelatihanController::class);
+    Route::resource('pelatihan/pelatihan', PelatihanController::class);
+
+    Route::resource('riwayat/riwayat_pendidikan', RiwayatPendidikanController::class);
+    Route::resource('riwayat/riwayat_jabatan', RiwayatJabatanController::class);
+    Route::resource('riwayat/riwayat_keluarga', RiwayatKeluargaController::class);
+    Route::resource('riwayat/riwayat_sipp', RiwayatSippController::class);
+    Route::resource('riwayat/riwayat_kontrak', RiwayatKontrakController::class);
+    Route::resource('riwayat/riwayat_lain', RiwayatLainController::class);
+    Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
+    Route::post('/riwayat/riwayat_pelatihan/direct-store', [RiwayatPelatihanController::class, 'directstore'])->name('riwayat_pelatihan.directstore');
+    
+    
 });
 
 Route::get('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->name('employeelogin');
@@ -58,11 +73,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboardEmployee', [DashboardEmployeeController::class, 'index'])->name('dashboardEmployee');
     Route::get('actionlogout', [EmployeeAuthController::class, 'actionlogout'])->name('actionlogout');
 });
-
-Route::resource('riwayat/riwayat_pendidikan', RiwayatPendidikanController::class);
-Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
-Route::resource('riwayat/riwayat_jabatan', RiwayatJabatanController::class);
-Route::resource('riwayat/riwayat_keluarga', RiwayatKeluargaController::class);
-Route::resource('riwayat/riwayat_sipp', RiwayatSippController::class);
-Route::resource('riwayat/riwayat_kontrak', RiwayatKontrakController::class);
-Route::resource('riwayat/riwayat_lain', RiwayatLainController::class);
