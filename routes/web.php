@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('setting/role', RoleController::class);
     Route::resource('setting/user', UserController::class);
     Route::resource('pelatihan/jenispelatihan', JenisPelatihanController::class);
+    Route::get('/pelatihan/pelatihan/report-pelatihan', [PelatihanController::class, 'report'])->name('pelatihan.report');
     Route::resource('pelatihan/pelatihan', PelatihanController::class);
 
     Route::resource('riwayat/riwayat_pendidikan', RiwayatPendidikanController::class);
@@ -60,8 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('riwayat/riwayat_kontrak', RiwayatKontrakController::class);
     Route::resource('riwayat/riwayat_lain', RiwayatLainController::class);
     Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
-    Route::post('/riwayat/riwayat_pelatihan/direct-store', [RiwayatPelatihanController::class, 'directstore'])->name('riwayat_pelatihan.directstore');
-    
+    Route::post('/riwayat/riwayat_pelatihan/direct-store', [RiwayatPelatihanController::class, 'directstore'])->name('riwayat_pelatihan.directstore');   
     
 });
 
