@@ -17,7 +17,7 @@ class RiwayatPendidikanController extends Controller
             'tahun_lulus' => 'required|string',
             'nama_sekolah' => 'required',
             'lokasi' => 'required',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
@@ -39,7 +39,7 @@ class RiwayatPendidikanController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id', // Validasi id_employee
         ]);
 

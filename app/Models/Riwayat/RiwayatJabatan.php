@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RiwayatJabatan extends Model
 {
-    protected $fillable = ['id_employee', 'tahun_mulai', 'tahun_selesai', 'keterangan'];
+    protected $fillable = ['id_employee', 'tahun_mulai', 'tahun_selesai', 'keterangan','dokumen'];
 
     public function employee()
     {

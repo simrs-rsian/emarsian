@@ -18,7 +18,7 @@ class RiwayatKeluargaController extends Controller
             'status_keluarga' => 'required|string',
             'pekerjaan_keluarga' => 'required|string',
             'pendidikan_keluarga' => 'required|string',
-            'dokumen' => 'nullable|file',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id',
         ]);
         // dd($request->all());
@@ -41,7 +41,7 @@ class RiwayatKeluargaController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id', // Validasi employee_id
         ]);
         // dd($request->all());

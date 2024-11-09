@@ -42,6 +42,24 @@ class PelatihanController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nama_pelatihan' => 'sometimes|required|string',
+            'tanggal_mulai' => 'sometimes|required|date',
+            'tanggal_selesai' => 'sometimes|required|date',
+            'penyelenggara' => 'sometimes|required|string',
+            'lokasi' => 'sometimes|required|string',
+            'poin' => 'sometimes|required|string',
+            'jenis_pelatihan_id' => 'sometimes|required|exists:jenis_pelatihans,id',
+        ]);
+
+        // Mencari data pelatihan berdasarkan ID
+        $pelatihan = Pelatihan::findOrFail($id);
+
+        // Memperbarui data pelatihan
+        $pelatihan->update($request->all());
+
+        // Menggunakan session flash message dan redirect ke halaman sebelumnya
+        return back()->with('success', 'Data Pelatihan berhasil diperbarui.');
     }
 
     public function destroy(Pelatihan $Pelatihan)

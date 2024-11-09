@@ -16,8 +16,9 @@ class RiwayatSippController extends Controller
         // Validasi input
         $request->validate([
             'no_sipp' => 'required|string',
+            'no_str' => 'required|string',
             'tanggal_berlaku' => 'required|date',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
@@ -47,6 +48,7 @@ class RiwayatSippController extends Controller
     {
         $request->validate([
             'no_sipp' => 'required|string',
+            'no_str' => 'required|string',
             'tanggal_berlaku' => 'required|date',
             'id_employee' => 'required|exists:employees,id',
         ]);

@@ -16,7 +16,7 @@ class RiwayatKontrakController extends Controller
         $request->validate([
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id',
         ]);
 

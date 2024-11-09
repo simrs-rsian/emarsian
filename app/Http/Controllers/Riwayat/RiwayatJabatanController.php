@@ -15,15 +15,16 @@ class RiwayatJabatanController extends Controller
             'tahun_mulai' => 'required|string',
             'tahun_selesai' => 'required|string',
             'keterangan' => 'required|string',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
         $data = $request->all();
 
-        // if ($request->hasFile('dokumen')) {
-        //     $dokumenPath = $request->file('dokumen')->store('dokumen/dokumen_Jabatan', 'public');
-        //     $data['dokumen'] = $dokumenPath;
-        // }
+        if ($request->hasFile('dokumen')) {
+            $dokumenPath = $request->file('dokumen')->store('dokumen/dokumen_jabatan', 'public');
+            $data['dokumen'] = $dokumenPath;
+        }
 
         RiwayatJabatan::create($data);
 
@@ -38,6 +39,7 @@ class RiwayatJabatanController extends Controller
             'tahun_mulai' => 'required|string',
             'tahun_selesai' => 'required|string',
             'keterangan' => 'required|string',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id', 
         ]);
         // dd($request->all());
@@ -48,16 +50,16 @@ class RiwayatJabatanController extends Controller
         $data = $request->all();
 
         // Proses file dokumen jika diupload
-        // if ($request->hasFile('dokumen')) {
-        //     // Hapus dokumen lama jika ada
-        //     if ($riwayat->dokumen) {
-        //         Storage::disk('public')->delete($riwayat->dokumen);
-        //     }
+        if ($request->hasFile('dokumen')) {
+            // Hapus dokumen lama jika ada
+            if ($riwayat->dokumen) {
+                Storage::disk('public')->delete($riwayat->dokumen);
+            }
             
-        //     // Simpan dokumen baru
-        //     $dokumenPath = $request->file('dokumen')->store('dokumen/dokumen_Jabatan', 'public');
-        //     $d['dokumen'] = $dokumenPath;
-        // }
+            // Simpan dokumen baru
+            $dokumenPath = $request->file('dokumen')->store('dokumen/dokumen_jabatan', 'public');
+            $d['dokumen'] = $dokumenPath;
+        }
 
         // Update data riwayat Jabatan dengan data yang telah diproses
         $riwayat->update($data);

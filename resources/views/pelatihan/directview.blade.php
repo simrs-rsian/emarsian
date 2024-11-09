@@ -89,18 +89,14 @@
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             
-                                                            <input type="text" name="id_pelatihan" value="{{ $peserta->id_pelatihan }}">
+                                                            <input type="hidden" name="id_pelatihan" value="{{ $peserta->id_pelatihan }}">
                                                             <label for="nama_pelatihan{{ $peserta->id }}" class="form-label">Nama Pegawai</label>
-                                                            <select name="id_employee" class="form-control select2-form" style="width:100%" required>
+                                                            <select name="id_employee" class="form-control" style="width:100%" required>
                                                                 <option value="">Pilih Pegawai</option>
                                                                 @foreach($employees as $employee)
                                                                     <option value="{{ $employee->id }}" {{ $employee->id == $peserta->id ? 'selected' : '' }} >{{ $employee->nama_lengkap }}</option>
                                                                 @endforeach
                                                             </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="form-label">Pilih Jenis Pelatihan</label>
-                                                            
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">

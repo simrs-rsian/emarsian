@@ -1,13 +1,14 @@
-<p class="card-description"><h3>Riwayat SIPP</h3></p>
+<p class="card-description"><h3>Riwayat SIP</h3></p>
 <div class="row">
     <div class="col-md-12">
-        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createRiwayatSippModal">Tambah Riwayat SIPP</button>
+        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createRiwayatSippModal">Tambah Riwayat SIP</button>
         <div class="table-responsive" data-simplebar>
             <table class="table table-borderless align-middle text-nowrap">
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">No SIPP</th>
+                        <th scope="col">No SIP</th>
+                        <th scope="col">No STR</th>
                         <th scope="col">Tanggal Akhir Berlaku</th>
                         <th scope="col">Dokumen</th>
                         <th scope="col">Aksi</th>
@@ -18,6 +19,7 @@
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $riwayatSipp->no_sipp }}</td>
+                            <td>{{ $riwayatSipp->no_str }}</td>
                             <td>{{ $riwayatSipp->tanggal_berlaku }}</td>
                             <td>
                                 @if($riwayatSipp->dokumen)
@@ -48,12 +50,12 @@
 </div>
 <!-- Edit dan menampilkan gambar dengan cara terpisah -->
 @foreach($sipp as $key => $riwayatSipp)
-<!-- Edit Riwayat SIPP -->
+<!-- Edit Riwayat SIP -->
 <div class="modal fade" id="editRiwayatSippModal{{ $riwayatSipp->id }}" tabindex="-1" aria-labelledby="editRiwayatSippModalLabel{{ $riwayatSipp->id }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editRiwayatSippModalLabel{{ $riwayatSipp->id }}">Edit Riwayat SIPP</h5>
+                <h5 class="modal-title" id="editRiwayatSippModalLabel{{ $riwayatSipp->id }}">Edit Riwayat SIP</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('riwayat_sipp.update', $riwayatSipp->id) }}" method="POST" enctype="multipart/form-data">
@@ -66,6 +68,10 @@
                     <div class="mb-3">
                         <label for="no_sipp{{ $riwayatSipp->id }}" class="form-label">No SIP</label>
                         <input type="text" class="form-control" id="no_sipp{{ $riwayatSipp->id }}" name="no_sipp" value="{{ $riwayatSipp->no_sipp }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="no_str{{ $riwayatSipp->id }}" class="form-label">No STR</label>
+                        <input type="text" class="form-control" id="no_str{{ $riwayatSipp->id }}" name="no_str" value="{{ $riwayatSipp->no_str }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="tanggal_berlaku{{ $riwayatSipp->id }}" class="form-label">Tanggal Akhir Berlaku</label>
@@ -118,12 +124,12 @@
 </div>
 @endforeach
 
-<!-- Modal Tambah Riwayat SIPP -->
+<!-- Modal Tambah Riwayat SIP -->
 <div class="modal fade" id="createRiwayatSippModal" tabindex="-1" aria-labelledby="createRiwayatSippModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createRiwayatSippModalLabel">Tambah Riwayat SIPP</h5>
+                <h5 class="modal-title" id="createRiwayatSippModalLabel">Tambah Riwayat SIP</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('riwayat_sipp.store') }}" method="POST" enctype="multipart/form-data"> 
@@ -135,6 +141,10 @@
                     <div class="mb-3">
                         <label for="no_sipp" class="form-label">No. SIP</label>
                         <input type="text" class="form-control" id="no_sipp" name="no_sipp" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="no_str" class="form-label">No. STR</label>
+                        <input type="text" class="form-control" id="no_str" name="no_str" required>
                     </div>
                     <div class="mb-3">
                         <label for="tanggal_berlaku" class="form-label">Tanggal Akhir Berlaku</label>

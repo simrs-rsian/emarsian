@@ -16,7 +16,7 @@ class RiwayatLainController extends Controller
         $request->validate([
             'nama_riwayat' => 'required|string',
             'tanggal_riwayat' => 'required|date',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id',
         ]);
 

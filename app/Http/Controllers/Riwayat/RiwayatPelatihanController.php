@@ -40,7 +40,7 @@ class RiwayatPelatihanController extends Controller
     {
         $request->validate([
             'id_pelatihan' => 'required|exists:pelatihans,id',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id', // Validasi employee_id
         ]);
         // dd($request->all());

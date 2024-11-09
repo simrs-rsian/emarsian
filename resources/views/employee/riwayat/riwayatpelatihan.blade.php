@@ -1,4 +1,4 @@
-<p class="card-description"><h3>Riwayat Seminar dan Pelatihan</h3></p>
+<p class="card-description"><h3>Riwayat Diklat dan Pelatihan</h3></p>
 <div class="row">
     <div class="col-md-12">
         <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createRiwayatPelatihanModal">Tambah Riwayat Pelatihan</button>
