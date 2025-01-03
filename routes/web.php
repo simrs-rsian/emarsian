@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\EmployeeAuthController;
 use App\Http\Controllers\Dashboard\DashboardEmployeeController;
+use App\Http\Controllers\Navmenus\NavmenuController;
 use App\Http\Controllers\Pelatihan\JenisPelatihanController;
 use App\Http\Controllers\Pelatihan\PelatihanController;
 use App\Http\Controllers\Riwayat\RiwayatJabatanController;
@@ -30,7 +31,13 @@ Route::view('/', 'indexs');
 Route::get('adminlogin', [AdminAuthController::class, 'adminlogin'])->name('adminlogin');
 Route::post('actionlogin', [AdminAuthController::class, 'actionlogin'])->name('actionlogin');
 
-Route::middleware(['auth'])->group(function () {
+Route::prefix('navmenu')->middleware(['auth', 'dynamic.role'])->name('navmenu.')->group(function () {
+    Route::get('data/', [NavmenuController::class, 'index'])->name('index');
+    Route::get('get-navmenu/{roleId}', [NavmenuController::class, 'getNavmenu']);
+    Route::post('/update-hakakses', [NavmenuController::class, 'updateHakakses']);
+});
+
+Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('actionlogout', [AdminAuthController::class, 'actionlogout'])->name('actionlogout');
 

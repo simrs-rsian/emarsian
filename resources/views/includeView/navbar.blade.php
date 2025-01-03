@@ -2,158 +2,123 @@
     <ul id="sidebarnav" class="mb-4 pb-2">
         <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
-            <span class="hide-menu">Home</span>
+            <span class="hide-menu"></span>
         </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('dashboard') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-primary rounded-3">
-                    <i class="ti ti-layout-dashboard fs-7 text-primary"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Dashboard</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('employee.index') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-primary rounded-3">
-                    <i class="ti ti-article fs-7 text-primary"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Data Pegawai</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link primary-hover-bg" href="#ui-basic" data-bs-toggle="collapse" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-primary rounded-3">
-                    <i class="ti ti-alert-circle fs-7 text-primary"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Master Data</span>
-                <i class="ti ti-chevron-down float-end"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item ms-3">
-                        <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('unit.index') }}">
-                            <span class="aside-icon p-2 me-2 bg-light-success rounded-3">
-                                <i class="ti ti-building fs-7 text-success"></i>
-                            </span>
-                            <span class="dropdown-item">Jabatan Pegawai</span>
-                        </a>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('profesi.index') }}">
-                            <span class="aside-icon p-2 me-2 bg-light-info rounded-3">
-                                <i class="ti ti-user fs-7 text-info"></i>
-                            </span>
-                            <span class="dropdown-item">Profesi Pegawai</span>
-                        </a>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('pendidikan.index') }}">
-                            <span class="aside-icon p-2 me-2 bg-light-warning rounded-3">
-                                <i class="ti ti-book fs-7 text-warning"></i>
-                            </span>
-                            <span class="dropdown-item">Pendidikan Pegawai</span>
-                        </a>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('golongan.index') }}">
-                            <span class="aside-icon p-2 me-2 bg-light-danger rounded-3">
-                                <i class="ti ti-tag fs-7 text-danger"></i>
-                            </span>
-                            <span class="dropdown-item">Golongan Pegawai</span>
-                        </a>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('statuskaryawan.index') }}">
-                            <span class="aside-icon p-2 me-2 bg-light-secondary rounded-3">
-                                <i class="ti ti-check-circle fs-7 text-secondary"></i>
-                            </span>
-                            <span class="dropdown-item">Status Karyawan</span>
-                        </a>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('statuskeluarga.index') }}">
-                            <span class="aside-icon p-2 me-2 bg-light-dark rounded-3">
-                                <i class="ti ti-users fs-7 text-dark"></i>
-                            </span>
-                            <span class="dropdown-item">Status Keluarga</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        @php
+            use Illuminate\Support\Facades\DB;
 
-        <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
-            <span class="hide-menu">Pelatihan/Diklat</span>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link danger-hover-bg" href="{{ route('jenispelatihan.index') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-danger rounded-3">
-                    <i class="ti ti-bookmarks fs-7 text-danger"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Jenis Pelatihan</span>
-            </a>
-        </li>
+            $role_id = session('role');
+            
+            // Mengambil akses menu berdasarkan role pengguna
+            $accessables = DB::table('hak_akses')
+                ->where('role_id', $role_id)
+                ->pluck('navmenu_id')
+                ->toArray();
 
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link danger-hover-bg" href="{{ route('pelatihan.index') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-danger rounded-3">
-                    <i class="ti ti-books fs-7 text-danger"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Data Pelatihan</span>
-            </a>
-        </li>
+            // Mengambil main menu (menu tanpa parent) yang diakses pengguna
+            $mainmenus = DB::table('navmenus')
+                ->whereIn('m_id', $accessables)
+                ->where('m_child', 0)
+                ->where('m_status', 1)
+                ->orderBy('m_order', 'asc')
+                ->get();
 
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link danger-hover-bg" href="{{ route('pelatihan.report') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-danger rounded-3">
-                    <i class="ti ti-file-analytics fs-7 text-danger"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Rekap Pelatihan</span>
-            </a>
-        </li>
+            // Mengambil submenu (menu dengan parent) yang diakses pengguna
+            $submenus = DB::table('navmenus')
+                ->whereIn('m_id', $accessables)
+                ->where('m_child', '!=', 0)
+                ->where('m_status', 1)
+                ->orderBy('m_order', 'asc')
+                ->get();
+        @endphp
+        <!-- Menampilkan Main Menu -->
+        @foreach ($mainmenus as $main)
+            @if ($main->m_id == 1) <!-- Menu Dashboard -->
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('dashboard') }}" aria-expanded="false">
+                        <span class="aside-icon p-2 bg-light-primary rounded-3">
+                            <i class="{{ $main->m_icon }}"></i>
+                        </span>
+                        <span class="hide-menu ms-2 ps-1">{{ $main->m_name }}</span>
+                    </a>
+                </li>
+            @endif
+        @endforeach
 
-        <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
-            <span class="hide-menu">Setting</span>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('role.index') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-drone fs-7 text-warning"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Role</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('user.index') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-user-circle fs-7 text-warning"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Data User</span>
-            </a>
-        </li>
+        <!-- Menampilkan Menu dengan Submenu -->
+        @foreach ($mainmenus as $main)
+            @if ($main->m_id > 1 && $main->m_id != 18) <!-- Menu selain Dashboard dan Logout -->
+                @php
+                    // Submenu untuk menu utama saat ini
+                    $currentSubmenus = $submenus->filter(function ($submenu) use ($main) {
+                        return $submenu->m_child == $main->m_id;
+                    });
 
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('user.show', ['user' => session('user_id')]) }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-settings fs-7 text-warning"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Setting Akun</span>
-            </a>
-        </li>
+                    // Menentukan apakah salah satu submenu aktif
+                    $isActiveSubmenu = false;
+                    foreach ($currentSubmenus as $submenu) {
+                        $baseSubmenuLink = trim($submenu->m_link, '/');
+                        if (request()->is($baseSubmenuLink . '*') || request()->is($baseSubmenuLink . '/*')) {
+                            $isActiveSubmenu = true;
+                            break;
+                        }
+                    }
 
-        <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
-            <span class="hide-menu">Auth</span>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link danger-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-danger rounded-3">
-                    <i class="ti ti-login fs-7 text-danger"></i>
-                </span>
-                <span class="hide-menu ms-2 ps-1">Log Out</span>
-            </a>
-        </li>
+                    // Menentukan apakah menu utama aktif berdasarkan URL atau submenu
+                    $baseMainLink = trim($main->m_link, '/');
+                    $isActiveMain = request()->is($baseMainLink . '*') || $isActiveSubmenu;
+                @endphp
+                <li class="sidebar-item has-sub {{ $isActiveMain ? 'active' : '' }}">
+                    <a href="#" class="sidebar-link primary-hover-bg toggle-menu" data-menu-target="menu-{{ $main->m_id }}">
+                        <span class="aside-icon p-2 bg-light-primary rounded-3">
+                            <i class="{{ $main->m_icon }}"></i>
+                        </span>
+                        <span class="hide-menu ms-2 ps-1">{{ $main->m_name }}</span>
+                        <i class="ti ti-chevron-down float-end"></i>
+                    </a>
+                    <div id="menu-{{ $main->m_id }}" class="submenu collapse {{ $isActiveMain ? 'show' : '' }}">
+                        <ul class="nav flex-column sub-menu">
+                            @foreach ($currentSubmenus as $submenu)
+                                @php
+                                    // Membuat URL submenu, mempertimbangkan jika ada parameter dinamis
+                                    $submenuLink = $submenu->m_link_child 
+                                        ? route($submenu->m_link, [session($submenu->m_link_child)]) 
+                                        : ($submenu->m_link ? url($submenu->m_link) : null);
+
+                                    // Menentukan apakah submenu aktif berdasarkan URL dasar
+                                    $baseSubmenuLink = trim($submenu->m_link, '/');
+                                    $isActiveSub = request()->is($baseSubmenuLink . '*') || request()->is($baseSubmenuLink . '/*');
+                                @endphp
+                                @if ($submenuLink)
+                                    <li class="nav-item ms-3 {{ $isActiveSub ? 'active' : '' }}">
+                                        <a href="{{ $submenuLink }}" class="sidebar-link sidebar-link primary-hover-bg">
+                                            <span class="aside-icon p-2 me-2 bg-light-success rounded-3">
+                                                <i class="ti ti-menu fs-7 text-success"></i>
+                                            </span>
+                                            <span class="dropdown-item">{{ $submenu->m_name }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
+            @endif
+        @endforeach
+        
+        @foreach ($mainmenus as $main)
+            @if ($main->m_id == 18) <!-- Menu Dashboard -->
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
+                        <span class="aside-icon p-2 bg-light-primary rounded-3">
+                            <i class="{{ $main->m_icon }}"></i>
+                        </span>
+                        <span class="hide-menu ms-2 ps-1">{{ $main->m_name }}</span>
+                    </a>
+                </li>
+            @endif
+        @endforeach
+
+
     </ul>
 </nav>

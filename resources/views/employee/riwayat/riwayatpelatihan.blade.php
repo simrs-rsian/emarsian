@@ -63,7 +63,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editRiwayatPelatihanModalLabel{{ $riwayatPelatihan->id }}">Edit Riwayat Pendidikan</h5>
+                <h5 class="modal-title" id="editRiwayatPelatihanModalLabel{{ $riwayatPelatihan->id }}">Edit Riwayat Pelatihan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('riwayat_pelatihan.update', $riwayatPelatihan->id) }}" method="POST" enctype="multipart/form-data">
@@ -131,12 +131,12 @@
 </div>
 @endforeach
 
-<!-- Modal Tambah riwayat Pendidikan -->
+<!-- Modal Tambah riwayat Pelatihan -->
 <div class="modal fade" id="createRiwayatPelatihanModal" tabindex="-1" aria-labelledby="createRiwayatPelatihanModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createRiwayatPelatihanModalLabel">Tambah Riwayat Pendidikan</h5>
+                <h5 class="modal-title" id="createRiwayatPelatihanModalLabel">Tambah Riwayat Pelatihan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('riwayat_pelatihan.store') }}" method="POST" enctype="multipart/form-data"> 

@@ -19,6 +19,19 @@
       .select2-dropdown {
           z-index: 1056; /* Pastikan lebih tinggi dari modal */
       }
+      .collapse {
+          display: none;
+          transition: all 0.3s ease-in-out;
+      }
+      .collapse.show {
+          display: block;
+      }
+      .submenu a.active {
+          font-weight: bold;
+          color: #0d6efd; /* Warna biru Bootstrap */
+          background-color: rgba(13, 110, 253, 0.1); /* Latar belakang terang */
+          border-radius: 5px;
+      }
   </style>
 
 </head>
@@ -42,11 +55,7 @@
         <!-- Sidebar navigation-->
         <!-- Sidebar navigation-->
         @if(session()->has('user_id'))
-            @if(session('role') == 1)
-                @include('includeView.navbar')
-            @else
-                @include('includeView.navbaradminuser')
-            @endif
+            @include('includeView.navbar')
         @else
             @include('includeView.navbaremployee')
         @endif
@@ -136,114 +145,104 @@
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.colVis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script>
-      $(document).ready(function() {
-          $('#employeesTable').DataTable({
-              dom: 'Bfrtip',
-              buttons: [
-                  'copy', 'excel', 'pdf', 'print', 'colvis'
-              ],
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-          });
+    $(document).ready(function() {
+      // Initialize DataTables
+      $('#employeesTable, #dataTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: ['copy', 'excel', 'pdf', 'print', 'colvis'],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "paging": true,
+        "searching": true,
+        "ordering": true,
       });
-  </script>
-  <script>
-      $(document).ready(function() {
-          $('#dataTable').DataTable({
-              dom: 'Bfrtip',
-              buttons: [
-                  'copy','excel', 'pdf', 'print', 'colvis'
-              ]
-          });
+
+      // Initialize Select2 for multiple elements
+      const select2Elements = [
+        '.select2-profesi', '.select2-pendidikan', '.select2-jabatan',
+        '.select2-keluarga', '.select2-status', '.select2-golongan', '.select2-form'
+      ];
+      select2Elements.forEach(selector => {
+        $(selector).select2({
+          theme: 'bootstrap-5',
+          width: '100%'
+        });
       });
-  </script>
-  <script>
 
-    // Function to update date and time
-    function getCurrentDateTime() {
-      const now = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const formattedDate = now.toLocaleDateString('id-ID', options);
-      const time = now.toLocaleTimeString('id-ID');
-
-      return `${formattedDate}, ${time}`;
-    }
-
-    document.getElementById('currentDateTime').innerHTML = getCurrentDateTime();
-    setInterval(function() {
-      document.getElementById('currentDateTime').innerHTML = getCurrentDateTime();
-    }, 1000);
-  </script>
-  <script>
-    $(document).ready(function() {
-        $('.select2-profesi').select2({
-            theme: 'bootstrap-5', 
-            width: '100%' 
+      // Initialize Select2 for modal
+      $('#createPesertaPelatihanModal').on('shown.bs.modal', function() {
+        $('.pesertaMultiple').select2({
+          tags: true,
+          width: '100%',
+          placeholder: "Pilih Pegawai atau Tambah Baru",
+          allowClear: true,
+          dropdownParent: $('#createPesertaPelatihanModal')
         });
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-        $('.select2-pendidikan').select2({
-            theme: 'bootstrap-5', 
-            width: '100%' 
-        });
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-        $('.select2-jabatan').select2({
-            theme: 'bootstrap-5', 
-            width: '100%' 
-        });
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-        $('.select2-keluarga').select2({
-            theme: 'bootstrap-5', 
-            width: '100%' 
-        });
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-        $('.select2-status').select2({
-            theme: 'bootstrap-5', 
-            width: '100%' 
-        });
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-        $('.select2-golongan').select2({
-            theme: 'bootstrap-5', 
-            width: '100%' 
-        });
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-        $('.select2-form').select2({
-            theme: 'bootstrap-5', 
-            width: '100%' 
-        });
-    });
-  </script>
-  <script>
-      $(document).ready(function() {
-          $('#createPesertaPelatihanModal').on('shown.bs.modal', function() {
-              $('.pesertaMultiple').select2({
-                  tags: true,
-                  width: '100%',
-                  placeholder: "Pilih Pegawai atau Tambah Baru",
-                  allowClear: true,
-                  dropdownParent: $('#createPesertaPelatihanModal') 
-              });
-          });
       });
+
+      // Toggle submenu
+      $('.toggle-menu').on('click', function(event) {
+        event.preventDefault();
+        const targetMenu = $('#' + $(this).data('menu-target'));
+        $('.submenu.collapse.show').not(targetMenu).removeClass('show');
+        targetMenu.toggleClass('show');
+      });
+
+      // Update date and time
+      function getCurrentDateTime() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return `${now.toLocaleDateString('id-ID', options)}, ${now.toLocaleTimeString('id-ID')}`;
+      }
+      setInterval(() => {
+        $('#currentDateTime').text(getCurrentDateTime());
+      }, 1000);
+
+      // Load navmenu on role change
+      $('#role-select').on('change', function() {
+        const roleId = $(this).val();
+        if (roleId) {
+          $.get(`/navmenu/get-navmenu/${roleId}`, function(response) {
+            const navmenus = response.navmenus;
+            $('.menu-checkbox').each(function() {
+              const menuId = $(this).data('menu-id');
+              $(this).prop('checked', !!navmenus.find(menu => menu.m_id == menuId)?.checked);
+            });
+          }).fail(function() {
+            alert('Gagal mengambil data hak akses.');
+          });
+        }
+      });
+
+      // Update hak akses on checkbox change
+      $('.menu-checkbox').on('change', function() {
+        const roleId = $('#role-select').val();
+        const menuId = $(this).data('menu-id');
+        const checked = $(this).is(':checked');
+        if (roleId) {
+          $.ajax({
+            url: `/navmenu/update-hakakses`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+              _token: '{{ csrf_token() }}',
+              role_id: roleId,
+              menu_id: menuId,
+              checked: checked
+            }),
+            success: function(response) {
+              console.log(response.message);
+            },
+            error: function(xhr) {
+              alert('Gagal memperbarui hak akses.');
+              console.error(xhr.responseJSON);
+            }
+          });
+        } else {
+          alert('Pilih role terlebih dahulu.');
+          $(this).prop('checked', !checked);
+        }
+      });
+    });
   </script>
 </body>
 
