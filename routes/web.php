@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\EmployeeAuthController;
 use App\Http\Controllers\Dashboard\DashboardEmployeeController;
+use App\Http\Controllers\Keuangan\DefaultGajiController;
+use App\Http\Controllers\Keuangan\SettingGajiController;
+use App\Http\Controllers\Keuangan\SlipGajiController;
 use App\Http\Controllers\Navmenus\NavmenuController;
 use App\Http\Controllers\Pelatihan\JenisPelatihanController;
 use App\Http\Controllers\Pelatihan\PelatihanController;
@@ -32,7 +35,11 @@ Route::get('adminlogin', [AdminAuthController::class, 'adminlogin'])->name('admi
 Route::post('actionlogin', [AdminAuthController::class, 'actionlogin'])->name('actionlogin');
 
 Route::prefix('navmenu')->middleware(['auth', 'dynamic.role'])->name('navmenu.')->group(function () {
+    Route::get('indexmenu', [NavmenuController::class, 'indexmenu'])->name('indexmenu');
     Route::get('data/', [NavmenuController::class, 'index'])->name('index');
+    Route::post('update/', [NavmenuController::class, 'update'])->name('update');    
+    Route::post('store/', [NavmenuController::class, 'store'])->name('store');
+    Route::get('destroy/{id}', [NavmenuController::class, 'destroy'])->name('destroy');
     Route::get('get-navmenu/{roleId}', [NavmenuController::class, 'getNavmenu']);
     Route::post('/update-hakakses', [NavmenuController::class, 'updateHakakses']);
 });
@@ -68,8 +75,16 @@ Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::resource('riwayat/riwayat_kontrak', RiwayatKontrakController::class);
     Route::resource('riwayat/riwayat_lain', RiwayatLainController::class);
     Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
-    Route::post('/riwayat/riwayat_pelatihan/direct-store', [RiwayatPelatihanController::class, 'directstore'])->name('riwayat_pelatihan.directstore');   
+    Route::post('/riwayat/riwayat_pelatihan/direct-store', [RiwayatPelatihanController::class, 'directstore'])->name('riwayat_pelatihan.directstore'); 
     
+    //keuangan
+    Route::resource('keuangan/default_gaji', DefaultGajiController::class);
+    Route::resource('keuangan/setting_gaji', SettingGajiController::class);
+    Route::post('keuangan/setting_gaji/storeOrUpdate/{id}', [SettingGajiController::class, 'storeOrUpdate'])->name('setting_gaji.storeOrUpdate');
+    Route::resource('keuangan/slip_gaji', SlipGajiController::class);
+    Route::post('/keuangan/slip-gaji/store-all', [SlipGajiController::class, 'storeAllSlip'])->name('slip_gaji.storeAllSlip');
+    Route::get('keuangan/slip_gaji/cetakpdf/{id}/{bulan}/{tahun}', [SlipGajiController::class, 'CetakSlipPenggajian'])->name('slip_gaji.CetakSlipPenggajian');
+
 });
 
 Route::get('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->name('employeelogin');

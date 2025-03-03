@@ -15,7 +15,7 @@
                 ->pluck('navmenu_id')
                 ->toArray();
 
-            // Mengambil main menu (menu tanpa parent) yang diakses pengguna
+            // Mengambil main menu (tanpa parent)
             $mainmenus = DB::table('navmenus')
                 ->whereIn('m_id', $accessables)
                 ->where('m_child', 0)
@@ -23,102 +23,105 @@
                 ->orderBy('m_order', 'asc')
                 ->get();
 
-            // Mengambil submenu (menu dengan parent) yang diakses pengguna
-            $submenus = DB::table('navmenus')
+            // Mengambil submenu dan sub-submenu
+            $allmenus = DB::table('navmenus')
                 ->whereIn('m_id', $accessables)
-                ->where('m_child', '!=', 0)
                 ->where('m_status', 1)
                 ->orderBy('m_order', 'asc')
                 ->get();
         @endphp
-        <!-- Menampilkan Main Menu -->
-        @foreach ($mainmenus as $main)
-            @if ($main->m_id == 1) <!-- Menu Dashboard -->
-                <li class="sidebar-item">
-                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('dashboard') }}" aria-expanded="false">
-                        <span class="aside-icon p-2 bg-light-primary rounded-3">
-                            <i class="{{ $main->m_icon }}"></i>
-                        </span>
-                        <span class="hide-menu ms-2 ps-1">{{ $main->m_name }}</span>
-                    </a>
-                </li>
-            @endif
-        @endforeach
 
-        <!-- Menampilkan Menu dengan Submenu -->
         @foreach ($mainmenus as $main)
-            @if ($main->m_id > 1 && $main->m_id != 18) <!-- Menu selain Dashboard dan Logout -->
-                @php
-                    // Submenu untuk menu utama saat ini
-                    $currentSubmenus = $submenus->filter(function ($submenu) use ($main) {
-                        return $submenu->m_child == $main->m_id;
-                    });
+            @php
+                // Submenu dari main menu
+                $currentSubmenus = $allmenus->where('m_child', $main->m_id);
+                $isActiveMain = false;
 
-                    // Menentukan apakah salah satu submenu aktif
-                    $isActiveSubmenu = false;
-                    foreach ($currentSubmenus as $submenu) {
-                        $baseSubmenuLink = trim($submenu->m_link, '/');
-                        if (request()->is($baseSubmenuLink . '*') || request()->is($baseSubmenuLink . '/*')) {
-                            $isActiveSubmenu = true;
+                foreach ($currentSubmenus as $submenu) {
+                    // Sub-submenu dari submenu saat ini
+                    $currentSubsubmenus = $allmenus->where('m_child', $submenu->m_id);
+                    
+                    // Cek apakah submenu aktif
+                    $isActiveSub = request()->is(trim($submenu->m_link, '/') . '*');
+
+                    // Cek apakah sub-submenu aktif
+                    foreach ($currentSubsubmenus as $subsubmenu) {
+                        if (request()->is(trim($subsubmenu->m_link, '/') . '*')) {
+                            $isActiveSub = true;
                             break;
                         }
                     }
 
-                    // Menentukan apakah menu utama aktif berdasarkan URL atau submenu
-                    $baseMainLink = trim($main->m_link, '/');
-                    $isActiveMain = request()->is($baseMainLink . '*') || $isActiveSubmenu;
-                @endphp
-                <li class="sidebar-item has-sub {{ $isActiveMain ? 'active' : '' }}">
-                    <a href="#" class="sidebar-link primary-hover-bg toggle-menu" data-menu-target="menu-{{ $main->m_id }}">
-                        <span class="aside-icon p-2 bg-light-primary rounded-3">
-                            <i class="{{ $main->m_icon }}"></i>
-                        </span>
-                        <span class="hide-menu ms-2 ps-1">{{ $main->m_name }}</span>
-                        <i class="ti ti-chevron-down float-end"></i>
-                    </a>
-                    <div id="menu-{{ $main->m_id }}" class="submenu collapse {{ $isActiveMain ? 'show' : '' }}">
-                        <ul class="nav flex-column sub-menu">
-                            @foreach ($currentSubmenus as $submenu)
-                                @php
-                                    // Membuat URL submenu, mempertimbangkan jika ada parameter dinamis
-                                    $submenuLink = $submenu->m_link_child 
-                                        ? route($submenu->m_link, [session($submenu->m_link_child)]) 
-                                        : ($submenu->m_link ? url($submenu->m_link) : null);
+                    // Jika ada submenu aktif, menu utama harus aktif juga
+                    if ($isActiveSub) {
+                        $isActiveMain = true;
+                        break;
+                    }
+                }
+            @endphp
 
-                                    // Menentukan apakah submenu aktif berdasarkan URL dasar
-                                    $baseSubmenuLink = trim($submenu->m_link, '/');
-                                    $isActiveSub = request()->is($baseSubmenuLink . '*') || request()->is($baseSubmenuLink . '/*');
-                                @endphp
-                                @if ($submenuLink)
-                                    <li class="nav-item ms-3 {{ $isActiveSub ? 'active' : '' }}">
-                                        <a href="{{ $submenuLink }}" class="sidebar-link sidebar-link primary-hover-bg">
-                                            <span class="aside-icon p-2 me-2 bg-light-success rounded-3">
-                                                <i class="ti ti-menu fs-7 text-success"></i>
-                                            </span>
-                                            <span class="dropdown-item">{{ $submenu->m_name }}</span>
-                                        </a>
-                                    </li>
+            <li class="sidebar-item has-sub {{ $isActiveMain ? 'active' : '' }}">
+                <a href="#" class="sidebar-link toggle-menu" data-menu-target="menu-{{ $main->m_id }}">
+                    <span class="aside-icon p-2 bg-light-primary rounded-3">
+                        <i class="{{ $main->m_icon }}"></i>
+                    </span>
+                    <span class="hide-menu ms-2 ps-1">{{ $main->m_name }}</span>
+                    <i class="ti ti-chevron-down float-end"></i>
+                </a>
+                <div id="menu-{{ $main->m_id }}" class="submenu collapse {{ $isActiveMain ? 'show' : '' }}">
+                    <ul class="nav flex-column sub-menu">
+                        @foreach ($currentSubmenus as $submenu)
+                            @php
+                                $currentSubsubmenus = $allmenus->where('m_child', $submenu->m_id);
+                                $isActiveSub = request()->is(trim($submenu->m_link, '/') . '*');
+
+                                foreach ($currentSubsubmenus as $subsubmenu) {
+                                    if (request()->is(trim($subsubmenu->m_link, '/') . '*')) {
+                                        $isActiveSub = true;
+                                        break;
+                                    }
+                                }
+                            @endphp
+                            <li class="nav-item ms-3 {{ $isActiveSub ? 'active' : '' }}">
+                                <a href="{{ url($submenu->m_link) }}" class="sidebar-link primary-hover-bg">
+                                    <span class="aside-icon p-2 me-2 bg-light-success rounded-3">
+                                        <i class="ti ti-menu fs-7 text-success"></i>
+                                    </span>
+                                    <span class="dropdown-item">{{ $submenu->m_name }}</span>
+                                </a>
+
+                                @if ($currentSubsubmenus->isNotEmpty())
+                                    <ul class="nav flex-column sub-sub-menu collapse {{ $isActiveSub ? 'show' : '' }}">
+                                        @foreach ($currentSubsubmenus as $subsubmenu)
+                                            @php
+                                                $isActiveSubSub = request()->is(trim($subsubmenu->m_link, '/') . '*');
+                                            @endphp
+                                            <li class="nav-item ms-4 {{ $isActiveSubSub ? 'active' : '' }}">
+                                                <a href="{{ url($subsubmenu->m_link) }}" class="sidebar-link primary-hover-bg">
+                                                    <span class="aside-icon p-2 me-2 bg-light-warning rounded-3">
+                                                        <i class="ti ti-menu fs-7 text-warning"></i>
+                                                    </span>
+                                                    <span class="dropdown-item">{{ $subsubmenu->m_name }}</span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                </li>
-            @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </li>
         @endforeach
-        
-        @foreach ($mainmenus as $main)
-            @if ($main->m_id == 18) <!-- Menu Dashboard -->
-                <li class="sidebar-item">
-                    <a class="sidebar-link sidebar-link primary-hover-bg" href="{{ route('actionlogout') }}" aria-expanded="false">
-                        <span class="aside-icon p-2 bg-light-primary rounded-3">
-                            <i class="{{ $main->m_icon }}"></i>
-                        </span>
-                        <span class="hide-menu ms-2 ps-1">{{ $main->m_name }}</span>
-                    </a>
-                </li>
-            @endif
-        @endforeach
-
-
+        <ul>
+            <li class="sidebar-item">
+                <a href="{{ route('actionlogout') }}" class="sidebar-link primary-hover-bg">
+                    <span class="aside-icon p-2 me-2 bg-light-danger rounded-3">
+                        <i class="ti ti-login fs-7 text-danger"></i>
+                    </span>
+                    <span class="dropdown-item">Logout</span>
+                </a>
+            </li>
+        </ul>
     </ul>
 </nav>

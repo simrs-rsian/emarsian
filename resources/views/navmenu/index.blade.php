@@ -52,6 +52,7 @@
                                 <tr>
                                     <th>Menu</th>
                                     <th>Submenu</th>
+                                    <th>Sub-submenu</th>
                                     <th>Akses</th>
                                 </tr>
                             </thead>
@@ -59,6 +60,7 @@
                                 @foreach ($mainmenus as $mainmenu)
                                 <tr>
                                     <td>{{ $mainmenu->m_name }}</td>
+                                    <td>-</td>
                                     <td>-</td>
                                     <td>
                                         <input type="checkbox" class="menu-checkbox" data-menu-id="{{ $mainmenu->m_id }}" />
@@ -68,10 +70,21 @@
                                 <tr>
                                     <td></td>
                                     <td>{{ $submenu->m_name }}</td>
+                                    <td>-</td>
                                     <td>
                                         <input type="checkbox" class="menu-checkbox" data-menu-id="{{ $submenu->m_id }}" />
                                     </td>
                                 </tr>
+                                @foreach ($subsubmenus->where('m_child', $submenu->m_id) as $subsubmenu)
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ $subsubmenu->m_name }}</td>
+                                    <td>
+                                        <input type="checkbox" class="menu-checkbox" data-menu-id="{{ $subsubmenu->m_id }}" />
+                                    </td>
+                                </tr>
+                                @endforeach
                                 @endforeach
                                 @endforeach
                             </tbody>

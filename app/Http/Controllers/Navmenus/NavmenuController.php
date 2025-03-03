@@ -27,8 +27,14 @@ class NavmenuController extends Controller
             ->orderBy('m_order', 'asc')
             ->get();
 
+        // Mengambil subsubmenu (child dari submenu)
+        $subsubmenus = Navmenus::whereIn('m_child', $submenus->pluck('m_id'))
+            ->where('m_status', 1)
+            ->orderBy('m_order', 'asc')
+            ->get();
+
         $roles = Role::all();
-        return view('navmenu.index', compact('roles', 'mainmenus', 'submenus'));
+        return view('navmenu.index', compact('roles', 'mainmenus', 'submenus', 'subsubmenus'));
     }
 
     public function getNavmenu($roleId)
@@ -99,5 +105,77 @@ class NavmenuController extends Controller
         }
 
         return redirect()->route('Navmenus.index')->with('success', 'Akses menu berhasil diperbarui.');
+    }
+
+    public function store(Request $request) {
+        $validatedData = $request->validate([
+            'm_name' => 'required|string|max:255',
+            'm_link' => 'required|string|max:255',
+            'm_icon' => 'required|string|max:255',
+            'm_child' => 'required|integer',
+            'm_order' => 'required|integer',
+            'm_status' => 'required|integer',
+        ]);
+
+        Navmenus::create([
+            'm_name' => $validatedData['m_name'],
+            'm_link' => $validatedData['m_link'],
+            'm_icon' => $validatedData['m_icon'],
+            'm_child' => $validatedData['m_child'],
+            'm_order' => $validatedData['m_order'],
+            'm_status' => $validatedData['m_status'],
+        ]);
+
+        return redirect()->route('navmenu.indexmenu')->with('success', 'Menu berhasil ditambahkan.');
+    }
+
+    public function update(Request $request) {
+        dd('update');
+        dd($request->all());
+        $menu = Navmenus::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'm_name' => 'required|string|max:255',
+            'm_link' => 'required|string|max:255',
+            'm_icon' => 'required|string|max:255',
+            'm_child' => 'required|integer',
+            'm_order' => 'required|integer',
+            'm_status' => 'required|integer',
+        ]);
+
+        $menu->update($validatedData);
+
+        return redirect()->route('navmenu.indexmenu')->with('success', 'Menu berhasil diperbarui.');
+    }
+
+    public function destroy($id) {
+        dd($id);
+        $menu = Navmenus::findOrFail($id);
+        $menu->delete();
+
+        return redirect()->route('navmenu.indexmenu')->with('success', 'Menu berhasil dihapus.');
+    }
+
+    public function indexmenu() {
+        
+        // Mengambil main menu (menu tanpa parent) yang diakses pengguna
+        $mainmenus = Navmenus::where('m_child', 0)
+        ->orderBy('m_order', 'asc')
+        ->get();
+
+        // Mengambil submenu (menu dengan parent) yang diakses pengguna
+        $submenus = Navmenus::where('m_child', '!=', 0)
+        ->orderBy('m_order', 'asc')
+        ->get();
+
+        // Mengambil subsubmenu (child dari submenu)
+        $consts = Navmenus::whereIn('m_child', $submenus->pluck('m_id'))
+        ->orderBy('m_order', 'asc')
+        ->get();
+
+        $roles = Role::all();
+        return view('navmenu.indexmenu', compact('roles', 'mainmenus', 'submenus', 'consts'));
+        
+        
     }
 }

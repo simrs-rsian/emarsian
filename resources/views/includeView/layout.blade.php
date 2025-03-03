@@ -35,7 +35,7 @@
   </style>
 
 </head>
-
+@yield('css')
 <body>
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -123,6 +123,7 @@
       </div>
     </div>
   </div>
+  @yield('js')
   <script src="{{ url('src/assets/libs/jquery/dist/jquery.min.js') }}"></script>
   <script src="{{ url('src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ url('src/assets/js/sidebarmenu.js') }}"></script>
