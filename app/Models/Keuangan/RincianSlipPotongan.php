@@ -13,4 +13,9 @@ class RincianSlipPotongan extends Model
     protected $fillable = [
         'nama_potongan', 'nominal_potongan', 'slip_penggajian_id'
     ];
+
+    public function slip_penggajian()
+    {
+        return $this->belongsTo(SlipPenggajian::class);
+    }
 }

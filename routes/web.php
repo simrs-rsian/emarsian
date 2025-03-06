@@ -33,6 +33,7 @@ Route::view('/', 'indexs');
 
 Route::get('adminlogin', [AdminAuthController::class, 'adminlogin'])->name('adminlogin');
 Route::post('actionlogin', [AdminAuthController::class, 'actionlogin'])->name('actionlogin');
+Route::get('/keuangan/slip_gaji/slip-gaji-karyawan', [SlipGajiController::class, 'slipGajiKaryawan']);
 
 Route::prefix('navmenu')->middleware(['auth', 'dynamic.role'])->name('navmenu.')->group(function () {
     Route::get('indexmenu', [NavmenuController::class, 'indexmenu'])->name('indexmenu');
@@ -83,7 +84,10 @@ Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::post('keuangan/setting_gaji/storeOrUpdate/{id}', [SettingGajiController::class, 'storeOrUpdate'])->name('setting_gaji.storeOrUpdate');
     Route::resource('keuangan/slip_gaji', SlipGajiController::class);
     Route::post('/keuangan/slip-gaji/store-all', [SlipGajiController::class, 'storeAllSlip'])->name('slip_gaji.storeAllSlip');
+    Route::get('keuangan/slip-gaji/index-send-all', [SlipGajiController::class, 'IndexSendSlip'])->name('slip_gaji.IndexSendSlip');
     Route::get('keuangan/slip_gaji/cetakpdf/{id}/{bulan}/{tahun}', [SlipGajiController::class, 'CetakSlipPenggajian'])->name('slip_gaji.CetakSlipPenggajian');
+    Route::post('keuangan/slip_gaji/send-all', [SlipGajiController::class, 'SendAllSlip'])->name('slip_gaji.SendAllSlip');
+    Route::get('keuangan/slip_gaji/send/{id}/{bulan}/{tahun}', [SlipGajiController::class, 'SendSlip'])->name('slip_gaji.SendSlip');
 
 });
 

@@ -11,6 +11,7 @@ use App\Models\Keuangan\SlipPenggajian;
 use App\Models\Keuangan\SettingGaji;
 use App\Models\Keuangan\SettingPotongan;
 use App\Models\Employee\Employee;
+use App\Models\Keuangan\HistorySenderSlip;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -203,33 +204,167 @@ class SlipGajiController extends Controller
         return redirect()->route('slip_gaji.index')->with('success', 'Slip gaji berhasil disimpan untuk karyawan yang memenuhi syarat.');
     }
 
-    public function sendSlip(Request $request)
+    public function IndexSendSlip(Request $request)
     {
         $bulan                  = $request->input('bulan', date('m'));
         $tahun                  = $request->input('tahun', date('Y'));
         $SlipPenggajians        = SlipPenggajian::where('bulan', $bulan)->where('tahun', $tahun)->get();
-        $rincianslipgaji        = RincianSlipGaji::all();
-        $rincianslippotongan    = RincianSlipPotongan::all();
-        return view('keuangan.slip_gaji.senderslip', compact('rincianslipgaji', 'rincianslippotongan', 'employees', 'SlipPenggajians', 'bulan', 'tahun'));
+        $rincianslipgaji        = RincianSlipGaji::with('slip_penggajian')->get();
+        $rincianslippotongan    = RincianSlipPotongan::with('slip_penggajian')->get();
+        $employees              = Employee::all();
+        return view('keuangan.slip_gaji.indexsenderslip', compact('rincianslipgaji', 'rincianslippotongan', 'employees', 'SlipPenggajians', 'bulan', 'tahun'));
     }
 
-    public function CetakSlipPenggajian(Request $request, $id, $bulan, $tahun)
+    public function SendSlip(Request $request, $id, $bulan, $tahun)
     {
+        $employee = Employee::findOrFail($id);
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        // Generate link slip gaji
+        $link = url('keuangan/slip_gaji/slip-gaji-karyawan?id_pegawai=' . base64_encode($id) . '&bulan=' . base64_encode($bulan) . '&tahun=' . base64_encode($tahun));
+
+        // Pesan WhatsApp
+        $pesan = 'Assalamualaikum Warohmatullahi Wabarokatuh ' . "\n\n" .
+                'Kami dari Admin Keuangan Rumah Sakit Aisyiah Nganjuk ingin menginformasikan bahwa ' .
+                'pegawai atas nama ' . $employee->nama_lengkap . ' telah menerima slip gaji untuk bulan ' . $bulan . ' tahun ' . $tahun . '. ' . "\n\n" .
+                'Berikut kami lampirkan slip gaji Anda untuk bulan ' . $bulan . ' tahun ' . $tahun . '. ' . "\n\n" .
+                'Link untuk mengunduh slip gaji Anda: ' . $link . "\n\n" .
+                'Mohon untuk melakukan koreksi jika ada kekeliruan dalam dokumentasi kami. ' . "\n\n" . 
+                'Terima kasih atas kepercayaan yang Anda berikan. ' . "\n\n" . 
+                'Semoga Allah selalu memberikan kesehatan kepada Anda. Aamiin Ya Robbal Aalamiin.';
+
+        // Kirim pesan WhatsApp menggunakan service provider
+        $phone = $employee->telepon;
+        $response = app('WaHelper')->sendMessage($phone, $pesan);
+
+        $idslip = SlipPenggajian::where('employee_id', $id)->where('bulan', $bulan)->where('tahun', $tahun)->first();
+        // Simpan riwayat pengiriman
+        HistorySenderSlip::create([
+            'slip_penggajian_id' => $idslip->id,
+            'user_id' => auth()->id(),
+            'status' => 'Sukses',
+            'message' => $pesan,
+            'link' => $link,
+            'status_downloader' => '1',
+        ]);
+
+        //tampilkan pesan sukses ke halaman sebelumnya
+        return redirect()->route('slip_gaji.IndexSendSlip', [
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+        ])->with('success', 'Slip gaji berhasil dikirim via WhatsApp');
+    }
+
+    public function SendAllSlip(Request $request)
+    {
+        $selectedEmployees = $request->input('selected_employees', []);
+        $employeeData = $request->input('employee_data', []);
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
+
+        if (empty($selectedEmployees)) {
+            return redirect()->back()->with('error', 'Tidak ada karyawan yang dipilih.');
+        }
+
+        $messages = [];
+        foreach ($selectedEmployees as $id) {
+            if (!isset($employeeData[$id])) {
+                continue;
+            }
+
+            $employee = Employee::find($id);
+            if (!$employee) {
+                continue;
+            }
+
+            $link = url('keuangan/slip_gaji/slip-gaji-karyawan?id_pegawai=' . base64_encode($id) . '&bulan=' . base64_encode($bulan) . '&tahun=' . base64_encode($tahun));
+
+            $pesan = "Assalamualaikum Warohmatullahi Wabarokatuh\n\n"
+                . "Kami dari Admin Keuangan Rumah Sakit Aisyiah Nganjuk ingin menginformasikan bahwa "
+                . "pegawai atas nama {$employee->nama_lengkap} telah menerima slip gaji untuk bulan {$bulan} tahun {$tahun}.\n\n"
+                . "Berikut kami lampirkan slip gaji Anda untuk bulan {$bulan} tahun {$tahun}.\n\n"
+                . "Link untuk mengunduh slip gaji Anda: {$link}\n\n"
+                . "Mohon untuk melakukan koreksi jika ada kekeliruan dalam dokumentasi kami.\n\n"
+                . "Terima kasih atas kepercayaan yang Anda berikan.\n\n"
+                . "Semoga Allah selalu memberikan kesehatan kepada Anda. Aamiin Ya Robbal Aalamiin.";
+
+            
+
+            $phone = $employeeData[$id]['telepon'];
+            $messages[] = [
+                'target' => $phone,
+                'message' => $pesan,
+                'delay' => '2',
+                'countryCode' => '62',
+                'typing' => false,
+                'delay' => '2',
+            ];
+            //id slip penggajian
+            $idslip = SlipPenggajian::where('employee_id', $id)->where('bulan', $bulan)->where('tahun', $tahun)->first();
+
+            // Simpan riwayat pengiriman
+            HistorySenderSlip::create([
+                'slip_penggajian_id' => $idslip,
+                'user_id' => auth()->id(),
+                'status' => 'success',
+                'message' => $pesan,
+                'link' => $link,
+                'status_downloader' => 'open downloaded',
+            ]);
+            
+        }
+
+        if (!empty($messages)) {
+            app('WaBroadcastHelper')->sendBatchMessages($messages);
+        }
+
+        return redirect()->route('slip_gaji.IndexSendSlip', [
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+        ])->with('success', 'Slip gaji berhasil dikirim ke semua karyawan yang dipilih.');
+    }
+
+    public function slipGajiKaryawan(Request $request)
+    {
+        $validatelink = url('keuangan/slip_gaji/slip-gaji-karyawan?id_pegawai=' . $request->input('id_pegawai') . '&bulan=' . $request->input('bulan') . '&tahun=' . $request->input('tahun'));
+    
+        // Validasi link hanya bisa dipakai 1 kali
+        $history = HistorySenderSlip::where('link', $validatelink)->first();
+    
+        if (!$history || $history->status_downloader !== '1') {
+            return response()->json(['message' => 'Link tidak valid atau sudah pernah digunakan.'], 404);
+        }
+    
+        // Decrypt parameters from the request
+        $id = base64_decode($request->input('id_pegawai'));
+        $bulan = base64_decode($request->input('bulan'));
+        $tahun = base64_decode($request->input('tahun'));
+    
+        // Cek jika session sudah pernah digunakan
+        if (session()->has('id') && session()->has('bulan') && session()->has('tahun')) {
+            return redirect()->route('slip_gaji.IndexSendSlip', [
+                'bulan' => session()->get('bulan'),
+                'tahun' => session()->get('tahun'),
+            ]);
+        }
+    
         // Ambil data slip penggajian
         $slip_penggajian = SlipPenggajian::where('bulan', $bulan)
             ->where('tahun', $tahun)
             ->where('employee_id', $id)
             ->firstOrFail();
-        
+    
         $rincianslipgaji = RincianSlipGaji::where('slip_penggajian_id', $slip_penggajian->id)->get();
         $rincianslippotongan = RincianSlipPotongan::where('slip_penggajian_id', $slip_penggajian->id)->get();
         $employee = Employee::with('statusKaryawan', 'unit')->where('id', $id)->first();
-
+    
+        // Load logo
         $path = public_path('rsia.png');
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
+    
         // Load tampilan Blade sebagai HTML
         $html = view('keuangan.slip_gaji.cetakpdf', compact(
             'slip_penggajian',
@@ -238,19 +373,23 @@ class SlipGajiController extends Controller
             'employee',
             'logo'
         ))->render();
-
+    
         // Konfigurasi Dompdf
         $options = new Options();
         $options->set('defaultFont', 'Helvetica');
         $options->set('isHtml5ParserEnabled', true);
-
+    
         // Inisialisasi Dompdf
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-
+    
+        // Update status history setelah slip berhasil dibuat
+        $history->status_downloader = 'close downloaded';
+        $history->save();
+    
         // Stream PDF ke browser
-        return $dompdf->stream('slip_gaji_'.$employee->id.'_'.$bulan.'_'.$tahun.'.pdf', ['Attachment' => false]);
+        return $dompdf->stream('slip_gaji_' . $employee->id . '_' . $bulan . '_' . $tahun . '.pdf');
     }
 }

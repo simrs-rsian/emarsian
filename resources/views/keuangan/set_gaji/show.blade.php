@@ -45,7 +45,10 @@
                                         <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">{{ $gaji->gaji_nama }}</label>
                                             <div class="col-sm-8">
-                                                <input type="number" name="gaji[{{ $gaji->id }}]" class="form-control" value="{{ $settingGaji[$gaji->id]->nominal ?? '0' }}" required>
+                                                <input type="text" name="gaji[{{ $gaji->id }}]" 
+                                                    class="form-control" 
+                                                    value="{{ number_format($settingGaji[$gaji->id]->nominal ?? 0, 0, ',', '.') }}" 
+                                                    oninput="formatRupiah(this)" required>
                                             </div>
                                         </div>
                                     @endforeach
@@ -57,7 +60,10 @@
                                         <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">{{ $potongan->gaji_nama }}</label>
                                             <div class="col-sm-8">
-                                                <input type="number" name="potongan[{{ $potongan->id }}]" class="form-control" value="{{ $settingPotongan[$potongan->id]->nominal ?? '0' }}" required>
+                                                <input type="text" name="potongan[{{ $potongan->id }}]" 
+                                                    class="form-control" 
+                                                    value="{{ number_format($settingPotongan[$potongan->id]->nominal ?? 0, 0, ',', '.') }}" 
+                                                    oninput="formatRupiah(this)" required>
                                             </div>
                                         </div>
                                     @endforeach
@@ -75,6 +81,17 @@
 </div>
 
 <!-- Tambahkan script inisialisasi DataTable setelah halaman siap -->
+<script>
+    function formatRupiah(input) {
+        let value = input.value.replace(/\./g, ""); // Hapus titik yang sudah ada
+        if (!value) {
+            input.value = "";
+            return;
+        }
 
+        let formatted = new Intl.NumberFormat("id-ID").format(value);
+        input.value = formatted;
+    }
+</script>
 
 @endsection

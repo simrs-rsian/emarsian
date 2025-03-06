@@ -13,4 +13,9 @@ class RincianSlipGaji extends Model
     protected $fillable = [
         'nama_gaji', 'nominal_gaji', 'slip_penggajian_id'
     ];
+
+    public function slip_penggajian()
+    {
+        return $this->belongsTo(SlipPenggajian::class);
+    }
 }

@@ -22,7 +22,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>NIK Karyawan</th>
+                                    <th>NIP Karyawan</th>
                                     <th>Nama Lengkap</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Tempat Lahir</th>
@@ -49,7 +49,7 @@
                                 @foreach($employees as $key => $employee)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $employee->nik_karyawan }}</td>
+                                        <td>{{ $employee->nip_karyawan }}</td>
                                         <td>{{ $employee->nama_lengkap }}</td>
                                         <td>{{ $employee->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
                                         <td>{{ $employee->tempat_lahir }}</td>

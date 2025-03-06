@@ -4,6 +4,16 @@
             <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
             <span class="hide-menu"></span>
         </li>
+        <ul>
+            <li class="sidebar-item">
+                <a href="{{ route('dashboard') }}" class="sidebar-link primary-hover-bg">
+                    <span class="aside-icon p-2 me-2 bg-light-danger rounded-3">
+                        <i class="ti ti-layout-dashboard fs-7 text-primary"></i>
+                    </span>
+                    <span class="dropdown-item">Dashboard</span>
+                </a>
+            </li>
+        </ul>
         @php
             use Illuminate\Support\Facades\DB;
 
@@ -59,6 +69,8 @@
                     }
                 }
             @endphp
+            <!-- // menu dashboard -->
+            
 
             <li class="sidebar-item has-sub {{ $isActiveMain ? 'active' : '' }}">
                 <a href="#" class="sidebar-link toggle-menu" data-menu-target="menu-{{ $main->m_id }}">

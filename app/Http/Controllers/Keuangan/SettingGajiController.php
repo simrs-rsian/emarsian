@@ -43,21 +43,30 @@ class SettingGajiController extends Controller
 
     public function storeOrUpdate(Request $request, $id)
     {
+        $request->validate([
+            'gaji' => 'required|array',
+            'potongan' => 'required|array',
+            'gaji.*' => 'nullable|string',
+            'potongan.*' => 'nullable|string',
+        ]);
+
         DB::beginTransaction();
         try {
             // **Simpan atau update data Gaji**
             foreach ($request->gaji as $default_gaji_id => $nominal) {
+                $nominal = str_replace('.', '', $nominal); // Hapus titik agar menjadi angka valid
                 SettingGaji::updateOrCreate(
                     ['employee_id' => $id, 'default_gaji_id' => $default_gaji_id],
-                    ['nominal' => $nominal]
+                    ['nominal' => (int) $nominal] // Pastikan disimpan sebagai integer
                 );
             }
 
             // **Simpan atau update data Potongan**
             foreach ($request->potongan as $default_gaji_id => $nominal) {
+                $nominal = str_replace('.', '', $nominal); // Hapus titik agar menjadi angka valid
                 SettingPotongan::updateOrCreate(
                     ['employee_id' => $id, 'default_gaji_id' => $default_gaji_id],
-                    ['nominal' => $nominal]
+                    ['nominal' => (int) $nominal] // Pastikan disimpan sebagai integer
                 );
             }
 
@@ -68,4 +77,5 @@ class SettingGajiController extends Controller
             return redirect()->route('setting_gaji.show', $id)->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
 }

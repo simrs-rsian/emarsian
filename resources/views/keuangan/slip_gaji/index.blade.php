@@ -121,7 +121,7 @@
                                                             @if($employee->id == $potongan->employee_id)
                                                                 <div class="form-group">
                                                                     <label>{{ $potongan->gaji_nama }}</label>
-                                                                    <input type="hidden" name="nama_gaji[{{ $potongan->id }}]" value="{{ $potongan->gaji_nama }}">
+                                                                    <input type="hidden" name="nama_potongan[{{ $potongan->id }}]" value="{{ $potongan->gaji_nama }}">
                                                                     <input type="number" name="potongan[{{ $employee->id }}][{{ $potongan->id }}]" class="form-control" value="{{ $potongan->nominal }}" required>
                                                                 </div>
                                                             @endif
