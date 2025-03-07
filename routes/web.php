@@ -78,10 +78,13 @@ Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
     Route::post('/riwayat/riwayat_pelatihan/direct-store', [RiwayatPelatihanController::class, 'directstore'])->name('riwayat_pelatihan.directstore'); 
     
-    //keuangan
+    //keuangan    
+    Route::get('keuangan/setting_gaji/export-gaji', [SettingGajiController::class, 'exportEmployeeGaji'])->name('setting_gaji.exportEmployeeGaji');
+    Route::post('keuangan/setting_gaji/import-gaji', [SettingGajiController::class, 'importEmployeeGaji'])->name('setting_gaji.importEmployeeGaji');
     Route::resource('keuangan/default_gaji', DefaultGajiController::class);
     Route::resource('keuangan/setting_gaji', SettingGajiController::class);
     Route::post('keuangan/setting_gaji/storeOrUpdate/{id}', [SettingGajiController::class, 'storeOrUpdate'])->name('setting_gaji.storeOrUpdate');
+
     Route::resource('keuangan/slip_gaji', SlipGajiController::class);
     Route::post('/keuangan/slip-gaji/store-all', [SlipGajiController::class, 'storeAllSlip'])->name('slip_gaji.storeAllSlip');
     Route::get('keuangan/slip-gaji/index-send-all', [SlipGajiController::class, 'IndexSendSlip'])->name('slip_gaji.IndexSendSlip');

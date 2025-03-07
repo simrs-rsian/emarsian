@@ -9,6 +9,10 @@ use App\Models\Keuangan\DefaultGaji;
 use App\Models\Keuangan\SettingPotongan;
 use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\DB;
+use App\Exports\EmployeeDefaultGajiExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\GajiImport;
+use App\Imports\PotonganImport;
 
 class SettingGajiController extends Controller
 {
@@ -78,4 +82,21 @@ class SettingGajiController extends Controller
         }
     }
 
+    public function exportEmployeeGaji()
+    {
+        // dd('masuk');
+        return Excel::download(new EmployeeDefaultGajiExport, 'format_Default_Gaji_Karyawan.xlsx');
+    }
+
+    public function importEmployeeGaji(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+        // dd($request->file('file'));
+        Excel::import(new GajiImport, $request->file('file'));
+        Excel::import(new PotonganImport, $request->file('file'));
+
+        return back()->with('success', 'Data gaji dan potongan berhasil diimport.');
+    }
 }
