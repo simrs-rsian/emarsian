@@ -12,7 +12,7 @@ class EmployeeDefaultGajiExport implements WithHeadings, FromArray
     public function headings(): array
     {
         // Ambil daftar default gaji
-        $gajiList = DefaultGaji::orderBy('id')->get(['id', 'gaji_nama'])->toArray();
+        $gajiList = DefaultGaji::orderBy('mode_id')->get(['id', 'gaji_nama'])->toArray();
         
         // Heading awal
         $headings = ['ID', 'NIP', 'Nama'];
