@@ -38,7 +38,7 @@ class EmployeeDefaultGajiExport implements WithHeadings, FromArray
 
     public function array(): array
     {
-        $employees = Employee::all();
+        $employees = Employee::orderBy('nama_lengkap')->get();
         $gajiList = DefaultGaji::orderBy('id')->pluck('gaji_nama')->toArray();
 
         $data = [];

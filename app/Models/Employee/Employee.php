@@ -5,10 +5,11 @@ namespace App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'nik_karyawan', 'nip_karyawan', 'photo', 'password', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir',
@@ -16,6 +17,7 @@ class Employee extends Authenticatable
         'pendidikan_diakui', 'status_karyawan', 'status_keluarga', 'jabatan_struktural',
         'golongan', 'alamat_lengkap', 'telepon', 'photo', 'kelompok_usia', 'umur', 'telepon', 'golongan_darah', 'bpjs_kesehatan', 'bpjs_ketenagakerjaan', 'npwp'
     ];
+    protected $dates = ['deleted_at'];
 
     // Relationships
     public function profesi()

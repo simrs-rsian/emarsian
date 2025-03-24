@@ -267,9 +267,40 @@ class EmployeeController extends Controller
         return '12';
     }
 
+    public function indexTrash()
+    {
+        $employees = Employee::onlyTrashed()
+                ->select('employees.*', 'status_karyawans.nama_status AS namastatuskar', 'status_keluargas.nama_status AS namastatuskel', 'pendidikans.nama_pendidikan', 'profesis.nama_profesi', 'units.nama_unit', 'golongans.nama_golongan', 'kelompok_umurs.nama_kelompok')
+                ->join('status_karyawans', 'employees.status_karyawan', 'status_karyawans.id')
+                ->join('status_keluargas', 'employees.status_keluarga', 'status_keluargas.id')
+                ->join('profesis', 'employees.profesi', 'profesis.id')
+                ->join('pendidikans', 'employees.pendidikan', 'pendidikans.id')
+                ->join('units', 'employees.jabatan_struktural', 'units.id')
+                ->join('golongans', 'employees.golongan', 'golongans.id')
+                ->join('kelompok_umurs', 'employees.kelompok_usia', 'kelompok_umurs.id')
+                ->get();
+        return view('employee.indexTrash', compact('employees'));
+    }
+
+    public function trash(Request $request)
+    {
+        // dd($request->all());
+        $employee = Employee::find($request->employee_id);
+        $employee->delete();
+        return redirect()->route('employee.index')->with('success', 'Employee moved to trash');
+    }
+
+    public function restore(Request $request)
+    {
+        // dd($request->all());
+        $employee = Employee::withTrashed()->find($request->employee_id);
+        $employee->restore();
+        return redirect()->route('employee.index')->with('success', 'Employee restored successfully');
+    }
+
     public function destroy(Employee $employee)
     {
-        $employee->delete();
+        $employee->forceDelete();
         return redirect()->route('employee.index')->with('success', 'Employee deleted successfully');
     }
     

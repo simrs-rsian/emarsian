@@ -62,6 +62,10 @@ Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::post('/employee/import', [EmployeeController::class, 'import'])->name('employee.import');
     Route::get('/employee/viewImport', [EmployeeController::class, 'viewImport'])->name('employee.viewImport');
     Route::get('/download-import-template', [EmployeeController::class, 'downloadImportTemplate'])->name('employee.download.import.template');
+    Route::get('/employee/export', [EmployeeController::class, 'export'])->name('employee.export');
+    Route::get('/employee/index/trash', [EmployeeController::class, 'indexTrash'])->name('employee.indexTrash');
+    Route::get('/employee/restore', [EmployeeController::class, 'restore'])->name('employee.restore');
+    Route::get('/employee/trash', [EmployeeController::class, 'trash'])->name('employee.trash');
 
     Route::resource('setting/role', RoleController::class);
     Route::resource('setting/user', UserController::class);

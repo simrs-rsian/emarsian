@@ -8,8 +8,9 @@
                 <div class="card-body">
                     <h4 class="card-title">Data Employees</h4>
                     <p class="card-description">
-                        <a href="{{ route('employee.create') }}" class="btn btn-primary btn-md">Tambah Pegawai</a>
-                        <a href="{{ route('employee.indexTrash') }}" class="btn btn-danger btn-md">Data Trashed</a>
+                        <!-- tombol kembali -->
+                        <a href="{{ route('employee.index') }}" class="btn btn-danger btn-md">Kembali</a>
+                        <!-- <a href="{{ route('employee.viewImport') }}" class="btn btn-success mb-3">Import Data Pegawai</a> -->
 
                         @if (session('success'))
                             <div class="alert alert-success">
@@ -21,7 +22,7 @@
                         <table id="employeesTable" class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th style="width: 200px;">Action</th>
+                                    <th>Action</th>
                                     <th>NIP Karyawan</th>
                                     <th>Nama Lengkap</th>
                                     <th>Jenis Kelamin</th>
@@ -48,12 +49,13 @@
                                 @foreach($employees as $key => $employee)
                                     <tr>
                                         <td style="width: 200px;">
-                                            <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#ubahPassword{{ $employee->id }}">
-                                                Ubah Password
-                                            </button>
-                                            <a href="{{ route('employee.show', $employee->id) }}" class="btn btn-info btn-sm">Detail</a>
-                                            <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                            <a href="{{ route('employee.trash', ['employee_id' => $employee->id]) }}" class="btn btn-secondary btn-sm">Trash</a>
+                                            
+                                            <a href="{{ route('employee.restore', ['employee_id' => $employee->id]) }}" class="btn btn-warning btn-sm">Restore</a>
+                                            <form action="{{ route('employee.destroy', $employee->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete Permanen</button>
+                                            </form>
                                         </td>
                                         <td>{{ $employee->nip_karyawan }}</td>
                                         <td>{{ $employee->nama_lengkap }}</td>
