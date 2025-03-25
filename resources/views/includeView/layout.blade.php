@@ -148,14 +148,27 @@
   <script>
     $(document).ready(function() {
       // Initialize DataTables
-      $('#employeesTable, #dataTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: ['copy', 'excel', 'pdf', 'print', 'colvis'],
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        "paging": true,
-        "searching": true,
-        "ordering": true,
-      });
+      $(document).ready(function () {
+        let table = $('#employeesTable, #dataTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: ['copy', 'excel', 'pdf', 'print', 'colvis'],
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+        });
+
+        // Cek apakah ada halaman terakhir yang tersimpan di localStorage
+        let lastPage = localStorage.getItem("datatable_last_page");
+        if (lastPage !== null) {
+            table.page(parseInt(lastPage)).draw(false);
+        }
+
+        // Simpan halaman terakhir saat user berpindah halaman
+        table.on('page', function () {
+            localStorage.setItem("datatable_last_page", table.page());
+        });
+    });
 
       // Initialize Select2 for multiple elements
       const select2Elements = [

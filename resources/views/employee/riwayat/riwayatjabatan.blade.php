@@ -21,7 +21,7 @@
                             <td>{{ $riwayatJabatan->tahun_mulai }}</td>
                             <td>{{ $riwayatJabatan->tahun_selesai }}</td>
                             <td>
-                                @if($riwayatJabatan->dokumen)
+                                @if($riwayatJabatan->dokumen != null)
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenJabatanModal{{ $riwayatJabatan->id }}">
                                         Tampilalkan Dokumen
                                     </button>

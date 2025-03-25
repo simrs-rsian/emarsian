@@ -295,14 +295,15 @@
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <button type="submit" class="btn btn-primary">Update</button>
-                        <a href="{{ route('employee.index') }}" class="btn btn-light">Batal</a>
+                        <a href="javascript:history.back()" class="btn btn-light">Batal</a>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
+@endsection
+@section('js')
 <script>
     function previewImage(event) {
         const reader = new FileReader();
@@ -313,5 +314,4 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 </script>
-
 @endsection

@@ -8,7 +8,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-md-between flex-wrap mb-4">
                 <div>
-                    <p class="mb-2 text-md-center text-lg-left">Data Pegawai Tetap</p>
+                    <p class="mb-2 text-md-center text-lg-left">Data Pegawai Kontrak</p>
                     <h1 class="mb-0">{{ $tetapCount->total_employees; }}</h1>
                 </div>
                 <i class="typcn typcn-briefcase icon-xl text-secondary"></i>
@@ -21,7 +21,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
                 <div>
-                    <p class="mb-2 text-md-center text-lg-left">Data Pegawai Kontrak</p>
+                    <p class="mb-2 text-md-center text-lg-left">Data Pegawai Tetap & Capeg</p>
                     <h1 class="mb-0">{{ $kontrakCount->total_employees; }}</h1>
                 </div>
                 <i class="typcn typcn-chart-pie icon-xl text-secondary"></i>

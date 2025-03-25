@@ -180,7 +180,7 @@
             <!-- Edit Button -->
             <div class="text-left mt-4">
                 <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-primary">Edit Data</a> &nbsp;&nbsp;
-                <a href="{{ route('employee.index') }}" class="btn btn-light">Batal</a>
+                <a href="#" onclick="goBackToTable()" class="btn btn-light">Batal</a>
             </div>
 
 <!-- ===================================================================================================++++++++++++++++ -->
@@ -215,4 +215,15 @@
         </div>
     </div>
 </div>
+@endsection
+@section('js')
+<script>
+    function goBackToTable() {
+        let lastPage = localStorage.getItem("datatable_last_page") || 0;
+        let baseUrl = "{{ route('employee.index') }}"; // Pastikan route ini benar
+
+        // Redirect ke halaman yang terakhir dikunjungi
+        window.location.href = baseUrl + "?page=" + (parseInt(lastPage) + 1);
+    }
+</script>
 @endsection

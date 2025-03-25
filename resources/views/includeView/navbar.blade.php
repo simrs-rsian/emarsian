@@ -30,6 +30,7 @@
                 ->whereIn('m_id', $accessables)
                 ->where('m_child', 0)
                 ->where('m_status', 1)
+                ->where('m_name', '!=', 'Dashboard')
                 ->orderBy('m_order', 'asc')
                 ->get();
 
