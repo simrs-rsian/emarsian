@@ -20,8 +20,10 @@ class EmployeeAuthController extends Controller
     }
 
     public function actionloginemployee(Request $request){
-        $nip_karyawan = $request->input('nip_karyawan');
+        $nip_karyawan = $request->input('username');
         $password = md5($request->input('password')); // Mengenkripsi password menggunakan md5
+
+        // dd  ($nip_karyawan, $password);
     
         // Periksa apakah username ditemukan di database
         $employee = Employee::where('nip_karyawan', $nip_karyawan)->first();

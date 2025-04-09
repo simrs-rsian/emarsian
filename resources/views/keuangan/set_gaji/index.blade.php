@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div class="table-responsive pt-3">
-                        <table id="employeesTable" class="table table-striped">
+                        <table id="dataTable" class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>No</th>

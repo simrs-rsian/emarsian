@@ -28,11 +28,14 @@ use App\Http\Controllers\Riwayat\RiwayatPendidikanController;
 use App\Http\Controllers\Riwayat\RiwayatSippController;
 use App\Http\Controllers\Setting\RoleController;
 use App\Http\Controllers\Setting\UserController;
+use App\Http\Controllers\Setting\WebSettingController;
 
 Route::view('/', 'indexs');
 
-Route::get('adminlogin', [AdminAuthController::class, 'adminlogin'])->name('adminlogin');
+// Route::get('adminlogin', [AdminAuthController::class, 'adminlogin'])->name('adminlogin');
 Route::post('actionlogin', [AdminAuthController::class, 'actionlogin'])->name('actionlogin');
+// Route::post('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->name('employeelogin');
+Route::post('actionloginemployee', [EmployeeAuthController::class, 'actionloginemployee'])->name('actionloginemployee');
 Route::get('/keuangan/slip_gaji/slip-gaji-karyawan', [SlipGajiController::class, 'slipGajiKaryawan']);
 
 Route::prefix('navmenu')->middleware(['auth', 'dynamic.role'])->name('navmenu.')->group(function () {
@@ -48,6 +51,8 @@ Route::prefix('navmenu')->middleware(['auth', 'dynamic.role'])->name('navmenu.')
 Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('actionlogout', [AdminAuthController::class, 'actionlogout'])->name('actionlogout');
+    //setting Web
+    Route::resource('setting/websetting', WebSettingController::class);
 
     //data master data
     Route::resource('master/unit', UnitController::class);
@@ -95,6 +100,12 @@ Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::get('keuangan/slip_gaji/cetakpdf/{id}/{bulan}/{tahun}', [SlipGajiController::class, 'CetakSlipPenggajian'])->name('slip_gaji.CetakSlipPenggajian');
     Route::post('keuangan/slip_gaji/send-all', [SlipGajiController::class, 'SendAllSlip'])->name('slip_gaji.SendAllSlip');
     Route::get('keuangan/slip_gaji/send/{id}/{bulan}/{tahun}', [SlipGajiController::class, 'SendSlip'])->name('slip_gaji.SendSlip');
+
+    //inventaris
+    Route::resource('inventaris/inventaris', \App\Http\Controllers\Inventaris\InventarisController::class);
+    Route::get('inventaris/indexChecker', [\App\Http\Controllers\Inventaris\InventarisController::class, 'indexChecker'])->name('inventaris.indexChecker');
+    Route::get('inventaris/cetakQrBarang/{id}', [\App\Http\Controllers\Inventaris\InventarisController::class, 'cetakQrBarang'])->name('inventaris.cetakQrBarang');
+    Route::get('inventaris/cetakQrRuang/{id}', [\App\Http\Controllers\Inventaris\InventarisController::class, 'cetakQrRuang'])->name('inventaris.cetakQrRuang');
 
 });
 
