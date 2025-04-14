@@ -105,7 +105,9 @@ Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::resource('inventaris/inventaris', \App\Http\Controllers\Inventaris\InventarisController::class);
     Route::get('inventaris/indexChecker', [\App\Http\Controllers\Inventaris\InventarisController::class, 'indexChecker'])->name('inventaris.indexChecker');
     Route::get('inventaris/cetakQrBarang/{id}', [\App\Http\Controllers\Inventaris\InventarisController::class, 'cetakQrBarang'])->name('inventaris.cetakQrBarang');
+    Route::post('inventaris/cetakQrBarangAll', [\App\Http\Controllers\Inventaris\InventarisController::class, 'cetakQrBarangBulk'])->name('inventaris.cetakQrBarangBulk');
     Route::get('inventaris/cetakQrRuang/{id}', [\App\Http\Controllers\Inventaris\InventarisController::class, 'cetakQrRuang'])->name('inventaris.cetakQrRuang');
+    Route::post('inventaris/cetakQrRuangAll', [\App\Http\Controllers\Inventaris\InventarisController::class, 'cetakQrRuangBulk'])->name('inventaris.cetakQrRuangBulk');
 
 });
 

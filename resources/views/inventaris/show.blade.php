@@ -20,56 +20,69 @@
                         <a href="{{ route('inventaris.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
                     </div>
                     <div class="table-responsive pt-3">
-                        <table class="table table-striped" id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Action</th>
-                                    <th>No. Inventaris</th>
-                                    <th>Kode Barang</th>
-                                    <th>Nama Barang</th>
-                                    <th>Asal Barang</th>
-                                    <th>Tanggal Pengadaan</th>
-                                    <th>Harga</th>
-                                    <th>Status Barang</th>
-                                    <th>Nama Ruang</th>
-                                    <th>No. Rak</th>
-                                    <th>No. Box</th>
-                                    <th>Merk</th>
-                                    <th>Tahun Produksi</th>
-                                    <th>Kategori</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($inventaris as $index => $item)
+                        {{-- Form Cetak Barcode Terpilih --}}
+                        <form action="{{ route('inventaris.cetakQrBarangBulk') }}" method="POST" target="_blank">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm mb-3">Cetak Barcode Terpilih</button>
+
+                            <table class="table table-striped" id="dataTable">
+                                <thead>
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>                                        
-                                        <td>
-                                            <a href="{{ route('inventaris.cetakQrBarang', str_replace('/', '|', $item->no_inventaris)) }}" class="btn btn-info btn-sm" target="_blank">Print</a>
-                                            <!-- <a href="{{ route('inventaris.edit', str_replace('/', '|', $item->no_inventaris)) }}) }}" class="btn btn-warning btn-sm">Edit</a> -->
-                                            <form action="{{ route('inventaris.destroy', str_replace('/', '|', $item->no_inventaris)) }}) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                                            </form>
-                                        </td>
-                                        <td>{{ $item->no_inventaris }}</td>
-                                        <td>{{ $item->kode_barang }}</td>
-                                        <td>{{ $item->nama_barang }}</td>
-                                        <td>{{ $item->asal_barang }}</td>
-                                        <td>{{ $item->tgl_pengadaan }}</td>
-                                        <td>{{ number_format($item->harga, 0, ',', '.') }}</td>
-                                        <td>{{ $item->status_barang }}</td>
-                                        <td>{{ $item->nama_ruang }}</td>
-                                        <td>{{ $item->no_rak }}</td>
-                                        <td>{{ $item->no_box }}</td>
-                                        <td>{{ $item->nama_merk }}</td>
-                                        <td>{{ $item->thn_produksi }}</td>
-                                        <td>{{ $item->nama_kategori }}</td>
+                                        <th><input type="checkbox" id="selectAll"></th>
+                                        <th>No</th>
+                                        <th>Action</th>
+                                        <th>No. Inventaris</th>
+                                        <th>Kode Barang</th>
+                                        <th>Nama Barang</th>
+                                        <th>Asal Barang</th>
+                                        <th>Tanggal Pengadaan</th>
+                                        <th>Harga</th>
+                                        <th>Status Barang</th>
+                                        <th>Nama Ruang</th>
+                                        <th>No. Rak</th>
+                                        <th>No. Box</th>
+                                        <th>Merk</th>
+                                        <th>Tahun Produksi</th>
+                                        <th>Kategori</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($inventaris as $index => $item)
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="selected_items[]" value="{{ $item->no_inventaris }}">
+                                            </td>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>
+                                                <a href="{{ route('inventaris.cetakQrBarang', str_replace('/', '|', $item->no_inventaris)) }}" class="btn btn-info btn-sm" target="_blank">Print</a>
+                                                <a href="{{ route('inventaris.edit', str_replace('/', '|', $item->no_inventaris)) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                                                {{-- Form Delete Dipindah ke Luar Form Utama --}}
+                                                <form action="{{ route('inventaris.destroy', str_replace('/', '|', $item->no_inventaris)) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </td>
+                                            <td>{{ $item->no_inventaris }}</td>
+                                            <td>{{ $item->kode_barang }}</td>
+                                            <td>{{ $item->nama_barang }}</td>
+                                            <td>{{ $item->asal_barang }}</td>
+                                            <td>{{ $item->tgl_pengadaan }}</td>
+                                            <td>{{ number_format($item->harga, 0, ',', '.') }}</td>
+                                            <td>{{ $item->status_barang }}</td>
+                                            <td>{{ $item->nama_ruang }}</td>
+                                            <td>{{ $item->no_rak }}</td>
+                                            <td>{{ $item->no_box }}</td>
+                                            <td>{{ $item->nama_merk }}</td>
+                                            <td>{{ $item->thn_produksi }}</td>
+                                            <td>{{ $item->nama_kategori }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </form>
+
                     </div>
                 </div>
             </div>
@@ -91,4 +104,12 @@
     }
 </script>
 
+@endsection
+@section('js')
+<script>
+    document.getElementById('selectAll').addEventListener('change', function (e) {
+        let checkboxes = document.querySelectorAll('input[name="selected_items[]"]');
+        checkboxes.forEach(cb => cb.checked = e.target.checked);
+    });
+</script>
 @endsection

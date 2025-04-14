@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>E-SDI RSIA Nganjuk</title>
+  <title>E-MARSIA Nganjuk</title>
   <link rel="shortcut icon" href="{{ url('/logo.png') }}" />
   <link rel="stylesheet" href="{{ url('src/assets/css/styles.min.css') }}" />
   <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap5.css">
@@ -33,9 +33,9 @@
           border-radius: 5px;
       }
   </style>
+  @yield('css')
 
 </head>
-@yield('css')
 <body>
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -173,7 +173,8 @@
       // Initialize Select2 for multiple elements
       const select2Elements = [
         '.select2-profesi', '.select2-pendidikan', '.select2-jabatan',
-        '.select2-keluarga', '.select2-status', '.select2-golongan', '.select2-form'
+        '.select2-keluarga', '.select2-status', '.select2-golongan', '.select2-form', 
+        '.select2-barang', '.select2-ruang'
       ];
       select2Elements.forEach(selector => {
         $(selector).select2({
@@ -258,6 +259,5 @@
       });
     });
   </script>
-</body>
-
+</body>  
 </html>

@@ -6,7 +6,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Check Data Inventaris Ruangan</h4>
+                    <h4 class="card-title">Check Data Inventaris Ruangan/ Barang</h4>
                     <p class="card-description">
                         @if (session('success'))
                             <div class="alert alert-success">
@@ -21,7 +21,13 @@
 
                     {{-- Data hasil pencarian --}}
                     <div id="data-barang" class="table-responsive pt-3">
-                        @if(isset($datas))
+                        @if ($message)
+                            <div class="alert alert-danger">
+                                {{ $message }}
+                            </div>
+                        @endif
+
+                        @if (isset($datas))
                             <table class="table table-striped" id="dataTable">
                                 <thead>
                                     <tr>
@@ -45,11 +51,11 @@
                                 <tbody>
                                     @foreach ($datas as $index => $item)
                                         <tr>
-                                            <td>{{ $index + 1 }}</td>                                        
+                                            <td>{{ $index + 1 }}</td>
                                             <td>
                                                 <a href="{{ route('inventaris.cetakQrBarang', str_replace('/', '|', $item->no_inventaris)) }}" class="btn btn-info btn-sm" target="_blank">Print</a>
-                                                <!-- <a href="{{ route('inventaris.edit', str_replace('/', '|', $item->no_inventaris)) }}) }}" class="btn btn-warning btn-sm">Edit</a> -->
-                                                <form action="{{ route('inventaris.destroy', str_replace('/', '|', $item->no_inventaris)) }}) }}" method="POST" style="display:inline;">
+                                                <a href="{{ route('inventaris.edit', str_replace('/', '|', $item->no_inventaris)) }}" class="btn btn-warning btn-sm">Edit</a>
+                                                <form action="{{ route('inventaris.destroy', str_replace('/', '|', $item->no_inventaris)) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
@@ -72,6 +78,10 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        @else
+                            <div class="alert alert-warning">
+                                Tidak ada data yang ditemukan.
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -87,7 +97,7 @@
         document.getElementById('scan-result').innerText = `Hasil Scan: ${decodedText}`;
 
         // Redirect ke halaman ini dengan parameter hasil scan
-        window.location.href = `{{ url('inventaris/indexChecker') }}?id_ruang=${encodeURIComponent(decodedText)}`;
+        window.location.href = `{{ url('inventaris/indexChecker') }}?kodeQrCode=${encodeURIComponent(decodedText)}`;
     }
 
     const html5QrcodeScanner = new Html5QrcodeScanner(
