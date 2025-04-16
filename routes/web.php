@@ -30,7 +30,7 @@ use App\Http\Controllers\Setting\RoleController;
 use App\Http\Controllers\Setting\UserController;
 use App\Http\Controllers\Setting\WebSettingController;
 
-Route::view('/', 'indexs');
+Route::view('/', 'indexs')->name('indexs');
 
 // Route::get('adminlogin', [AdminAuthController::class, 'adminlogin'])->name('adminlogin');
 Route::post('actionlogin', [AdminAuthController::class, 'actionlogin'])->name('actionlogin');
@@ -102,6 +102,7 @@ Route::middleware(['auth', 'dynamic.role'])->group(function () {
     Route::get('keuangan/slip_gaji/send/{id}/{bulan}/{tahun}', [SlipGajiController::class, 'SendSlip'])->name('slip_gaji.SendSlip');
 
     //inventaris
+    Route::post('inventaris/storeSign', [\App\Http\Controllers\Inventaris\InventarisController::class, 'storeSign'])->name('inventaris.storeSign');
     Route::resource('inventaris/inventaris', \App\Http\Controllers\Inventaris\InventarisController::class);
     Route::get('inventaris/indexChecker', [\App\Http\Controllers\Inventaris\InventarisController::class, 'indexChecker'])->name('inventaris.indexChecker');
     Route::get('inventaris/cetakQrBarang/{id}', [\App\Http\Controllers\Inventaris\InventarisController::class, 'cetakQrBarang'])->name('inventaris.cetakQrBarang');

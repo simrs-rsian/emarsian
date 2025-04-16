@@ -9,6 +9,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\Setting\WebSetting as SettingWeb;
+use Illuminate\Support\Carbon;
 
 class InventarisController extends Controller
 {
@@ -20,7 +21,29 @@ class InventarisController extends Controller
     public function show($id){
         $ruangs = DB::connection('mysql2')->table('inventaris_ruang')->where('id_ruang', $id)->first();
         $inventaris  = DB::connection('mysql2')->table('v_kartuinventaris')->where('id_ruang', $id)->get();
-        return view('inventaris/show', compact('inventaris', 'ruangs'));
+
+        $ttd_pj = DB::connection('mysql2')->table('inventaris_sign')->where('id_ruang', $id)->first();
+
+        $QrKasubagRt = null;
+        $QrKasubagLu = null;
+
+        if ($ttd_pj) {
+            $kataKasubagRt = "Dikeluarkan di RSI Aisyiyah Nganjuk, Kabupaten/Kota Nganjuk\n 
+                    Ruangan     : ".$ruangs->nama_ruang."\n
+                    Mengetahui Bahwa dengan benar barang tersebut berada dalam ruangan tersebut; \n 
+                    Ditandatangani secara elektronik oleh Nita Melina W (Kasubag RT) pada tanggal ".$ttd_pj->tanggal_sign.". \n 
+                    di RSI 'Aisyiyah Nganjuk";    
+                
+            $QrKasubagRt = QrCode::generate($kataKasubagRt);
+            $kataKasubagLu = "Dikeluarkan di RSI Aisyiyah Nganjuk, Kabupaten/Kota Nganjuk\n 
+                    Ruangan     : ".$ruangs->nama_ruang."\n
+                    Mengetahui Bahwa dengan benar barang tersebut berada dalam ruangan tersebut; \n 
+                    Ditandatangani secara elektronik oleh Mulia Annisa W (Kasubag Logistik Umum) pada tanggal ".$ttd_pj->tanggal_sign.". \n 
+                    di RSI 'Aisyiyah Nganjuk"; 
+                
+            $QrKasubagLu = QrCode::generate($kataKasubagLu);
+        }
+        return view('inventaris/show', compact('inventaris', 'ruangs', 'ttd_pj', 'QrKasubagRt', 'QrKasubagLu'));
     }
 
     public function edit($id){
@@ -212,8 +235,35 @@ class InventarisController extends Controller
         if ($datas->isEmpty()) {
             $message = "Data tidak ditemukan untuk ID: $id";
         }
+        $ruangs = DB::connection('mysql2')->table('inventaris_ruang')->where('id_ruang', $id)->first();
 
-        return view('inventaris.indexChecker', compact('datas', 'message'));
+        $ttd_pj = DB::connection('mysql2')->table('inventaris_sign')->where('id_ruang', $id)->first();
+        $QrKasubagRt = null;
+        $QrKasubagLu = null;
+
+        if (!$ttd_pj) {
+            $message = "Data tanda tangan tidak ditemukan untuk ID: $id";
+        } elseif ($ruangs) {
+            $kataKasubagRt = "Dikeluarkan di RSI Aisyiyah Nganjuk, Kabupaten/Kota Nganjuk\n 
+                Ruangan     : " . $ruangs->nama_ruang . "\n
+                Mengetahui Bahwa dengan benar barang tersebut berada dalam ruangan tersebut; \n 
+                Ditandatangani secara elektronik oleh Nita Melina W (Kasubag RT) pada tanggal " . $ttd_pj->tanggal_sign . ". \n 
+                di RSI 'Aisyiyah Nganjuk";
+
+            $QrKasubagRt = QrCode::generate($kataKasubagRt);
+
+            $kataKasubagLu = "Dikeluarkan di RSI Aisyiyah Nganjuk, Kabupaten/Kota Nganjuk\n 
+                Ruangan     : " . $ruangs->nama_ruang . "\n
+                Mengetahui Bahwa dengan benar barang tersebut berada dalam ruangan tersebut; \n 
+                Ditandatangani secara elektronik oleh Mulia Annisa W (Kasubag Logistik Umum) pada tanggal " . $ttd_pj->tanggal_sign . ". \n 
+                di RSI 'Aisyiyah Nganjuk";
+
+            $QrKasubagLu = QrCode::generate($kataKasubagLu);
+        } else {
+            $message = "Data ruangan tidak ditemukan untuk ID: $id";
+        }
+
+        return view('inventaris.indexChecker', compact('datas', 'message', 'ruangs', 'ttd_pj', 'QrKasubagRt', 'QrKasubagLu', 'id'));
     }
 
 
@@ -221,5 +271,75 @@ class InventarisController extends Controller
         $ruangs = DB::connection('mysql2')->table('inventaris_ruang')->where('id_ruang', $id)->first();
         $inventaris  = DB::connection('mysql2')->table('v_kartuinventaris')->where('id_ruang', $id)->get();
         return view('inventaris/showChecker', compact('inventaris', 'ruangs'));
+    }
+
+    public function storeSign(Request $request){
+
+        $data = $request->input('signature');
+        $noRuang = $request->input('no_ruang');
+        $nmSign = $request->input('nama_sign');        
+
+        if (strpos($data, 'data:image/png;base64,') !== 0) {
+            return response()->json(['success' => false, 'message' => 'Format gambar tidak valid.'], 400);
+        }
+
+        $data = str_replace('data:image/png;base64,', '', $data);
+
+        if (!base64_decode($data, true)) {
+            return response()->json(['success' => false, 'message' => 'Data base64 tidak valid.'], 400);
+        }
+
+        $fileName = 'signature-' . str_replace('/', '_', $noRuang) . '-' . time() . '.png';  
+        $filePath = public_path('dokumen/signature/inventaris/') . $fileName;
+        
+        if (!file_exists(public_path('dokumen/signature/inventaris/'))) {
+            if (!mkdir(public_path('dokumen/signature/inventaris/'), 0777, true)) {
+            return response()->json(['success' => false, 'message' => 'Gagal membuat direktori untuk menyimpan tanda tangan.'], 500);
+            }
+        }
+
+        // Decode data base64 dan simpan ke file
+        if (file_put_contents($filePath, base64_decode($data)) === false) {
+            return response()->json(['success' => false, 'message' => 'Gagal menyimpan file tanda tangan.'], 500);
+        }
+
+        // Cek apakah sudah ada tanda tangan untuk ruang ini
+        $existingSign = DB::connection('mysql2')->table('inventaris_sign')->where('id_ruang', $noRuang)->first();
+
+        if ($existingSign) {
+            // Hapus file tanda tangan lama jika ada
+            $oldFilePath = public_path('dokumen/signature/inventaris/') . $existingSign->signature;
+            if (file_exists($oldFilePath)) {
+            if (!unlink($oldFilePath)) {
+                return response()->json(['success' => false, 'message' => 'Gagal menghapus file tanda tangan lama.'], 500);
+            }
+            }
+
+            // Update tanda tangan jika sudah ada
+            $updated = DB::connection('mysql2')->table('inventaris_sign')->where('id_ruang', $noRuang)->update([
+            'nama_sign' => $nmSign,
+            'signature' => $fileName,
+            'tanggal_sign' => Carbon::now(),
+            ]);
+
+            if (!$updated) {
+            return response()->json(['success' => false, 'message' => 'Gagal memperbarui data tanda tangan di database.'], 500);
+            }
+        } else {
+            // Simpan data baru jika belum ada
+            $inserted = DB::connection('mysql2')->table('inventaris_sign')->insert([
+            'id_ruang' => $noRuang,
+            'nama_sign' => $nmSign,
+            'signature' => $fileName,
+            'tanggal_sign' => Carbon::now(),
+            ]);
+
+            if (!$inserted) {
+            return response()->json(['success' => false, 'message' => 'Gagal menyimpan data ke database.'], 500);
+            }
+        }
+        
+        // Jika semua berhasil
+        return response()->json(['success' => true, 'file' => $fileName]);
     }
 }
