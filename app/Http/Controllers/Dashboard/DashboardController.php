@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     public function index() {
+        $sessionRole = session('role');
         $data = User::latest()->paginate();
 
         $tetapCount = DB::table('employees')
@@ -91,7 +92,7 @@ class DashboardController extends Controller
             ->groupBy('u.nama_kelompok')
             ->get();
 
-        return view('dashboard/dashboard', compact('data','unitsCount','unitsJkCount','golonganCount','statusKaryawanCount','bagians', 'totalKaryawanKeseluruhan', 'kelompokUmurCount', 'tetapCount', 'kontrakCount', 'allCount'));
+        return view('dashboard/dashboard', compact('data','unitsCount','unitsJkCount','golonganCount','statusKaryawanCount','bagians', 'totalKaryawanKeseluruhan', 'kelompokUmurCount', 'tetapCount', 'kontrakCount', 'allCount', 'sessionRole'));
         // return view('dashboard');
     }
 }
