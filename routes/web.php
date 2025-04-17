@@ -32,13 +32,12 @@ use App\Http\Controllers\Setting\WebSettingController;
 
 Route::view('/', 'indexs')->name('indexs');
 
-// Route::get('adminlogin', [AdminAuthController::class, 'adminlogin'])->name('adminlogin');
 Route::post('actionlogin', [AdminAuthController::class, 'actionlogin'])->name('actionlogin');
-// Route::post('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->name('employeelogin');
 Route::post('actionloginemployee', [EmployeeAuthController::class, 'actionloginemployee'])->name('actionloginemployee');
+Route::get('/logout/admin', [AdminAuthController::class, 'logoutAdmin'])->name('logoutAdmin');
 Route::get('/keuangan/slip_gaji/slip-gaji-karyawan', [SlipGajiController::class, 'slipGajiKaryawan']);
 
-Route::prefix('navmenu')->middleware(['auth', 'dynamic.role'])->name('navmenu.')->group(function () {
+Route::prefix('navmenu')->middleware(['auth.check:admin', 'dynamic.role'])->name('navmenu.')->group(function () {
     Route::get('indexmenu', [NavmenuController::class, 'indexmenu'])->name('indexmenu');
     Route::get('data/', [NavmenuController::class, 'index'])->name('index');
     Route::post('update/', [NavmenuController::class, 'update'])->name('update');    
@@ -48,9 +47,9 @@ Route::prefix('navmenu')->middleware(['auth', 'dynamic.role'])->name('navmenu.')
     Route::post('/update-hakakses', [NavmenuController::class, 'updateHakakses']);
 });
 
-Route::middleware(['auth', 'dynamic.role'])->group(function () {
+Route::middleware(['auth.check:admin', 'dynamic.role'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('actionlogout', [AdminAuthController::class, 'actionlogout'])->name('actionlogout');
+    // Route::get('actionlogout', [AdminAuthController::class, 'actionlogout'])->name('actionlogout');
     //setting Web
     Route::resource('setting/websetting', WebSettingController::class);
 
@@ -115,8 +114,9 @@ Route::middleware(['auth', 'dynamic.role'])->group(function () {
 Route::get('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->name('employeelogin');
 Route::post('actionloginemployee', [EmployeeAuthController::class, 'actionloginemployee'])->name('actionloginemployee');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth.check:pegawai'])->group(function () {
 
     Route::get('dashboardEmployee', [DashboardEmployeeController::class, 'index'])->name('dashboardEmployee');
-    Route::get('actionlogout', [EmployeeAuthController::class, 'actionlogout'])->name('actionlogout');
+    // Route::get('actionlogout', [EmployeeAuthController::class, 'actionlogout'])->name('actionlogout');
 });
+Route::get('/logout/pegawai', [EmployeeAuthController::class, 'logoutPegawai'])->name('logoutPegawai');

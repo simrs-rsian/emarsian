@@ -48,8 +48,11 @@ class AdminAuthController extends Controller
     }
     
 
-    public function actionlogout() {
-        Auth::logout();
+    public function logoutAdmin(Request $request)
+    {
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/');
     }
 }

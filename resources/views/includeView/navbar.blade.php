@@ -128,7 +128,7 @@
         @endforeach
         <ul>
             <li class="sidebar-item">
-                <a href="{{ route('actionlogout') }}" class="sidebar-link primary-hover-bg">
+                <a href="{{ route('logoutAdmin') }}" class="sidebar-link primary-hover-bg">
                     <span class="aside-icon p-2 me-2 bg-light-danger rounded-3">
                         <i class="ti ti-login fs-7 text-danger"></i>
                     </span>

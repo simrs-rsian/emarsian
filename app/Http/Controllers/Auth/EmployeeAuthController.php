@@ -19,38 +19,35 @@ class EmployeeAuthController extends Controller
         }
     }
 
-    public function actionloginemployee(Request $request){
+    public function actionloginemployee(Request $request)
+    {
         $nip_karyawan = $request->input('username');
-        $password = md5($request->input('password')); // Mengenkripsi password menggunakan md5
+        $password = md5($request->input('password')); // MD5 hash
 
-        // dd  ($nip_karyawan, $password);
-    
-        // Periksa apakah username ditemukan di database
         $employee = Employee::where('nip_karyawan', $nip_karyawan)->first();
 
-        if ($employee) {
-            // Periksa apakah password cocok
-            if ($employee->password === $password) {
-                // Autentikasi berhasil, login pengguna
-                Auth::login($employee);
+        if ($employee && $employee->password === $password) {
+            // Login menggunakan guard pegawai
+            Auth::guard('pegawai')->login($employee);
 
-                // Set session data jika diperlukan
-                session(['id' => $employee->id]);
-                session(['nip_pegawai' => $employee->username]);
-                session(['nama_lengkap' => $employee->nama_lengkap]);
+            // Set session jika diperlukan
+            session([
+                'id' => $employee->id,
+                'nip_pegawai' => $employee->nip_karyawan,
+                'nama_lengkap' => $employee->nama_lengkap,
+            ]);
 
-                return redirect('dashboardEmployee');
-            }
+            return redirect('dashboardEmployee');
         }
-    
-        // Autentikasi gagal, tampilkan pesan kesalahan
+
+        // Jika gagal
         Session::flash('error', 'Username atau Password Salah');
         return redirect('/');
     }
     
 
-    public function actionlogout() {
-        Auth::logout();
+    public function logoutPegawai() {
+        Auth::guard('pegawai')->logout();
         return redirect('/');
     }
 }

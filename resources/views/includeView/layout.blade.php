@@ -54,7 +54,7 @@
         </div>
         <!-- Sidebar navigation-->
         <!-- Sidebar navigation-->
-        @if(session()->has('user_id'))
+        @if(isset($sessionRole))
             @include('includeView.navbar')
         @else
             @include('includeView.navbaremployee')

@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // Middleware lainnya
         'dynamic.role' => \App\Http\Middleware\DynamicRoleAccess::class,
+        'auth.check' => \App\Http\Middleware\CheckAuthType::class,
     ];
     
 }
