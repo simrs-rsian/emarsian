@@ -13,17 +13,17 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('pegawai.profile') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-article fs-7 text-warning"></i>
+            <a class="sidebar-link sidebar-link success-hover-bg" href="{{ route('pegawai.profile') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-success rounded-3">
+                    <i class="ti ti-user-circle fs-7 text-success"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Data Saya</span>
             </a>
         </li>
         <li class="sidebar-item has-sub {{ request()->is('pegawai/riwayat*') ? 'active' : '' }}">
             <a href="#" class="sidebar-link toggle-menu" data-menu-target="menu-riwayat">
-            <span class="aside-icon p-2 bg-light-warning rounded-3">
-                <i class="ti ti-article fs-7 text-warning"></i>
+            <span class="aside-icon p-2 bg-light-success rounded-3">
+                <i class="ti ti-history fs-7 text-success"></i>
             </span>
             <span class="hide-menu ms-2 ps-1">Data Riwayat</span>
             <i class="ti ti-chevron-down float-end"></i>
@@ -92,8 +92,8 @@
 
         <li class="sidebar-item has-sub {{ request()->is('pegawai/presensi*') ? 'active' : '' }}">
             <a href="#" class="sidebar-link toggle-menu" data-menu-target="menu-presensi">
-            <span class="aside-icon p-2 bg-light-warning rounded-3">
-            <i class="ti ti-article fs-7 text-warning"></i>
+            <span class="aside-icon p-2 bg-light-success rounded-3">
+            <i class="ti ti-clock fs-7 text-success"></i>
             </span>
             <span class="hide-menu ms-2 ps-1">Data Presensi</span>
             <i class="ti ti-chevron-down float-end"></i>
@@ -101,7 +101,7 @@
             <div id="menu-presensi" class="submenu collapse {{ request()->is('pegawai/presensi*') ? 'show' : '' }}">
             <ul class="nav flex-column sub-menu">
             <li class="nav-item ms-3 {{ request()->is('pegawai/presensi') ? 'active' : '' }}">
-            <a href="{{ route('pegawai.presensi') }}" class="sidebar-link primary-hover-bg">
+            <a href="{{ route('feature.maintenance') }}" class="sidebar-link primary-hover-bg">
                 <span class="aside-icon p-2 me-2 bg-light-success rounded-3">
                 <i class="ti ti-menu fs-7 text-success"></i>
                 </span>
@@ -129,9 +129,9 @@
         </li>
 
         <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('pegawai.gaji') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-article fs-7 text-warning"></i>
+            <a class="sidebar-link sidebar-link success-hover-bg" href="{{ route('feature.maintenance') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-success rounded-3">
+                    <i class="ti ti-moneybag fs-7 text-success"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Data Gaji Saya</span>
             </a>
@@ -142,9 +142,9 @@
             <span class="hide-menu">Auth</span>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link sidebar-link warning-hover-bg" href="{{ route('logoutPegawai') }}" aria-expanded="false">
-                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                    <i class="ti ti-login fs-7 text-warning"></i>
+            <a class="sidebar-link sidebar-link danger-hover-bg" href="{{ route('logoutPegawai') }}" aria-expanded="false">
+                <span class="aside-icon p-2 bg-light-danger rounded-3">
+                    <i class="ti ti-login fs-7 text-danger"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Log Out</span>
             </a>

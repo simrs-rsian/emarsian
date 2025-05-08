@@ -116,7 +116,9 @@ Route::get('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->n
 Route::post('actionloginemployee', [EmployeeAuthController::class, 'actionloginemployee'])->name('actionloginemployee');
 
 Route::middleware(['auth.check:pegawai'])->group(function () {
-
+    Route::get('/fitur-tertentu', function () {
+        return view('maintenance');
+    })->name('feature.maintenance')->middleware('feature.maintenance');    
     Route::get('dashboardEmployee', [DashboardEmployeeController::class, 'index'])->name('dashboardEmployee');
     Route::get('pegawai/profile', [PegawaiController::class, 'profile'])->name('pegawai.profile');
     Route::get('pegawai/profile-edit', [PegawaiController::class, 'editProfile'])->name('pegawai.editProfile');
