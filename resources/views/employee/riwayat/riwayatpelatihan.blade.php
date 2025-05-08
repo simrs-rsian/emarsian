@@ -21,7 +21,7 @@
                 <tbody id="riwayatPelatihanTable">
                     @foreach($pelatihan as $key => $riwayatPelatihan)
                         <tr>
-                            <td>{{ $riwayatPelatihan->id }}</td>
+                            <td>{{ $key + 1 }}</td>
                             <td>{{ $riwayatPelatihan->nama_pelatihan }}</td>
                             <td>{{ $riwayatPelatihan->tanggal_mulai }}</td>
                             <td>{{ $riwayatPelatihan->tanggal_selesai }}</td>

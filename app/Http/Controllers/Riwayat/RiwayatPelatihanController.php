@@ -26,7 +26,7 @@ class RiwayatPelatihanController extends Controller
         if ($request->hasFile('dokumen')) {
             // Menyimpan gambar ke folder public/dokumen/dokumen_pelatihan
             $request->file('dokumen')->move(public_path('dokumen/dokumen_pelatihan'), $request->file('dokumen')->getClientOriginalName());
-            $employeeData['dokumen'] = 'dokumen/dokumen_pelatihan/' . $request->file('dokumen')->getClientOriginalName();
+            $data['dokumen'] = 'dokumen/dokumen_pelatihan/' . $request->file('dokumen')->getClientOriginalName();
         }
 
         RiwayatPelatihan::create($data);
@@ -64,8 +64,6 @@ class RiwayatPelatihanController extends Controller
             // Tambahkan path dokumen baru ke dalam array data
             $data['dokumen'] = 'dokumen/dokumen_pelatihan/' . $newFileName;
         }
-
-
         // Update data Riwayat Pelatihan dengan data yang telah diproses
         $riwayat->update($data);
 

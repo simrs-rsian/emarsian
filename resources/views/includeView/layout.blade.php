@@ -53,8 +53,7 @@
             </div>
         </div>
         <!-- Sidebar navigation-->
-        <!-- Sidebar navigation-->
-        @if(isset($sessionRole))
+        @if (session('navmenu') == 'admin')
             @include('includeView.navbar')
         @else
             @include('includeView.navbaremployee')

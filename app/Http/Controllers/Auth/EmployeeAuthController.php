@@ -35,6 +35,7 @@ class EmployeeAuthController extends Controller
                 'id' => $employee->id,
                 'nip_pegawai' => $employee->nip_karyawan,
                 'nama_lengkap' => $employee->nama_lengkap,
+                'navmenu' => 'pegawai',
             ]);
 
             return redirect('dashboardEmployee');

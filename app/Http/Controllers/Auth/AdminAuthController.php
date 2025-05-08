@@ -37,6 +37,7 @@ class AdminAuthController extends Controller
                 session(['user_name' => $user->username]);
                 session(['user_fullname' => $user->fullname]);
                 session(['role' => $user->role]);
+                session(['navmenu' => 'admin']);
 
                 return redirect('dashboard');
             }

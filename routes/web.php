@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\EmployeeAuthController;
 use App\Http\Controllers\Dashboard\DashboardEmployeeController;
+use App\Http\Controllers\Employee\PegawaiController;
 use App\Http\Controllers\Keuangan\DefaultGajiController;
 use App\Http\Controllers\Keuangan\SettingGajiController;
 use App\Http\Controllers\Keuangan\SlipGajiController;
@@ -117,6 +118,20 @@ Route::post('actionloginemployee', [EmployeeAuthController::class, 'actionlogine
 Route::middleware(['auth.check:pegawai'])->group(function () {
 
     Route::get('dashboardEmployee', [DashboardEmployeeController::class, 'index'])->name('dashboardEmployee');
+    Route::get('pegawai/profile', [PegawaiController::class, 'profile'])->name('pegawai.profile');
+    Route::get('pegawai/profile-edit', [PegawaiController::class, 'editProfile'])->name('pegawai.editProfile');
+    Route::get('pegawai/profile-update/{id}', [PegawaiController::class, 'updateProfile'])->name('pegawai.updateProfile');
+    Route::get('pegawai/riwayat_pendidikan', [PegawaiController::class, 'riwayatPendidikan'])->name('pegawai.riwayat_pendidikan');
+    Route::get('pegawai/riwayat_jabatan', [PegawaiController::class, 'riwayatJabatan'])->name('pegawai.riwayat_jabatan');
+    Route::get('pegawai/riwayat_keluarga', [PegawaiController::class, 'riwayatKeluarga'])->name('pegawai.riwayat_keluarga');
+    Route::get('pegawai/riwayat_sipp', [PegawaiController::class, 'riwayatSipp'])->name('pegawai.riwayat_sipp');
+    Route::get('pegawai/riwayat_kontrak', [PegawaiController::class, 'riwayatKontrak'])->name('pegawai.riwayat_kontrak');
+    Route::get('pegawai/riwayat_lain', [PegawaiController::class, 'riwayatLain'])->name('pegawai.riwayat_lain');
+    Route::get('pegawai/riwayat_pelatihan', [PegawaiController::class, 'riwayatPelatihan'])->name('pegawai.riwayat_pelatihan');
+    Route::get('pegawai/presensi', [PegawaiController::class, 'presensi'])->name('pegawai.presensi');
+    Route::get('pegawai/jadwal_presensi', [PegawaiController::class, 'jadwalPresensi'])->name('pegawai.jadwal_presensi');
+    Route::get('pegawai/riwayat_presensi', [PegawaiController::class, 'riwayatPresensi'])->name('pegawai.riwayat_presensi');
+    Route::get('pegawai/gaji', [PegawaiController::class, 'gaji'])->name('pegawai.gaji');
     // Route::get('actionlogout', [EmployeeAuthController::class, 'actionlogout'])->name('actionlogout');
 });
 Route::get('/logout/pegawai', [EmployeeAuthController::class, 'logoutPegawai'])->name('logoutPegawai');
