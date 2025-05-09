@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Riwayat\RiwayatJabatan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File; 
 
 class RiwayatJabatanController extends Controller
 {    
@@ -22,8 +23,9 @@ class RiwayatJabatanController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('dokumen')) {
-            $dokumenPath = $request->file('dokumen')->store('dokumen/dokumen_jabatan', 'public');
-            $data['dokumen'] = $dokumenPath;
+            // Menyimpan gambar ke folder public/dokumen/dokumen_jabatan
+            $request->file('dokumen')->move(public_path('dokumen/dokumen_jabatan'), $request->file('dokumen')->getClientOriginalName());
+            $data['dokumen'] = 'dokumen/dokumen_jabatan/' . $request->file('dokumen')->getClientOriginalName();
         }
 
         RiwayatJabatan::create($data);
@@ -42,26 +44,26 @@ class RiwayatJabatanController extends Controller
             'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'id_employee' => 'required|exists:employees,id', 
         ]);
-        // dd($request->all());
 
         $riwayat = RiwayatJabatan::findOrFail($id);
 
-        // Mengambil data kecuali dokumen (jika diupload akan ditangani terpisah)
-        $data = $request->all();
+        $data = $request->except(['dokumen']);
 
         // Proses file dokumen jika diupload
         if ($request->hasFile('dokumen')) {
             // Hapus dokumen lama jika ada
-            if ($riwayat->dokumen) {
-                Storage::disk('public')->delete($riwayat->dokumen);
+            if ($riwayat->dokumen && File::exists(public_path($riwayat->dokumen))) {
+                File::delete(public_path($riwayat->dokumen));
             }
-            
-            // Simpan dokumen baru
-            $dokumenPath = $request->file('dokumen')->store('dokumen/dokumen_jabatan', 'public');
-            $d['dokumen'] = $dokumenPath;
-        }
 
-        // Update data riwayat Jabatan dengan data yang telah diproses
+            // Menyimpan dokumen baru
+            $newFileName = $request->file('dokumen')->getClientOriginalName();
+            $request->file('dokumen')->move(public_path('dokumen/dokumen_jabatan'), $newFileName);
+
+            // Tambahkan path dokumen baru ke dalam array data
+            $data['dokumen'] = 'dokumen/dokumen_jabatan/' . $newFileName;
+        }
+        // Update data Riwayat Pelatihan dengan data yang telah diproses
         $riwayat->update($data);
 
         // Kembali ke halaman sebelumnya dengan pesan sukses

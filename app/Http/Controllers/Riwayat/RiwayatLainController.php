@@ -22,19 +22,10 @@ class RiwayatLainController extends Controller
 
         $data = $request->all();
 
-        
-
-        // Cek jika dokumen diunggah
         if ($request->hasFile('dokumen')) {
-            // Tentukan path penyimpanan dokumen
-            $path = public_path('dokumen/dokumen_lain');
-            $fileName = time() . '_' . $request->file('dokumen')->getClientOriginalName();
-            
-            // Simpan file ke folder yang ditentukan
-            $request->file('dokumen')->move($path, $fileName);
-            
-            // Masukkan path dokumen ke array $data untuk disimpan di database
-            $data['dokumen'] = 'dokumen/dokumen_lain/' . $fileName;
+            // Menyimpan gambar ke folder public/dokumen/dokumen_lain
+            $request->file('dokumen')->move(public_path('dokumen/dokumen_lain'), $request->file('dokumen')->getClientOriginalName());
+            $data['dokumen'] = 'dokumen/dokumen_lain/' . $request->file('dokumen')->getClientOriginalName();
         }
 
         RiwayatLain::create($data);

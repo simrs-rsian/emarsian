@@ -27,15 +27,9 @@ class RiwayatSippController extends Controller
 
         // Cek jika dokumen diunggah
         if ($request->hasFile('dokumen')) {
-            // Tentukan path penyimpanan dokumen
-            $path = public_path('dokumen/dokumen_sipp');
-            $fileName = time() . '_' . $request->file('dokumen')->getClientOriginalName();
-            
-            // Simpan file ke folder yang ditentukan
-            $request->file('dokumen')->move($path, $fileName);
-            
-            // Masukkan path dokumen ke array $data untuk disimpan di database
-            $data['dokumen'] = 'dokumen/dokumen_sipp/' . $fileName;
+            // Menyimpan gambar ke folder public/dokumen/dokumen_jabatan
+            $request->file('dokumen')->move(public_path('dokumen/dokumen_sipp'), $request->file('dokumen')->getClientOriginalName());
+            $data['dokumen'] = 'dokumen/dokumen_sipp/' . $request->file('dokumen')->getClientOriginalName();
         }
 
         RiwayatSipp::create($data);

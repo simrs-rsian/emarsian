@@ -16,7 +16,7 @@ class RiwayatKontrakController extends Controller
         $request->validate([
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
@@ -24,17 +24,12 @@ class RiwayatKontrakController extends Controller
 
         
 
-        // Cek jika dokumen diunggah
+        $data = $request->all();
+
         if ($request->hasFile('dokumen')) {
-            // Tentukan path penyimpanan dokumen
-            $path = public_path('dokumen/dokumen_kontrak');
-            $fileName = time() . '_' . $request->file('dokumen')->getClientOriginalName();
-            
-            // Simpan file ke folder yang ditentukan
-            $request->file('dokumen')->move($path, $fileName);
-            
-            // Masukkan path dokumen ke array $data untuk disimpan di database
-            $data['dokumen'] = 'dokumen/dokumen_kontrak/' . $fileName;
+            // Menyimpan gambar ke folder public/dokumen/dokumen_kontrak
+            $request->file('dokumen')->move(public_path('dokumen/dokumen_kontrak'), $request->file('dokumen')->getClientOriginalName());
+            $data['dokumen'] = 'dokumen/dokumen_kontrak/' . $request->file('dokumen')->getClientOriginalName();
         }
 
         RiwayatKontrak::create($data);
@@ -49,6 +44,7 @@ class RiwayatKontrakController extends Controller
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date',
             'id_employee' => 'required|exists:employees,id',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
         ]);
 
         $riwayat = RiwayatKontrak::findOrFail($id);
