@@ -182,36 +182,71 @@
                 <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-primary">Edit Data</a> &nbsp;&nbsp;
                 <a href="#" onclick="goBackToTable()" class="btn btn-light">Batal</a>
             </div>
-
-<!-- ===================================================================================================++++++++++++++++ -->
-            <!-- Riwayat Pendidikan -->
-            @include('employee.riwayat.riwayatpendidikan')
-            
-<!-- ===================================================================================================++++++++++++++++ -->
-            <!-- Riwayat Seminar/Pelatihan -->
-            @include('employee.riwayat.riwayatpelatihan')
-
-<!-- ===================================================================================================++++++++++++++++ -->
-            <!-- Riwayat Jabatan -->
-            @include('employee.riwayat.riwayatjabatan')
-            
-<!-- ===================================================================================================++++++++++++++++ -->
-            <!-- Riwayat Keluarga -->
-            @include('employee.riwayat.riwayatkeluarga')
-            
-<!-- ===================================================================================================++++++++++++++++ -->
-            <!-- Riwayat Sipp -->
-            @include('employee.riwayat.riwayatsipp')
-
-<!-- ===================================================================================================++++++++++++++++ -->
-            <!-- Riwayat Kontrak -->
-            @include('employee.riwayat.riwayatkontrak')
-            
-<!-- ===================================================================================================++++++++++++++++ -->
-            <!-- Riwayat Lainnya -->
-            @include('employee.riwayat.riwayatlain')
-            
-
+        </div>
+        <!-- End of card-body -->
+        <div class="card-body">
+            <h4 class="card-title">Detail Data Karyawan</h4>
+            <div class="table-responsive mt-4">
+                <table class="table">
+                    <tr>
+                        <td>Riwayat Pendidikan <br><b>Total Data : {{ $count_pendidikan }} Data</b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_pendidikan.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
+                        <td>Riwayat Diklat dan Pelatihan <br><b>Total Data : {{ $count_pelatihan }} Data</b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_pelatihan.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>Riwayat Jabatan <br><b>Total Data : {{ $count_jabatan }} Data</b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_jabatan.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
+                        <td>Riwayat Keluarga <br><b>Total Data : {{ $count_keluarga }} Data </b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_keluarga.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Riwayat SIP <br><b>Total Data : {{ $count_sipp }} Data </b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_sipp.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
+                        <td>Riwayat Kontrak <br><b>Total Data : {{ $count_kontrak }} Data </b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_kontrak.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Riwayat Lain-Lain <br><b>Total Data : {{ $count_lain }} Data </b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_lain.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>

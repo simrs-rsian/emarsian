@@ -7,47 +7,61 @@ use Illuminate\Http\Request;
 use App\Models\Riwayat\RiwayatKontrak;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\Models\Employee\Employee;
 
 class RiwayatKontrakController extends Controller
 {    
+    public function show(Request $request, $riwayat_kontrak)
+    {        
+        $id_employee = $riwayat_kontrak;
+        $RiwayatKontraks = RiwayatKontrak::leftjoin('employees', 'riwayat_kontraks.id_employee', '=', 'employees.id')
+            ->select('riwayat_kontraks.*', 'employees.nama_lengkap', 'employees.nip_karyawan')
+            ->where('riwayat_kontraks.id_employee', $id_employee)
+            ->get();
+        $employee = Employee::find($id_employee);
+        return view('riwayat.kontrak.show', compact('RiwayatKontraks', 'employee'));
+    }
     
     public function store(Request $request)
     {
         $request->validate([
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
         $data = $request->all();
 
-        
-
-        $data = $request->all();
-
         if ($request->hasFile('dokumen')) {
-            // Menyimpan gambar ke folder public/dokumen/dokumen_kontrak
-            $request->file('dokumen')->move(public_path('dokumen/dokumen_kontrak'), $request->file('dokumen')->getClientOriginalName());
-            $data['dokumen'] = 'dokumen/dokumen_kontrak/' . $request->file('dokumen')->getClientOriginalName();
+            $file = $request->file('dokumen');
+            $filename = time() . '_' . $file->getClientOriginalName(); // Nama file unik agar tidak bentrok
+            $file->move(public_path('dokumen/dokumen_kontrak'), $filename);
+            $data['dokumen'] = 'dokumen/dokumen_kontrak/' . $filename;
         }
 
         RiwayatKontrak::create($data);
 
         // Menggunakan session flash message dan redirect ke halaman sebelumnya
-        return back()->with('success', 'Riwayat Kontrak berhasil ditambahkan.');
+        return redirect()->route('riwayat_kontrak.show', ['riwayat_kontrak' => $request->id_employee])->with('success', 'Riwayat Kontrak berhasil ditambahkan.');
+    }
+
+    public function edit($id)
+    {
+        $riwayat = RiwayatKontrak::findOrFail($id);
+        $employee = Employee::find($riwayat->id_employee);
+        return view('riwayat.kontrak.edit', compact('riwayat', 'employee'));
     }
     
     public function update(Request $request, $id)
     {
+        $riwayat = RiwayatKontrak::findOrFail($id);
+
         $request->validate([
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date',
-            'id_employee' => 'required|exists:employees,id',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
         ]);
-
-        $riwayat = RiwayatKontrak::findOrFail($id);
 
         // Mengambil data kecuali dokumen
         $data = $request->except(['dokumen']);
@@ -72,7 +86,7 @@ class RiwayatKontrakController extends Controller
         $riwayat->update($data);
 
         // Kembali ke halaman sebelumnya dengan pesan sukses
-        return back()->with('success', 'Riwayat Kontrak berhasil diperbarui.');
+        return redirect()->route('riwayat_kontrak.show', ['riwayat_kontrak' => $riwayat->id_employee])->with('success', 'Riwayat Kontrak berhasil diperbarui.');
     }
 
     public function destroy(RiwayatKontrak $RiwayatKontrak)

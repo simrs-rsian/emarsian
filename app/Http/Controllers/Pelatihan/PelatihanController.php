@@ -8,6 +8,8 @@ use App\Models\Pelatihan\Pelatihan;
 use App\Models\Pelatihan\JenisPelatihan;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Models\Employee\Employee;
+use Illuminate\Support\Facades\File;
 
 class PelatihanController extends Controller
 {
@@ -17,7 +19,28 @@ class PelatihanController extends Controller
                             ->join('jenis_pelatihans', 'pelatihans.jenis_pelatihan_id', 'jenis_pelatihans.id')
                             ->get();
         $jenispelatihans = JenisPelatihan::all();
-        return view('pelatihan.pelatihan', compact('pelatihans', 'jenispelatihans'));
+        return view('pelatihan.index', compact('pelatihans', 'jenispelatihans'));
+    }    
+
+    public function show($id) {
+        $pelatihans = DB::table('pelatihans as a')
+            ->leftJoin('jenis_pelatihans as b', 'a.jenis_pelatihan_id', '=', 'b.id')
+            ->select('a.*', 'b.nama_jenis')
+            ->where('a.id',$id)
+            ->first();  // Ambil satu data atau fail
+
+        $pesertaPelatihans = DB::table('riwayat_pelatihans as a')
+            ->leftJoin('pelatihans as b', 'a.id_pelatihan', '=', 'b.id')
+            ->leftJoin('employees as c', 'a.id_employee', '=', 'c.id')
+            ->leftJoin('jenis_pelatihans as d', 'b.jenis_pelatihan_id', '=', 'd.id')
+            ->leftJoin('units as e', 'c.jabatan_struktural', '=', 'e.id')
+            ->select('a.id as id_riwayat','b.id as id_pelatihan','b.poin','d.nama_jenis', 'c.*','e.nama_unit')
+            ->where('b.id',$id)
+            ->get();
+
+        $employees = Employee::all();
+        
+        return view('pelatihan.directview', compact('pelatihans', 'employees','pesertaPelatihans'));
     }
 
     public function store(Request $request)
@@ -116,6 +139,39 @@ class PelatihanController extends Controller
         $jumlahPegawai = count($pegawai); // Hitung jumlah pegawai
     
         return view('pelatihan.report', compact('pegawai', 'dataPelatihan', 'pegawaiData', 'tahun', 'totalPoin', 'totalPencapaian', 'jumlahPegawai'));
+    }
+
+    public function directstore(Request $request)
+    {
+        // Validasi data
+        $request->validate([
+            'id_pelatihan' => 'required|exists:pelatihans,id',
+            'id_employee' => 'required|array', // pastikan input berupa array
+            'id_employee.*' => 'exists:employees,id' // validasi setiap item di array ada di tabel employees
+        ]);
+
+        $idPelatihan = $request->input('id_pelatihan');
+        $employeeIds = $request->input('id_employee');
+
+        // Loop melalui setiap employee ID dan periksa duplikasi
+        foreach ($employeeIds as $employeeId) {
+            $exists = DB::table('riwayat_pelatihans')
+                ->where('id_pelatihan', $idPelatihan)
+                ->where('id_employee', $employeeId)
+                ->exists();
+
+            // Jika tidak ada duplikasi, insert data ke riwayat_pelatihans
+            if (!$exists) {
+                DB::table('riwayat_pelatihans')->insert([
+                    'id_pelatihan' => $idPelatihan,
+                    'id_employee' => $employeeId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Data Pegawai berhasil ditambahkan.');
     }
     
 }

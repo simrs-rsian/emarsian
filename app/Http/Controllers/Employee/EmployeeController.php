@@ -31,6 +31,8 @@ class EmployeeController extends Controller
                         ->join('units', 'employees.jabatan_struktural', 'units.id')
                         ->join('golongans', 'employees.golongan', 'golongans.id')
                         ->join('kelompok_umurs', 'employees.kelompok_usia', 'kelompok_umurs.id')
+                        ->orderBy('employees.nip_karyawan', 'desc')
+                        ->orderBy('employees.nama_lengkap', 'asc')
                         ->get();        
         return view('employee.index', compact('employees'));
     }
@@ -324,47 +326,35 @@ class EmployeeController extends Controller
                             ->join('kelompok_umurs', 'employees.kelompok_usia', '=', 'kelompok_umurs.id')
                             ->where('employees.id', $employee->id)  // Filter by the employee ID
                             ->firstOrFail();  // Ambil satu data atau fail
-        $pendidikan = DB::table('riwayat_pendidikans as p')
-                            ->leftJoin('employees as e', 'p.id_employee', '=', 'e.id')
-                            ->select('p.*')
-                            ->where('e.id', $employee->id)
-                            ->get();
-        $pelatihan = DB::table('riwayat_pelatihans as a')
-                            ->leftJoin('pelatihans as b', 'a.id_pelatihan', '=', 'b.id')
-                            ->leftJoin('employees as c', 'a.id_employee', '=', 'c.id')
-                            ->leftJoin('jenis_pelatihans as d', 'b.jenis_pelatihan_id', '=', 'd.id')
-                            ->select('a.*','b.*','d.nama_jenis')
-                            ->where('c.id', $employee->id)
-                            ->get();
-        $jabatan = DB::table('riwayat_jabatans as j')
-                            ->leftJoin('employees as e', 'j.id_employee', '=', 'e.id')
-                            ->select('j.*')
-                            ->where('e.id', $employee->id)
-                            ->get();
-        $keluarga = DB::table('riwayat_keluargas as k')
-                            ->leftJoin('employees as e', 'k.id_employee', '=', 'e.id')
-                            ->select('k.*')
-                            ->where('e.id', $employee->id)
-                            ->get();
-        $sipp = DB::table('riwayat_sipps as s')
-                            ->leftJoin('employees as e', 's.id_employee', '=', 'e.id')
-                            ->select('s.*')
-                            ->where('e.id', $employee->id)
-                            ->get();
-        $kontrak = DB::table('riwayat_kontraks as k')
-                            ->leftJoin('employees as e', 'k.id_employee', '=', 'e.id')
-                            ->select('k.*')
-                            ->where('e.id', $employee->id)
-                            ->get();
-        $lain = DB::table('riwayat_lains as l')
-                            ->leftJoin('employees as e', 'l.id_employee', '=', 'e.id')
-                            ->select('l.*')
-                            ->where('e.id', $employee->id)
-                            ->get();
-        
-        $pelatihans = Pelatihan::all();
+        $count_pendidikan = DB::table('riwayat_pendidikans as p')
+                    ->where('p.id_employee', $employee->id)
+                    ->count();
+
+        $count_pelatihan = DB::table('riwayat_pelatihans as a')
+                    ->where('a.id_employee', $employee->id)
+                    ->count();
+
+        $count_jabatan = DB::table('riwayat_jabatans as j')
+                    ->where('j.id_employee', $employee->id)
+                    ->count();
+
+        $count_keluarga = DB::table('riwayat_keluargas as k')
+                    ->where('k.id_employee', $employee->id)
+                    ->count();
+
+        $count_sipp = DB::table('riwayat_sipps as s')
+                    ->where('s.id_employee', $employee->id)
+                    ->count();
+
+        $count_kontrak = DB::table('riwayat_kontraks as k')
+                    ->where('k.id_employee', $employee->id)
+                    ->count();
+
+        $count_lain = DB::table('riwayat_lains as l')
+                    ->where('l.id_employee', $employee->id)
+                    ->count();
                             
-        return view('employee.show', compact('employee','pendidikan','pelatihan','jabatan','keluarga','sipp','kontrak','lain','pelatihans'));
+        return view('employee.show', compact('employee', 'count_pendidikan', 'count_pelatihan', 'count_jabatan', 'count_keluarga', 'count_sipp', 'count_kontrak', 'count_lain'));
     }
 
     public function updatePassword(Request $request, $id)

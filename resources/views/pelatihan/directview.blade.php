@@ -124,7 +124,7 @@
                 <h5 class="modal-title" id="createPesertaPelatihanModalLabel">Tambah Data Peserta {{ $pelatihans->nama_pelatihan }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('riwayat_pelatihan.directstore') }}" method="POST" id="unitForm">
+            <form action="{{ route('pelatihan.directstore') }}" method="POST" id="unitForm">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">

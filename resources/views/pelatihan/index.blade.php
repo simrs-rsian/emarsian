@@ -40,7 +40,7 @@
                                         <td>{{ $pelatihan->poin }}</td>
                                         <td>{{ $pelatihan->nama_jenis }}</td>
                                         <td>
-                                            <a href="{{ route('riwayat_pelatihan.show', $pelatihan->id) }}" class="btn btn-success btn-sm">Input Peserta</a>
+                                            <a href="{{ route('pelatihan.show', $pelatihan->id) }}" class="btn btn-success btn-sm">Input Peserta</a>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPelatihanModal{{ $pelatihan->id }}">

@@ -85,7 +85,7 @@ Route::middleware(['auth.check:admin', 'dynamic.role'])->group(function () {
     Route::resource('riwayat/riwayat_kontrak', RiwayatKontrakController::class);
     Route::resource('riwayat/riwayat_lain', RiwayatLainController::class);
     Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
-    Route::post('/riwayat/riwayat_pelatihan/direct-store', [RiwayatPelatihanController::class, 'directstore'])->name('riwayat_pelatihan.directstore'); 
+    Route::post('/pelatihan/pelatihan/direct-store', [PelatihanController::class, 'directstore'])->name('pelatihan.directstore'); 
     
     //keuangan    
     Route::get('keuangan/setting_gaji/export-gaji', [SettingGajiController::class, 'exportEmployeeGaji'])->name('setting_gaji.exportEmployeeGaji');

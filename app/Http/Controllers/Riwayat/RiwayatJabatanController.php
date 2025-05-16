@@ -7,47 +7,65 @@ use Illuminate\Http\Request;
 use App\Models\Riwayat\RiwayatJabatan;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File; 
+use App\Models\Employee\Employee;
 
 class RiwayatJabatanController extends Controller
 {    
+    public function show(Request $request, $riwayat_jabatan)
+    {        
+        $id_employee = $riwayat_jabatan;
+        $riwayatJabatans = RiwayatJabatan::leftjoin('employees', 'riwayat_jabatans.id_employee', '=', 'employees.id')
+            ->select('riwayat_jabatans.*', 'employees.nama_lengkap', 'employees.nip_karyawan')
+            ->where('riwayat_jabatans.id_employee', $id_employee)
+            ->get();
+        $employee = Employee::find($id_employee);
+        return view('riwayat.jabatan.show', compact('riwayatJabatans', 'employee'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'tahun_mulai' => 'required|string',
             'tahun_selesai' => 'required|string',
             'keterangan' => 'required|string',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
         $data = $request->all();
 
         if ($request->hasFile('dokumen')) {
-            // Menyimpan gambar ke folder public/dokumen/dokumen_jabatan
-            $request->file('dokumen')->move(public_path('dokumen/dokumen_jabatan'), $request->file('dokumen')->getClientOriginalName());
-            $data['dokumen'] = 'dokumen/dokumen_jabatan/' . $request->file('dokumen')->getClientOriginalName();
+            $file = $request->file('dokumen');
+            $filename = time() . '_' . $file->getClientOriginalName(); // Nama file unik agar tidak bentrok
+            $file->move(public_path('dokumen/dokumen_jabatan'), $filename);
+            $data['dokumen'] = 'dokumen/dokumen_jabatan/' . $filename;
         }
 
         RiwayatJabatan::create($data);
 
-        // Menggunakan session flash message dan redirect ke halaman sebelumnya
-        return back()->with('success', 'Riwayat Jabatan berhasil ditambahkan.');
+        return redirect()->route('riwayat_jabatan.show', ['riwayat_jabatan' => $request->id_employee])
+            ->with('success', 'Riwayat Pendidikan berhasil ditambahkan.');
     }
 
+    public function edit($id)
+    {
+        $riwayat = RiwayatJabatan::findOrFail($id);
+        $employee = Employee::find($riwayat->id_employee);
+        return view('riwayat.jabatan.edit', compact('riwayat', 'employee'));
+    }
 
     public function update(Request $request, $id)
     {
+        $riwayat = RiwayatJabatan::findOrFail($id);
+
         $request->validate([
             'tahun_mulai' => 'required|string',
             'tahun_selesai' => 'required|string',
             'keterangan' => 'required|string',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
-            'id_employee' => 'required|exists:employees,id', 
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
         ]);
 
-        $riwayat = RiwayatJabatan::findOrFail($id);
-
-        $data = $request->except(['dokumen']);
+        $data = $request->except(['dokumen', 'id_riwayat']);
 
         // Proses file dokumen jika diupload
         if ($request->hasFile('dokumen')) {
@@ -67,7 +85,7 @@ class RiwayatJabatanController extends Controller
         $riwayat->update($data);
 
         // Kembali ke halaman sebelumnya dengan pesan sukses
-        return back()->with('success', 'Riwayat Jabatan berhasil diperbarui.');
+        return redirect()->route('riwayat_jabatan.show', ['riwayat_jabatan' => $riwayat->id_employee])->with('success', 'Riwayat Jabatan berhasil diperbarui.');
     }
 
     public function destroy(RiwayatJabatan $RiwayatJabatan)

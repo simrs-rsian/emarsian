@@ -5,48 +5,72 @@ namespace App\Http\Controllers\Riwayat;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Riwayat\RiwayatPendidikan;
+use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File; // Import facade File
 
 class RiwayatPendidikanController extends Controller
 {
+    public function show(Request $request, $riwayat_pendidikan)
+    {        
+        $id_employee = $riwayat_pendidikan;
+        $riwayatPendidikans = RiwayatPendidikan::leftjoin('employees', 'riwayat_pendidikans.id_employee', '=', 'employees.id')
+            ->select('riwayat_pendidikans.*', 'employees.nama_lengkap', 'employees.nip_karyawan')
+            ->where('riwayat_pendidikans.id_employee', $id_employee)
+            ->get();
+        $employee = Employee::find($id_employee);
+        return view('riwayat.pendidikan.show', compact('riwayatPendidikans', 'employee'));
+    }
+
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'tahun_masuk' => 'required|string',
             'tahun_lulus' => 'required|string',
             'nama_sekolah' => 'required',
             'lokasi' => 'required',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
         $data = $request->all();
+        // dd($data);
 
         if ($request->hasFile('dokumen')) {
-            // Menyimpan gambar ke folder public/dokumen/dokumen_pendidikan
-            $request->file('dokumen')->move(public_path('dokumen/dokumen_pendidikan'), $request->file('dokumen')->getClientOriginalName());
-            $employeeData['dokumen'] = 'dokumen/dokumen_pendidikan/' . $request->file('dokumen')->getClientOriginalName();
+            $file = $request->file('dokumen');
+            $filename = time() . '_' . $file->getClientOriginalName(); // Nama file unik agar tidak bentrok
+            $file->move(public_path('dokumen/dokumen_pendidikan'), $filename);
+            $data['dokumen'] = 'dokumen/dokumen_pendidikan/' . $filename;
         }
 
         RiwayatPendidikan::create($data);
 
-        // Menggunakan session flash message dan redirect ke halaman sebelumnya
-        return back()->with('success', 'Riwayat Pendidikan berhasil ditambahkan.');
+        return redirect()->route('riwayat_pendidikan.show', ['riwayat_pendidikan' => $request->id_employee])
+            ->with('success', 'Riwayat Pendidikan berhasil ditambahkan.');
     }
 
+    public function edit($id)
+    {
+        $riwayat = RiwayatPendidikan::findOrFail($id);
+        $employee = Employee::find($riwayat->id_employee);
+        return view('riwayat.pendidikan.edit', compact('riwayat', 'employee'));
+    }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
-            'id_employee' => 'required|exists:employees,id', // Validasi id_employee
-        ]);
-
+        // dd($id);
         $riwayat = RiwayatPendidikan::findOrFail($id);
 
-        // Mengambil data kecuali dokumen
-        $data = $request->except(['dokumen']);
+        $request->validate([
+            'tahun_masuk' => 'required|string',
+            'tahun_lulus' => 'required|string',
+            'nama_sekolah' => 'required|string',
+            'lokasi' => 'required|string',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+        ]);
+
+        $data = $request->except(['dokumen', 'id_riwayat']);
 
         // Proses file dokumen jika diupload
         if ($request->hasFile('dokumen')) {
@@ -63,12 +87,9 @@ class RiwayatPendidikanController extends Controller
             $data['dokumen'] = 'dokumen/dokumen_pendidikan/' . $newFileName;
         }
 
-        // Update data riwayat pendidikan
-        // dd($data);
         $riwayat->update($data);
 
-        // Kembali ke halaman sebelumnya dengan pesan sukses
-        return back()->with('success', 'Riwayat Pendidikan berhasil diperbarui.');
+        return redirect()->route('riwayat_pendidikan.show', ['riwayat_pendidikan' => $riwayat->id_employee])->with('success', 'Riwayat Pendidikan berhasil diperbarui.');
     }
 
 

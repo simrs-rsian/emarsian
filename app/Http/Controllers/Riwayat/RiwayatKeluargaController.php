@@ -7,10 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\Riwayat\RiwayatKeluarga;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File; // Import facade File
+use App\Models\Employee\Employee;
 
 class RiwayatKeluargaController extends Controller
 {
-    //
+    public function show(Request $request, $riwayat_keluarga)
+    {        
+        $id_employee = $riwayat_keluarga;
+        $riwayatKeluargas = RiwayatKeluarga::leftjoin('employees', 'riwayat_keluargas.id_employee', '=', 'employees.id')
+            ->select('riwayat_keluargas.*', 'employees.nama_lengkap', 'employees.nip_karyawan')
+            ->where('riwayat_keluargas.id_employee', $id_employee)
+            ->get();
+        $employee = Employee::find($id_employee);
+        return view('riwayat.keluarga.show', compact('riwayatKeluargas', 'employee'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -18,35 +29,44 @@ class RiwayatKeluargaController extends Controller
             'status_keluarga' => 'required|string',
             'pekerjaan_keluarga' => 'required|string',
             'pendidikan_keluarga' => 'required|string',
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'id_employee' => 'required|exists:employees,id',
         ]);
-        // dd($request->all());
 
         $data = $request->all();
 
         if ($request->hasFile('dokumen')) {
-            // Menyimpan gambar ke folder public/dokumen/dokumen_keluarga
-            $request->file('dokumen')->move(public_path('dokumen/dokumen_keluarga'), $request->file('dokumen')->getClientOriginalName());
-            $employeeData['dokumen'] = 'dokumen/dokumen_keluarga/' . $request->file('dokumen')->getClientOriginalName();
+            $file = $request->file('dokumen');
+            $filename = time() . '_' . $file->getClientOriginalName(); // Nama file unik agar tidak bentrok
+            $file->move(public_path('dokumen/dokumen_keluarga'), $filename);
+            $data['dokumen'] = 'dokumen/dokumen_keluarga/' . $filename;
         }
 
         RiwayatKeluarga::create($data);
 
         // Menggunakan session flash message dan redirect ke halaman sebelumnya
-        return back()->with('success', 'Riwayat Keluarga berhasil ditambahkan.');
+        return redirect()->route('riwayat_keluarga.show', ['riwayat_keluarga' => $request->id_employee])->with('success', 'Riwayat Keluarga berhasil ditambahkan.');
     }
 
+    public function edit($id)
+    {
+        $riwayat = RiwayatKeluarga::findOrFail($id);
+        $employee = Employee::find($riwayat->id_employee);
+        return view('riwayat.keluarga.edit', compact('riwayat', 'employee'));
+    }
 
     public function update(Request $request, $id)
     {
+        $riwayat = RiwayatKeluarga::findOrFail($id);
+
         $request->validate([
-            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
-            'id_employee' => 'required|exists:employees,id', // Validasi employee_id
+            'nama_keluarga' => 'required|string',
+            'status_keluarga' => 'required|string',
+            'pekerjaan_keluarga' => 'required|string',
+            'pendidikan_keluarga' => 'required|string',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
         ]);
         // dd($request->all());
-
-        $riwayat = RiwayatKeluarga::findOrFail($id);
 
         // Mengambil data kecuali dokumen (jika diupload akan ditangani terpisah)
         $data = $request->except(['dokumen']);
@@ -70,7 +90,7 @@ class RiwayatKeluargaController extends Controller
         $riwayat->update($data);
 
         // Kembali ke halaman sebelumnya dengan pesan sukses
-        return back()->with('success', 'Riwayat Keluarga berhasil diperbarui.');
+        return redirect()->route('riwayat_keluarga.show', ['riwayat_keluarga' => $riwayat->id_employee])->with('success', 'Riwayat Keluarga berhasil diperbarui.');
     }
 
 
