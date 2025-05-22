@@ -140,6 +140,42 @@ class EmployeeController extends Controller
         // dd($employeeData);
 
         Employee::create($employeeData);
+
+        //input ke tabel pegawai ip 200
+        DB::connection('mysql2')->table('pegawai')->insert([
+            'nik'            => $request->nip_karyawan,
+            'nama'           => $request->nama_lengkap,
+            'jk'             => $request->jenis_kelamin == 'L' ? 'Pria' : 'Wanita',
+            'jbtn'           => '-', // Isi sesuai kebutuhan
+            'jnj_jabatan'    => '-', // Isi sesuai kebutuhan
+            'kode_kelompok'  => '-', // Isi sesuai kebutuhan
+            'kode_resiko'    => '-', // Isi sesuai kebutuhan
+            'kode_emergency' => '-', // Isi sesuai kebutuhan
+            'departemen'     => '-', // Isi sesuai kebutuhan
+            'bidang'         => '-', // Isi sesuai kebutuhan
+            'stts_wp'        => '-', // Isi sesuai kebutuhan
+            'stts_kerja'     => '-', // Isi sesuai kebutuhan
+            'npwp'           => $request->npwp ?? '',
+            'gapok'          => 0, // Isi sesuai kebutuhan
+            'tmp_lahir'      => $request->tempat_lahir,
+            'tgl_lahir'      => $request->tanggal_lahir,
+            'alamat'         => $request->alamat_lengkap,
+            'kota'           => '-', // Isi sesuai kebutuhan
+            'mulai_kerja'    => $request->tmt,
+            'ms_kerja'       => '<1', // Isi sesuai kebutuhan
+            'indexins'       => '-', // Isi sesuai kebutuhan
+            'rekening'       => '-', // Isi sesuai kebutuhan
+            'stts_aktif'     => 'AKTIF', // Default aktif
+            'wajibmasuk'     => 0, // Isi sesuai kebutuhan
+            'pengurang'      => 0, // Isi sesuai kebutuhan
+            'indek'          => 0, // Isi sesuai kebutuhan
+            'mulai_kontrak'  => null, // Isi sesuai kebutuhan
+            'cuti_diambil'   => 0, // Default 0
+            'dankes'         => 0, // Isi sesuai kebutuhan
+            'photo'          => isset($employeeData['photo']) ? $employeeData['photo'] : null,
+            'no_ktp'         => $request->nik_karyawan,
+        ]);
+        //input ke tabel pegawai ip 200
         return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil ditambahkan');
     }
 

@@ -16,20 +16,24 @@ class DashboardController extends Controller
         $tetapCount = DB::table('employees')
             ->select(DB::raw('COUNT(id) as total_employees'))
             ->where('status_karyawan', '=', '1')
+            ->where('deleted_at', '=', null)
             ->first();
 
         $kontrakCount = DB::table('employees')
             ->select(DB::raw('COUNT(id) as total_employees'))
             ->whereIn('status_karyawan', ['2', '3', '4']) // Kondisi whereIn untuk beberapa nilai
+            ->where('deleted_at', '=', null)
             ->first();
 
         $allCount = DB::table('employees')
             ->select(DB::raw('COUNT(id) as total_employees'))
+            ->where('deleted_at', '=', null)
             ->first();
 
         $unitsCount = DB::table('units as u')
             ->leftJoin('employees as e', 'u.id', '=', 'e.jabatan_struktural')
             ->select('u.nama_unit', DB::raw('COUNT(e.id) as total_employees'))
+            ->where('deleted_at', '=', null)
             ->groupBy('u.nama_unit')
             ->get();
 
@@ -39,6 +43,7 @@ class DashboardController extends Controller
                 DB::raw("SUM(CASE WHEN e.jenis_kelamin = 'L' THEN 1 ELSE 0 END) as total_laki_laki"),
                 DB::raw("SUM(CASE WHEN e.jenis_kelamin = 'P' THEN 1 ELSE 0 END) as total_perempuan")
             )
+            ->where('deleted_at', '=', null)
             ->groupBy('u.nama_unit')
             ->get();
 
@@ -46,6 +51,7 @@ class DashboardController extends Controller
             ->leftJoin('employees as e', 'g.id', '=', 'e.golongan')
             ->select('g.nama_golongan', 
                 DB::raw('COUNT(e.id) as total_golongan'))
+            ->where('deleted_at', '=', null)
             ->groupBy('g.nama_golongan')
             ->get();
 
@@ -53,6 +59,7 @@ class DashboardController extends Controller
             ->leftJoin('employees as e', 's.id', '=', 'e.status_karyawan')
             ->select('s.nama_status', 
                 DB::raw('COUNT(e.id) as total_status_karyawan'))
+            ->where('deleted_at', '=', null)
             ->groupBy('s.nama_status')
             ->get();
 
@@ -89,6 +96,7 @@ class DashboardController extends Controller
             ->leftJoin('employees as e', 'u.id', '=', 'e.kelompok_usia')
             ->select('u.nama_kelompok', 
                 DB::raw('COUNT(e.id) as total_kelompok_umur'))
+            ->where('deleted_at', '=', null)
             ->groupBy('u.nama_kelompok')
             ->get();
 

@@ -36,7 +36,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">NIK Karyawan</label>
+                            <label class="col-sm-3 col-form-label">NIK Karyawan (No. KTP)</label>
                             <div class="col-sm-9">
                                 <input type="text" name="nik_karyawan" class="form-control" value="{{ $employee->nik_karyawan }}" />
                             </div>
