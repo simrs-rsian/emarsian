@@ -18,6 +18,7 @@
                                 <tr>
                                     <th>ID Profesi</th>
                                     <th>Nama Profesi</th>
+                                    <th>Nama Bagian</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -26,6 +27,7 @@
                                     <tr>
                                         <td>{{ $profesi->id }}</td>
                                         <td>{{ $profesi->nama_profesi }}</td>
+                                        <td>{{ $profesi->nama_bagian }}</td>
                                         <td>
                                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editprofesiModal{{ $profesi->id }}">
                                                 Edit
@@ -53,6 +55,17 @@
                                                         <div class="form-group">
                                                             <label for="nama_profesi">Nama Profesi</label>
                                                             <input type="text" name="nama_profesi" class="form-control" value="{{ $profesi->nama_profesi }}" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="id_bagians">Bagian</label>
+                                                            <select name="id_bagians" class="form-select" required>
+                                                                <option value="">Pilih Bagian</option>
+                                                                @foreach($bagians as $bagian)
+                                                                    <option value="{{ $bagian->id }}" {{ $profesi->id_bagians == $bagian->id ? 'selected' : '' }}>
+                                                                        {{ $bagian->nama_bagian }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -89,6 +102,15 @@
                             <label for="nama_profesi">Nama Profesi</label>
                             <input type="text" name="nama_profesi[]" class="form-control" required>
                         </div>
+                        <div>
+                            <label for="id_bagians">Bagian</label>
+                            <select name="id_bagians[]" class="form-select" required>
+                                <option value="">Pilih Bagian</option>
+                                @foreach($bagians as $bagian)
+                                    <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <button type="button" id="addField" class="btn btn-sm btn-info">Tambah Field</button>
                 </div>
@@ -112,6 +134,13 @@
             newField.innerHTML = `
                 <label for="nama_profesi">Nama Profesi</label>
                 <input type="text" name="nama_profesi[]" class="form-control" required>
+                <label for="id_bagians">Bagian</label>
+                <select name="id_bagians[]" class="form-select" required>
+                    <option value="">Pilih Bagian</option>
+                    @foreach($bagians as $bagian)
+                        <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
+                    @endforeach
+                </select>
                 <button type="button" class="btn btn-danger btn-sm mt-1 removeField">Remove</button>
             `;
             profesiFields.appendChild(newField);

@@ -10,5 +10,5 @@ class Profesi extends Model
     use HasFactory;
 
     protected $table = 'profesis'; // Nama tabel
-    protected $fillable = ['id','nama_profesi']; // Kolom yang bisa diisi secara massal
+    protected $fillable = ['id','nama_profesi', 'id_bagians']; // Kolom yang bisa diisi secara massal
 }

@@ -1,7 +1,5 @@
 @extends('includeView.layout')
 @section('content')
-
-
 <div class="col-12 grid-margin">
     <div class="card">
         <div class="card-body">
@@ -89,10 +87,10 @@
                     </div>
                 </div>
             </div>
-            @foreach($riwayatPelatihans as $key => $riwayatKeluarga)
+            @foreach($riwayatPelatihans as $key => $riwayatPelatihan)
                 
                 <!-- Modal untuk menampilkan gambar dokumen -->
-                <div class="modal fade" id="viewDokumenPelatihanModal{{ $riwayatPelatihan->id }}" tabindex="-1" aria-labelledby="viewDokumenModalPelatihanLabel{{ $riwayatPelatihan->id }}" aria-hidden="true">
+                <div class="modal fade" id="viewDokumenPelatihanModal{{ $riwayatPelatihan->id }}" tabindex="-1" aria-labelledby="viewDokumenModalPelatihanLabel{{ $riwayatPelatihan->id }}" >
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -124,7 +122,7 @@
                 </div>
             @endforeach
             <!-- Modal Tambah Riwayat Pelatihan -->
-            <div class="modal fade" id="createRiwayatPelatihanModal" tabindex="-1" aria-labelledby="createRiwayatPelatihanModalLabel" aria-hidden="true">
+            <div class="modal fade" id="createRiwayatPelatihanModal" tabindex="-1" aria-labelledby="createRiwayatPelatihanModalLabel" >
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">

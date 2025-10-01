@@ -39,7 +39,6 @@
                                     <th>Golongan</th>
                                     <th>Alamat Lengkap</th>
                                     <th>Telepon</th>
-                                    <th>Photo</th>
                                     <th>Kelompok Usia</th>
                                     <th>Umur</th>
                                 </tr>
@@ -72,13 +71,6 @@
                                         <td>{{ $employee->nama_golongan ?? '-' }}</td>
                                         <td>{{ $employee->alamat_lengkap }}</td>
                                         <td>{{ $employee->telepon ?? '-' }}</td>
-                                        <td>
-                                            @if($employee->photo)
-                                                <img src="{{ url($employee->photo) }}" alt="Photo" width="50">
-                                            @else
-                                                Tidak ada photo
-                                            @endif
-                                        </td>
                                         <td>{{ $employee->nama_kelompok }}</td>
                                         <td>{{ $employee->umur }} Tahun</td>
                                     </tr>

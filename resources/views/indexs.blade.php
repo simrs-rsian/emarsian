@@ -130,6 +130,21 @@
       <div class="col-lg-4 col-md-8 col-sm-10 mx-auto order-0 order-lg-1">
         <div class="card shadow p-4">
           <div class="text-center mb-3">
+          @if (session('status'))
+            <div class="alert alert-success mb-3">
+              {{ session('status') }}
+            </div>
+          @endif
+
+          @if ($errors->any())
+            <div class="alert alert-danger mb-3">
+              <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
             <img src="rsia.png" style="width: 200px;" alt="logo">
             <h3 class="mt-3" style="font-weight: bold; color:rgb(16, 3, 83);">Login E-MARSIAN</h3>
           </div>
