@@ -8,9 +8,44 @@ use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pelatihan\Pelatihan;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PegawaiController extends Controller
 {
+    public function showChangePasswordForm()
+    {
+        return view('pegawai.change_password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => ['required'],
+            'new_password' => [
+                'required',
+                'min:6',
+                'regex:/[a-z]/',      // huruf kecil
+                'regex:/[A-Z]/',      // huruf besar
+                'confirmed'
+            ],
+        ]);
+
+
+        $user = Auth::guard('pegawai')->user();
+
+        // Karena password Anda menggunakan MD5
+        if ($user->password !== md5($request->old_password)) {
+            return back()->withErrors(['old_password' => 'Password lama tidak sesuai']);
+        }
+
+        // Update password (MD5)
+        DB::table('employees')
+            ->where('id', $user->id)
+            ->update(['password' => md5($request->new_password)]);
+
+        Auth::guard('pegawai')->logout();
+        return redirect()->route('logoutPegawai')->with('status', 'Password berhasil diperbarui. Silakan login kembali.');
+    }
     //pegawai.profile
     public function profile()
     {
@@ -232,4 +267,30 @@ class PegawaiController extends Controller
 
         return view('pegawai.presensi.jadwal-presensi', compact('calendar', 'month', 'year'));
     }
+
+    public function riwayatPresensi(Request $request)
+    {
+        // dd('rekap presensi');
+        $sessionNip = session('nip_pegawai');
+        $currentDate = Carbon::now();
+        $month = $request->input('month') ?? $currentDate->format('m');
+        $year = $request->input('years') ?? $currentDate->format('Y');
+
+        // Tanggal 1 sampai tanggal akhir bulan
+        $dateStart = Carbon::createFromDate($year, $month, 1)->startOfDay()->format('Y-m-d');
+        $dateEnd = Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay()->format('Y-m-d');
+
+        $data = DB::connection('mysql2')->table('rekap_presensi AS p')
+            ->leftJoin('pegawai AS pg', 'p.id', '=', 'pg.id')
+            ->where('pg.nik', $sessionNip)
+            ->whereBetween('p.jam_datang', [
+                $dateStart . ' 00:00:00',
+                $dateEnd . ' 23:59:59'
+            ])
+            ->get();
+
+        return view('pegawai.presensi.rekap-presensi', compact('data'));
+    }
+
+
 }

@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'dynamic.role' => \App\Http\Middleware\DynamicRoleAccess::class,
         'auth.check' => \App\Http\Middleware\CheckAuthType::class,
         'feature.maintenance' => \App\Http\Middleware\FeatureMaintenance::class,
+        'check.default.password' => \App\Http\Middleware\CheckDefaultPassword::class,
     ];
     
 }

@@ -115,7 +115,7 @@ Route::middleware(['auth.check:admin', 'dynamic.role'])->group(function () {
 Route::get('employeelogin', [EmployeeAuthController::class, 'employeelogin'])->name('employeelogin');
 Route::post('actionloginemployee', [EmployeeAuthController::class, 'actionloginemployee'])->name('actionloginemployee');
 
-Route::middleware(['auth.check:pegawai'])->group(function () {
+Route::middleware(['auth.check:pegawai', 'check.default.password'])->group(function () {
     Route::get('/fitur-tertentu', function () {
         return view('maintenance');
     })->name('feature.maintenance')->middleware('feature.maintenance');    
@@ -136,4 +136,8 @@ Route::middleware(['auth.check:pegawai'])->group(function () {
     Route::get('pegawai/gaji', [PegawaiController::class, 'gaji'])->name('pegawai.gaji');
     // Route::get('actionlogout', [EmployeeAuthController::class, 'actionlogout'])->name('actionlogout');
 });
+// Tambahkan route untuk halaman ganti password
+Route::get('pegawai/ganti-password', [PegawaiController::class, 'showChangePasswordForm'])->name('pegawai.ganti_password');
+Route::post('pegawai/ganti-password', [PegawaiController::class, 'updatePassword'])->name('pegawai.update_password');
+
 Route::get('/logout/pegawai', [EmployeeAuthController::class, 'logoutPegawai'])->name('logoutPegawai');
