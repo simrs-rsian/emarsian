@@ -241,6 +241,8 @@ class PegawaiController extends Controller
             ->where('jp.bulan', str_pad($month, 2, '0', STR_PAD_LEFT))
             ->first();
 
+        $jam_masuks = DB::connection('mysql2')->table('jam_masuk')->get();
+
         $daysInMonth = Carbon::createFromDate($year, $month, 1)->daysInMonth;
 
         $calendar = [];
@@ -252,10 +254,15 @@ class PegawaiController extends Controller
 
             $jadwalKey = 'h' . $day;
             $jadwal = $data->$jadwalKey ?? '-';
+            $jadwalDetail = $jam_masuks->firstWhere('shift', $jadwal);
 
             $week[$dayOfWeek] = [
                 'tanggal' => $day,
                 'jadwal' => $jadwal
+                    ? ($jadwalDetail
+                        ? $jadwal . ' (' . Carbon::createFromFormat('H:i:s', $jadwalDetail->jam_masuk)->format('H:i') . ' - ' . Carbon::createFromFormat('H:i:s', $jadwalDetail->jam_pulang)->format('H:i') . ')'
+                        : $jadwal)
+                    : '-',
             ];
 
             // Tambahkan minggu ke kalender jika Sabtu atau hari terakhir bulan

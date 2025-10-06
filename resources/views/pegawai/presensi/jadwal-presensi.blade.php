@@ -63,7 +63,7 @@
                 <div class="card-body">
 
                     <div class="table-responsive pt-3">
-                        <table id="dataTable" class="table table-striped">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <td>Minggu</td>
