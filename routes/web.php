@@ -133,6 +133,12 @@ Route::middleware(['auth.check:pegawai', 'check.default.password'])->group(funct
     Route::get('pegawai/presensi', [PegawaiController::class, 'presensi'])->name('pegawai.presensi');
     Route::get('pegawai/jadwal_presensi', [PegawaiController::class, 'jadwalPresensi'])->name('pegawai.jadwal_presensi');
     Route::get('pegawai/riwayat_presensi', [PegawaiController::class, 'riwayatPresensi'])->name('pegawai.riwayat_presensi');
+    Route::get('pegawai/setting_presensi/index', [PegawaiController::class, 'settingPresensi'])->name('pegawai.setting_presensi');
+    Route::get('pegawai/setting_presensi/show/{id}', [PegawaiController::class, 'showSettingPresensi'])->name('pegawai.setPresensi.show');
+    Route::get('pegawai/setting_presensi/riwayat/show/{id}', [PegawaiController::class, 'setRiwayatPresensi'])->name('pegawai.setRiwayatPresensi.show');
+    // setRiwayatPresensi.update
+    Route::post('pegawai/setting_presensi/update', [PegawaiController::class, 'updateRiwayatPresensi'])->name('pegawai.setRiwayatPresensi.update');
+    Route::put('/pegawai/{id}/update-presensi', [PegawaiController::class, 'updatePresensi'])->name('pegawai.update_presensi');
     Route::get('pegawai/gaji', [PegawaiController::class, 'gaji'])->name('pegawai.gaji');
     // Route::get('actionlogout', [EmployeeAuthController::class, 'actionlogout'])->name('actionlogout');
 });

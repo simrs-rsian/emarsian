@@ -22,15 +22,12 @@
                             <td>{{ $riwayatLain->tanggal_riwayat }}</td>
                             <td>
                                 @if($riwayatLain->dokumen)
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenLainModal{{ $riwayatLain->id }}">
-                                        Tampilalkan Dokumen
-                                    </button>
+                                    <span class="badge bg-success">Dokumen Tersedia Hubungi Admin</span>
                                 @else
-                                    -
+                                    <span class="badge bg-danger">Tidak ada dokumen</span>
                                 @endif
                             </td>
                         </tr>
-                        
                     @endforeach
                 </tbody>
             </table>

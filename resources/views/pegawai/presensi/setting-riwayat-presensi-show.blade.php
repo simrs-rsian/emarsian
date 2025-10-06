@@ -1,20 +1,13 @@
 @extends('includeView.layout')
-@section('title', 'Rekap Presensi')
-@push('css')
-<style>
-    .row-libur {
-    background-color: #ffe6e6 !important;
-    color: red !important;
-}
-</style>
-@endpush
+@section('title', 'Show Rekap Presensi')
+
 @section('content')
 <div class="content-wrapper">
     <div class="row">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Jadwal Presensi</h4>
+                    <h4 class="card-title">Setting Presensi Pegawai </h4>
                     <p class="card-description">
                         @if (session('success'))
                             <div class="alert alert-success">
@@ -22,24 +15,43 @@
                             </div>
                         @endif
                     </p>
-                    <h4 class="card-title">Filter</h4>
                 </div>
                 <div class="card-body">
-                    <form method="GET" action="{{ route('pegawai.riwayat_presensi') }}" id="filterForm"> 
+                    <table class="table">
+                        <tr></tr>
+                            <td><strong>Nama Pegawai</strong></td>
+                            <td>:</td>
+                            <td>{{ $pegawai->nama }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bagian/Departemen</strong></td>
+                            <td>:</td>
+                            <td>{{ $pegawai->nama_departemen }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jabatan</strong></td>
+                            <td>:</td>
+                            <td>{{ $pegawai->jbtn }}</td>
+                        </tr>
+                    </table>
+                    <a href="{{ route('pegawai.setting_presensi', ['id' => $pegawai->id]) }}" class="btn btn-danger mb-3">Kembali</a>   
+                    <hr>
+                    <h4 class="card-title">Filter</h4>
+                    <form method="GET" action="{{ route('pegawai.setRiwayatPresensi.show' , ['id' => $pegawai->id]) }}" id="filterForm"> 
                         <div class="form-body">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="month">Bulan:</label>
+                                        @php
+                                            $currentMonth = date('m'); // bulan sekarang
+                                        @endphp
                                         <select name="month" class="form-control" id="month">
                                             <option value="">-- Pilih Bulan --</option>
-                                            @php
-                                                $currentMonth = date('n'); // bulan sekarang (1-12)
-                                            @endphp
-                                            @foreach (range(1, 12) as $month)
-                                                <option value="{{ $month }}" 
-                                                    {{ request('month') == $month || (is_null(request('month')) && $month == $currentMonth) ? 'selected' : '' }}>
-                                                    {{ \Carbon\Carbon::create()->month($month)->locale('id')->translatedFormat('F') }}
+                                            @foreach (range(1, 12) as $m)
+                                                <option value="{{ $m }}" 
+                                                    {{ (int)request('month', $currentMonth) === $m ? 'selected' : '' }}>
+                                                    {{ \Carbon\Carbon::create()->month($m)->locale('id')->translatedFormat('F') }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -56,10 +68,10 @@
                                                 $startYear = $currentYear - 5;
                                                 $endYear = $currentYear + 5;
                                             @endphp
-                                            @for ($year = $startYear; $year <= $endYear; $year++)
-                                                <option value="{{ $year }}" 
-                                                    {{ request('years') == $year || (is_null(request('years')) && $year == $currentYear) ? 'selected' : '' }}>
-                                                    {{ $year }}
+                                            @for ($y = $startYear; $y <= $endYear; $y++)
+                                                <option value="{{ $y }}" 
+                                                    {{ (int)request('years', $currentYear) === $y ? 'selected' : '' }}>
+                                                    {{ $y }}
                                                 </option>
                                             @endfor
                                         </select>
@@ -102,18 +114,18 @@
                             $no = 1;
                         @endphp
 
-                        <table class="table table-bordered" id="rekapPresensiTable">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Hari, Tanggal</th>
-                                    <th>Shift</th>
-                                    <th>Jam Datang</th>
-                                    <th>Jam Pulang</th>
+                        <table class="table table-bordered table-striped table-hover align-middle" id="rekapPresensiTable">
+                            <thead class="table-dark">
+                                <tr class="text-center">
+                                    <th style="width: 50px;">No</th>
+                                    <th style="width: 180px;">Hari, Tanggal</th>
+                                    <th style="width: 200px;">Shift</th>
+                                    <th style="width: 120px;">Jam Datang</th>
+                                    <th style="width: 120px;">Jam Pulang</th>
                                     <th>Status</th>
                                     <th>Keterlambatan</th>
                                     <th>Durasi Kerja</th>
-                                    <th>Keterangan</th>
+                                    <th style="width: 550px;">Catatan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -124,15 +136,32 @@
                                         $isLibur = !$item;
                                     @endphp
                                     <tr class="{{ $isLibur ? 'table-danger text-danger' : '' }}">
-                                        <td>{{ $no++ }}</td>
-                                        <td>{{ $date->translatedFormat('l') }},{{ $date->format('d-m-Y') }}</td>
-                                        <td>{{ $item->shift ?? '-' }} ( {{ $item->jam_masuk ?? '-' }} - {{ $item->jam_keluar ?? '-' }})</td>
+                                        <td class="text-center">{{ $no++ }}</td>
+                                        <td>{{ $date->translatedFormat('l') }}, {{ $date->format('d-m-Y') }}</td>
+                                        <td>
+                                            {{ $item->shift ?? '-' }} 
+                                            ({{ $item->jam_masuk ?? '-' }} - {{ $item->jam_keluar ?? '-' }})
+                                        </td>
                                         <td>{{ $item->jam_datang ?? '-' }}</td>
                                         <td>{{ $item->jam_pulang ?? '-' }}</td>
-                                        <td>{{ $item->status ?? 'Libur/Record Tidak Ditemukan' }}</td>
+                                        <td>{{ $item->status ?? 'Libur / Record Tidak Ditemukan' }}</td>
                                         <td>{{ $item->keterlambatan ?? '-' }}</td>
                                         <td>{{ $item->durasi ?? '-' }}</td>
-                                        <td>{{ $item->keterangan ?? '-' }}</td>
+                                        <td>
+                                            @if ($isLibur)
+                                                <span class="text-muted">-</span>
+                                            @else
+                                            <form action="{{ route('pegawai.setRiwayatPresensi.update') }}" method="POST" class="d-flex flex-column">
+                                                @csrf
+                                                <input type="hidden" name="jam_datang" value="{{ $item->jam_datang }}">
+                                                <input type="hidden" name="id_presensi" value="{{ $item->id ?? '' }}">
+                                                <textarea name="catatan" class="form-control mb-2" rows="3" placeholder="Catatan">{{ $item->keterangan ?? '' }}</textarea>
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    <i class="mdi mdi-content-save"></i> Simpan
+                                                </button>
+                                            </form>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -145,6 +174,4 @@
 </div>
 
 <!-- Tambahkan script inisialisasi DataTable setelah halaman siap -->
-
-
 @endsection

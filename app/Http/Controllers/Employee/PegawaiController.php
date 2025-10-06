@@ -282,15 +282,137 @@ class PegawaiController extends Controller
 
         $data = DB::connection('mysql2')->table('rekap_presensi AS p')
             ->leftJoin('pegawai AS pg', 'p.id', '=', 'pg.id')
+            ->leftJoin('jam_masuk AS jm', 'p.shift', '=', 'jm.shift')
+            ->select('p.*', 'jm.jam_masuk as jam_masuk', 'jm.jam_pulang as jam_keluar')
             ->where('pg.nik', $sessionNip)
-            ->whereBetween('p.jam_datang', [
-                $dateStart . ' 00:00:00',
-                $dateEnd . ' 23:59:59'
-            ])
+            ->whereBetween('p.jam_datang', [$dateStart, $dateEnd])
+            ->orderBy('p.jam_datang', 'ASC')
             ->get();
 
         return view('pegawai.presensi.rekap-presensi', compact('data'));
     }
 
+    public function settingPresensi()
+    {
+        $sessionNip = session('nip_pegawai');
+        // Ambil departemen user yg login
+        $userDeps = DB::connection('mysql2')
+            ->table('rsian_mapping_user_dep as jp')
+            ->where('jp.nip', $sessionNip)
+            ->pluck('jp.departemen'); // ambil list departemen id
 
+        // Ambil pegawai berdasarkan departemen user
+        $pegawai_datas = DB::connection('mysql2')
+            ->table('pegawai as p')
+            ->leftJoin('departemen as d', 'p.departemen', '=', 'd.dep_id')
+            ->whereIn('p.departemen', $userDeps)
+            ->where('p.stts_aktif', 'AKTIF')
+            ->select('p.id', 'p.nik', 'p.nama AS nama_pegawai', 'p.jbtn AS jabatan', 'd.nama AS nama_departemen')
+            ->get();
+
+            // dd($pegawai_datas);
+
+        return view('pegawai.presensi.setting-presensi', compact('pegawai_datas'));
+
+    }
+
+    public function showSettingPresensi(Request $request, $id)
+    {
+        $currentDate = Carbon::now();
+
+        // pastikan month & year selalu integer
+        $month = (int)($request->input('month') ?? $currentDate->format('m'));
+        $year = (int)($request->input('years') ?? $currentDate->format('Y'));
+
+        $dateStart = Carbon::createFromDate($year, $month, 1)->startOfDay()->format('Y-m-d');
+        $dateEnd   = Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay()->format('Y-m-d');
+
+        $pegawai = DB::connection('mysql2')
+                    ->table('pegawai')
+                    ->leftJoin('departemen', 'pegawai.departemen', '=', 'departemen.dep_id')
+                    ->select('pegawai.*', 'departemen.nama AS nama_departemen')
+                    ->where('id', $id)->first();
+
+        $jadwal = DB::connection('mysql2')
+                    ->table('jadwal_pegawai')
+                    ->where('id', $id)
+                    ->where('tahun', $year)
+                    ->where('bulan', str_pad($month, 2, '0', STR_PAD_LEFT))
+                    ->get();
+
+        $sift = DB::connection('mysql2')
+                    ->table('jam_masuk')
+                    ->get();
+
+        return view('pegawai.presensi.setting-presensi-show', compact('pegawai', 'jadwal', 'sift', 'month', 'year'));
+    }
+
+    public function updatePresensi(Request $request, $id)
+    {
+        $tahun = $request->input('tahun');
+        $bulan = $request->input('bulan');
+        $hari = 'h' . $request->input('hari'); // contoh: h5
+        $shift = $request->input('shift');
+
+        if($shift == 'LIBUR') {
+            DB::connection('mysql2')->table('jadwal_pegawai')
+                ->where('id', $id)
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan)
+                ->update([$hari => '']);
+        }else {
+            DB::connection('mysql2')->table('jadwal_pegawai')
+                ->where('id', $id)
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan)
+                ->update([$hari => $shift]);
+        }
+
+        return back()->with('success', 'Jadwal berhasil diperbarui!');
+    }
+
+    public function setRiwayatPresensi(Request $request, $id)
+    {
+        $currentDate = Carbon::now();
+
+        // pastikan month & year selalu integer
+        $month = (int)($request->input('month') ?? $currentDate->format('m'));
+        $year = (int)($request->input('years') ?? $currentDate->format('Y'));
+
+        $dateStart = Carbon::createFromDate($year, $month, 1)->startOfDay()->format('Y-m-d');
+        $dateEnd   = Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay()->format('Y-m-d');
+
+        $pegawai = DB::connection('mysql2')
+                    ->table('pegawai')
+                    ->leftJoin('departemen', 'pegawai.departemen', '=', 'departemen.dep_id')
+                    ->select('pegawai.*', 'departemen.nama AS nama_departemen')
+                    ->where('id', $id)->first();
+
+        $data = DB::connection('mysql2')->table('rekap_presensi AS p')
+            ->leftJoin('pegawai AS pg', 'p.id', '=', 'pg.id')
+            ->leftJoin('jam_masuk AS jm', 'p.shift', '=', 'jm.shift')
+            ->select('p.*', 'jm.jam_masuk as jam_masuk', 'jm.jam_pulang as jam_keluar')
+            ->where('pg.id', $id)
+            ->whereBetween('p.jam_datang', [$dateStart, $dateEnd])
+            ->orderBy('p.jam_datang', 'ASC')
+            ->get();
+        // dd($data);
+
+        return view('pegawai.presensi.setting-riwayat-presensi-show', compact('pegawai', 'data', 'month', 'year'));
+    }
+
+    public function updateRiwayatPresensi(Request $request)
+    {
+        // dd($request->all());
+        $id_presensi = $request->input('id_presensi');
+        $jam_datang = $request->input('jam_datang');
+        $catatan = $request->input('catatan');
+
+        DB::connection('mysql2')->table('rekap_presensi')
+            ->where('id', $id_presensi)
+            ->where('jam_datang', $jam_datang) // Pastikan jam_datang tidak null
+            ->update(['keterangan' => $catatan]);
+
+        return back()->with('success', 'Catatan presensi berhasil diperbarui!');
+    }
 }

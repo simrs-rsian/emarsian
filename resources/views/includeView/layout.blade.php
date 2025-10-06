@@ -88,7 +88,11 @@
                       <i class="ti ti-user fs-6"></i>
                       <p class="mb-0 fs-3">My Profile</p>
                     </a>
-                    <a href="{{ 'actionlogout' }}" class="btn btn-outline-primary mx-3 mt-2 d-block shadow-none">Logout</a>
+                    @if (session('navmenu') == 'admin')
+                      <a href="{{  route('logoutAdmin') }}" class="btn btn-outline-primary mx-3 mt-2 d-block shadow-none">Logout</a>
+                    @else
+                      <a href="{{ route('logoutPegawai') }}" class="btn btn-outline-primary mx-3 mt-2 d-block shadow-none">Logout</a>
+                    @endif
                   </div>
                 </div>
               </li>
@@ -187,7 +191,7 @@
         const select2Elements = [
           '.select2-profesi', '.select2-pendidikan', '.select2-jabatan',
           '.select2-keluarga', '.select2-status', '.select2-golongan', '.select2-form',
-          '.select2-barang', '.select2-ruang'
+          '.select2-barang', '.select2-ruang', '.select2-pegawai', '.select2-shift',
         ];
         select2Elements.forEach(selector => {
           if ($(selector).length && $.fn.select2) {
