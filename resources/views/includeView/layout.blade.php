@@ -217,6 +217,16 @@
           }
         });
 
+        
+        // Pastikan Select2 di-reinitialize setiap kali modal dibuka
+        $('#modalTambahRiwayat').on('shown.bs.modal', function() {
+            $('.select2-shifting').select2({
+                dropdownParent: $('#modalTambahRiwayat'), // wajib agar muncul di atas modal
+                width: '100%',
+                theme: 'bootstrap-5' // opsional, sesuaikan dengan tema Anda
+            });
+        });
+
         // Toggle submenu
         $(document).on('click', '.toggle-menu', function (event) {
           event.preventDefault();

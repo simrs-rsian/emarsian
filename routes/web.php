@@ -20,6 +20,7 @@ use App\Http\Controllers\Keuangan\SlipGajiController;
 use App\Http\Controllers\Navmenus\NavmenuController;
 use App\Http\Controllers\Pelatihan\JenisPelatihanController;
 use App\Http\Controllers\Pelatihan\PelatihanController;
+use App\Http\Controllers\Presensi\PresensiController;
 use App\Http\Controllers\Riwayat\RiwayatJabatanController;
 use App\Http\Controllers\Riwayat\RiwayatKeluargaController;
 use App\Http\Controllers\Riwayat\RiwayatKontrakController;
@@ -86,6 +87,18 @@ Route::middleware(['auth.check:admin', 'dynamic.role'])->group(function () {
     Route::resource('riwayat/riwayat_lain', RiwayatLainController::class);
     Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
     Route::post('/pelatihan/pelatihan/direct-store', [PelatihanController::class, 'directstore'])->name('pelatihan.directstore'); 
+
+    //presensi
+    Route::resource('presensi/presensi', PresensiController::class);
+    Route::get('presensi/absensi-pegawai', [PresensiController::class, 'absensiPegawai'])->name('presensi.absensiPegawai');
+    Route::post('presensi/presensi/verify/{id}', [PresensiController::class, 'verifyPresensi'])->name('presensi.verify');
+    Route::post('presensi/presensi/update-shift/{id}', [PresensiController::class, 'updateShiftPresensi'])->name('presensi.updateShiftPresensi');
+    Route::get('presensi/setting_presensi/{id}', [PresensiController::class, 'showSettingPresensi'])->name('presensi.setPresensi');
+    Route::put('presensi/setting_presensi/update', [PresensiController::class, 'updatePresensi'])->name('presensi.setPresensi.update');
+    Route::get('presensi/riwayat_presensi/{id}', [PresensiController::class, 'setRiwayatPresensi'])->name('presensi.setRiwayatPresensi');
+    Route::post('presensi/riwayat_presensi/store', [PresensiController::class, 'storeRiwayatPresensi'])->name('presensi.setRiwayatPresensi.store');
+    Route::put('presensi/riwayat_presensi/update/{id}', [PresensiController::class, 'updateRiwayatPresensi'])->name('presensi.setRiwayatPresensi.update');
+    Route::post('presensi/riwayat_presensi/hapus-jam-pulang', [PresensiController::class, 'hapusJamPulangRiwayatPresensi'])->name('presensi.setRiwayatPresensi.hapusJamPulang');
     
     //keuangan    
     Route::get('keuangan/setting_gaji/export-gaji', [SettingGajiController::class, 'exportEmployeeGaji'])->name('setting_gaji.exportEmployeeGaji');
