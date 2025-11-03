@@ -138,6 +138,13 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <form action="{{ route('presensi.hapusAbsensiPegawai', $absen_data->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
+
                                 </td>
                             </tr>
                             @endforeach

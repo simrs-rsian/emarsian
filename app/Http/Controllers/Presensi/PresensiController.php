@@ -68,19 +68,35 @@ class PresensiController extends Controller
         $shift = $request->input('shift');
         $id     = $request->input('pegawai_id');
 
-        if($shift == 'LIBUR') {
-            DB::connection('mysql2')->table('jadwal_pegawai')
-                ->where('id', $id)
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
-                ->update([$hari => '']);
-        }else {
-            DB::connection('mysql2')->table('jadwal_pegawai')
-                ->where('id', $id)
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
-                ->update([$hari => $shift]);
+        if ($shift == 'LIBUR') {
+            $shiftValue = '';
+        } else {
+            $shiftValue = $shift;
         }
+
+        $exists = DB::connection('mysql2')->table('jadwal_pegawai')
+            ->where('id', $id)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->exists();
+
+        if ($exists) {
+            // Jika data sudah ada → update
+            DB::connection('mysql2')->table('jadwal_pegawai')
+                ->where('id', $id)
+                ->where('tahun', $tahun)
+                ->where('bulan', $bulan)
+                ->update([$hari => $shiftValue]);
+        } else {
+            // Jika belum ada → insert
+            DB::connection('mysql2')->table('jadwal_pegawai')->insert([
+                'id' => $id,
+                'tahun' => $tahun,
+                'bulan' => $bulan,
+                $hari => $shiftValue,
+            ]);
+        }
+
 
         return back()->with('success', 'Jadwal berhasil diperbarui!');
     }
@@ -416,6 +432,11 @@ class PresensiController extends Controller
         TemporaryPresensi::where('id', $id)->delete();
 
         return back()->with('success', 'Verifikasi presensi berhasil tersimpan!');
+    }
+
+    public function hapusAbsensiPegawai($id) {
+        TemporaryPresensi::where('id', $id)->delete();
+        return back()->with('success', 'Data berhasil dihapus!');
     }
 
     public function updateShiftPresensi(Request $request, $id) {

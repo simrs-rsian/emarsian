@@ -91,6 +91,7 @@ Route::middleware(['auth.check:admin', 'dynamic.role'])->group(function () {
     //presensi
     Route::resource('presensi/presensi', PresensiController::class);
     Route::get('presensi/absensi-pegawai', [PresensiController::class, 'absensiPegawai'])->name('presensi.absensiPegawai');
+    Route::delete('presensi/presensi/hapus-absensi-pegawai/{id}', [PresensiController::class, 'hapusAbsensiPegawai'])->name('presensi.hapusAbsensiPegawai');
     Route::post('presensi/presensi/verify/{id}', [PresensiController::class, 'verifyPresensi'])->name('presensi.verify');
     Route::post('presensi/presensi/update-shift/{id}', [PresensiController::class, 'updateShiftPresensi'])->name('presensi.updateShiftPresensi');
     Route::get('presensi/setting_presensi/{id}', [PresensiController::class, 'showSettingPresensi'])->name('presensi.setPresensi');
