@@ -4,26 +4,31 @@ namespace App\Http\Controllers\Riwayat;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Riwayat\RiwayatLain;
+use App\Models\Riwayat\RiwayatEkk;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\Employee\Employee;
 
-class RiwayatLainController extends Controller
+class RiwayatEkkController extends Controller
 {
-    public function show(Request $request, $riwayat_lain)
+    public function show(Request $request, $id)
     {        
-        $id_employee = $riwayat_lain;
-        $riwayatLains = RiwayatLain::leftjoin('employees', 'riwayat_lains.id_employee', '=', 'employees.id')
-            ->select('riwayat_lains.*', 'employees.nama_lengkap', 'employees.nip_karyawan')
-            ->where('riwayat_lains.id_employee', $id_employee)
+        $id_employee = $id;
+
+        $riwayatEkks = RiwayatEkk::leftJoin('employees', 'riwayat_ekks.id_employee', '=', 'employees.id')
+            ->select('riwayat_ekks.*', 'employees.nama_lengkap', 'employees.nip_karyawan')
+            ->where('riwayat_ekks.id_employee', $id_employee)
             ->get();
+
         $employee = Employee::find($id_employee);
-        return view('riwayat.lain.show', compact('riwayatLains', 'employee'));
+
+        return view('riwayat.ekk.show', compact('riwayatEkks', 'employee'));
     }
+
     
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'nama_riwayat' => 'required|string',
             'tanggal_riwayat' => 'required|date',
@@ -35,18 +40,18 @@ class RiwayatLainController extends Controller
         if ($request->hasFile('dokumen')) {
             foreach ($request->file('dokumen') as $file) {
                 $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('dokumen/dokumen_lain'), $filename);
+                $file->move(public_path('dokumen/dokumen_ekks'), $filename);
 
-                RiwayatLain::create([
+                RiwayatEkk::create([
                     'id_employee' => $request->id_employee,
                     'nama_riwayat' => $request->nama_riwayat . ' - ' . $file->getClientOriginalName(),
                     'tanggal_riwayat' => $request->tanggal_riwayat,
-                    'dokumen' => 'dokumen/dokumen_lain/' . $filename,
+                    'dokumen' => 'dokumen/dokumen_ekks/' . $filename,
                 ]);
             }
         } else {
             // Jika tidak upload dokumen, tetap simpan record (tanpa file)
-            RiwayatLain::create([
+            RiwayatEkk::create([
                 'id_employee' => $request->id_employee,
                 'nama_riwayat' => $request->nama_riwayat,
                 'tanggal_riwayat' => $request->tanggal_riwayat,
@@ -55,20 +60,21 @@ class RiwayatLainController extends Controller
         }
 
         return redirect()
-            ->route('riwayat_lain.show', ['riwayat_lain' => $request->id_employee])
-            ->with('success', 'Riwayat Lain-Lain berhasil ditambahkan.');
+            ->route('riwayat_ekk.show', ['riwayat_ekk' => $request->id_employee])
+            ->with('success', 'Riwayat EKK berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
-        $riwayat = RiwayatLain::findOrFail($id);
+        $riwayat = RiwayatEkk::findOrFail($id);
         $employee = Employee::find($riwayat->id_employee);
-        return view('riwayat.lain.edit', compact('riwayat', 'employee'));
+        return view('riwayat.ekk.edit', compact('riwayat', 'employee'));
     }
 
     public function update(Request $request, $id)
     {
-        $riwayat = RiwayatLain::findOrFail($id);
+        // dd($request->all());
+        $riwayat = RiwayatEkk::findOrFail($id);
 
         $request->validate([
             'nama_riwayat' => 'required|string',
@@ -87,27 +93,27 @@ class RiwayatLainController extends Controller
 
             // Menyimpan dokumen baru
             $newFileName = $request->file('dokumen')->getClientOriginalName();
-            $request->file('dokumen')->move(public_path('dokumen/dokumen_lain'), $newFileName);
+            $request->file('dokumen')->move(public_path('dokumen/dokumen_ekks'), $newFileName);
 
             // Tambahkan path dokumen baru ke dalam array data
-            $data['dokumen'] = 'dokumen/dokumen_lain/' . $newFileName;
+            $data['dokumen'] = 'dokumen/dokumen_ekks/' . $newFileName;
         }
 
-        // Update data Riwayat Lain-Lain
+        // Update data Riwayat EKK
         // dd($data);
         $riwayat->update($data);
 
         // Kembali ke halaman sebelumnya dengan pesan sukses
-        return redirect()->route('riwayat_lain.show', ['riwayat_lain' => $riwayat->id_employee])->with('success', 'Riwayat Lain-Lain berhasil diperbarui.');
+        return redirect()->route('riwayat_ekk.show', ['id' => $riwayat->id_employee])->with('success', 'Riwayat EKK berhasil diperbarui.');
     }
 
-    public function destroy(RiwayatLain $RiwayatLain)
+    public function destroy(RiwayatEkk $RiwayatEkk)
     {
-        if ($RiwayatLain->dokumen) {
-            Storage::delete($RiwayatLain->dokumen);
+        if ($RiwayatEkk->dokumen) {
+            Storage::delete($RiwayatEkk->dokumen);
         }
 
-        $RiwayatLain->delete();
+        $RiwayatEkk->delete();
         
         return back()->with('success', 'Riwayat Lain-Lain berhasil dihapus.');
     }

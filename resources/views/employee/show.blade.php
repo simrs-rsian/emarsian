@@ -237,6 +237,29 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>Riwayat STR <br><b>Total Data : {{ $count_str }} Data </b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_str.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
+                        <td>Riwayat EKK <br><b>Total Data : {{ $count_ekk }} Data </b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_ekk.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Riwayat Rekruetmen <br><b>Total Data : {{ $count_rekrutmen }} Data </b></td>
+                        <td>:</td>
+                        <td>
+                            <a href="{{ route('riwayat_rekrutmen.show', $employee->id) }}" class="btn btn-primary"> 
+                                <i class="mdi mdi-eye"></i> Details
+                            </a>
+                        </td>
                         <td>Riwayat Lain-Lain <br><b>Total Data : {{ $count_lain }} Data </b></td>
                         <td>:</td>
                         <td>

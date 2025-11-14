@@ -4,26 +4,31 @@ namespace App\Http\Controllers\Riwayat;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Riwayat\RiwayatLain;
+use App\Models\Riwayat\RiwayatStr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\Employee\Employee;
 
-class RiwayatLainController extends Controller
+class RiwayatStrController extends Controller
 {
-    public function show(Request $request, $riwayat_lain)
+    public function show(Request $request, $id)
     {        
-        $id_employee = $riwayat_lain;
-        $riwayatLains = RiwayatLain::leftjoin('employees', 'riwayat_lains.id_employee', '=', 'employees.id')
-            ->select('riwayat_lains.*', 'employees.nama_lengkap', 'employees.nip_karyawan')
-            ->where('riwayat_lains.id_employee', $id_employee)
+        $id_employee = $id;
+
+        $riwayatStrs = RiwayatStr::leftJoin('employees', 'riwayat_strs.id_employee', '=', 'employees.id')
+            ->select('riwayat_strs.*', 'employees.nama_lengkap', 'employees.nip_karyawan')
+            ->where('riwayat_strs.id_employee', $id_employee)
             ->get();
+
         $employee = Employee::find($id_employee);
-        return view('riwayat.lain.show', compact('riwayatLains', 'employee'));
+
+        return view('riwayat.str.show', compact('riwayatStrs', 'employee'));
     }
+
     
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'nama_riwayat' => 'required|string',
             'tanggal_riwayat' => 'required|date',
@@ -35,18 +40,18 @@ class RiwayatLainController extends Controller
         if ($request->hasFile('dokumen')) {
             foreach ($request->file('dokumen') as $file) {
                 $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('dokumen/dokumen_lain'), $filename);
+                $file->move(public_path('dokumen/dokumen_strs'), $filename);
 
-                RiwayatLain::create([
+                RiwayatStr::create([
                     'id_employee' => $request->id_employee,
                     'nama_riwayat' => $request->nama_riwayat . ' - ' . $file->getClientOriginalName(),
                     'tanggal_riwayat' => $request->tanggal_riwayat,
-                    'dokumen' => 'dokumen/dokumen_lain/' . $filename,
+                    'dokumen' => 'dokumen/dokumen_strs/' . $filename,
                 ]);
             }
         } else {
             // Jika tidak upload dokumen, tetap simpan record (tanpa file)
-            RiwayatLain::create([
+            RiwayatStr::create([
                 'id_employee' => $request->id_employee,
                 'nama_riwayat' => $request->nama_riwayat,
                 'tanggal_riwayat' => $request->tanggal_riwayat,
@@ -55,20 +60,22 @@ class RiwayatLainController extends Controller
         }
 
         return redirect()
-            ->route('riwayat_lain.show', ['riwayat_lain' => $request->id_employee])
-            ->with('success', 'Riwayat Lain-Lain berhasil ditambahkan.');
+            ->route('riwayat_str.show', ['riwayat_str' => $request->id_employee])
+            ->with('success', 'Riwayat STR berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
-        $riwayat = RiwayatLain::findOrFail($id);
+        $riwayat = RiwayatStr::findOrFail($id);
         $employee = Employee::find($riwayat->id_employee);
-        return view('riwayat.lain.edit', compact('riwayat', 'employee'));
+        return view('riwayat.str.edit', compact('riwayat', 'employee'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $riwayat_str)
     {
-        $riwayat = RiwayatLain::findOrFail($id);
+        // dd($request->all());
+        $riwayat = RiwayatStr::findOrFail($riwayat_str);
+        // dd($riwayat->id_employee);
 
         $request->validate([
             'nama_riwayat' => 'required|string',
@@ -87,28 +94,29 @@ class RiwayatLainController extends Controller
 
             // Menyimpan dokumen baru
             $newFileName = $request->file('dokumen')->getClientOriginalName();
-            $request->file('dokumen')->move(public_path('dokumen/dokumen_lain'), $newFileName);
+            $request->file('dokumen')->move(public_path('dokumen/dokumen_strs'), $newFileName);
 
             // Tambahkan path dokumen baru ke dalam array data
-            $data['dokumen'] = 'dokumen/dokumen_lain/' . $newFileName;
+            $data['dokumen'] = 'dokumen/dokumen_strs/' . $newFileName;
         }
 
-        // Update data Riwayat Lain-Lain
+        // Update data Riwayat STR
         // dd($data);
         $riwayat->update($data);
 
         // Kembali ke halaman sebelumnya dengan pesan sukses
-        return redirect()->route('riwayat_lain.show', ['riwayat_lain' => $riwayat->id_employee])->with('success', 'Riwayat Lain-Lain berhasil diperbarui.');
+        return redirect()->route('riwayat_str.show', ['riwayat_str' => $riwayat->id_employee])->with('success', 'Riwayat STR berhasil diperbarui.');
     }
 
-    public function destroy(RiwayatLain $RiwayatLain)
+    public function destroy(RiwayatStr $RiwayatStr)
     {
-        if ($RiwayatLain->dokumen) {
-            Storage::delete($RiwayatLain->dokumen);
+        // dd($RiwayatStr->dokumen);
+        if ($RiwayatStr->dokumen) {
+            Storage::delete($RiwayatStr->dokumen);
         }
 
-        $RiwayatLain->delete();
+        $RiwayatStr->delete();
         
-        return back()->with('success', 'Riwayat Lain-Lain berhasil dihapus.');
+        return back()->with('success', 'Riwayat STR berhasil dihapus.');
     }
 }

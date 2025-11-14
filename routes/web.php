@@ -21,13 +21,16 @@ use App\Http\Controllers\Navmenus\NavmenuController;
 use App\Http\Controllers\Pelatihan\JenisPelatihanController;
 use App\Http\Controllers\Pelatihan\PelatihanController;
 use App\Http\Controllers\Presensi\PresensiController;
+use App\Http\Controllers\Riwayat\RiwayatEkkController;
 use App\Http\Controllers\Riwayat\RiwayatJabatanController;
 use App\Http\Controllers\Riwayat\RiwayatKeluargaController;
 use App\Http\Controllers\Riwayat\RiwayatKontrakController;
 use App\Http\Controllers\Riwayat\RiwayatLainController;
 use App\Http\Controllers\Riwayat\RiwayatPelatihanController;
 use App\Http\Controllers\Riwayat\RiwayatPendidikanController;
+use App\Http\Controllers\Riwayat\RiwayatRekrutmenController;
 use App\Http\Controllers\Riwayat\RiwayatSippController;
+use App\Http\Controllers\Riwayat\RiwayatStrController;
 use App\Http\Controllers\Setting\RoleController;
 use App\Http\Controllers\Setting\UserController;
 use App\Http\Controllers\Setting\WebSettingController;
@@ -85,6 +88,9 @@ Route::middleware(['auth.check:admin', 'dynamic.role'])->group(function () {
     Route::resource('riwayat/riwayat_sipp', RiwayatSippController::class);
     Route::resource('riwayat/riwayat_kontrak', RiwayatKontrakController::class);
     Route::resource('riwayat/riwayat_lain', RiwayatLainController::class);
+   Route::resource('riwayat/riwayat_rekrutmen', RiwayatRekrutmenController::class)->parameters(['riwayat_rekrutmen' => 'riwayat_rekrutmen']);
+    Route::resource('riwayat/riwayat_str', RiwayatStrController::class)->parameters(['riwayat_str' => 'riwayat_str']);
+    Route::resource('riwayat/riwayat_ekk', RiwayatEkkController::class)->parameters(['riwayat_ekk' => 'riwayat_ekk']);
     Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
     Route::post('/pelatihan/pelatihan/direct-store', [PelatihanController::class, 'directstore'])->name('pelatihan.directstore'); 
 

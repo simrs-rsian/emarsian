@@ -389,8 +389,20 @@ class EmployeeController extends Controller
         $count_lain = DB::table('riwayat_lains as l')
                     ->where('l.id_employee', $employee->id)
                     ->count();
+
+        $count_rekrutmen = DB::table('riwayat_rekrutmens as r')
+                    ->where('r.id_employee', $employee->id)
+                    ->count();
+        
+        $count_str = DB::table('riwayat_strs as s')
+                    ->where('s.id_employee', $employee->id)
+                    ->count();
+        
+        $count_ekk = DB::table('riwayat_ekks as e')
+                    ->where('e.id_employee', $employee->id)
+                    ->count();
                             
-        return view('employee.show', compact('employee', 'count_pendidikan', 'count_pelatihan', 'count_jabatan', 'count_keluarga', 'count_sipp', 'count_kontrak', 'count_lain'));
+        return view('employee.show', compact('employee', 'count_pendidikan', 'count_pelatihan', 'count_jabatan', 'count_keluarga', 'count_sipp', 'count_kontrak', 'count_lain', 'count_rekrutmen', 'count_str', 'count_ekk'));
     }
 
     public function updatePassword(Request $request, $id)
