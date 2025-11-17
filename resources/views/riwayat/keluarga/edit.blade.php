@@ -35,20 +35,8 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="pekerjaan_keluarga{{ $riwayat->id }}" class="form-label">Pekerjaan</label>
-                            <input type="text" class="form-control" id="pekerjaan_keluarga{{ $riwayat->id }}" name="pekerjaan_keluarga" value="{{ $riwayat->pekerjaan_keluarga }}" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="pendidikan_keluarga{{ $riwayat->id }}" class="form-label">Pendidikan Terakhir</label>
-                            <select name="pendidikan_keluarga" id="pendidikan_keluarga{{ $riwayat->id }}" class="form-control" required>
-                                <option value="SD" {{ $riwayat->pendidikan_keluarga == 'SD' ? 'selected' : '' }}>SD</option>
-                                <option value="SMP" {{ $riwayat->pendidikan_keluarga == 'SMP' ? 'selected' : '' }}>SMP</option>
-                                <option value="SMA" {{ $riwayat->pendidikan_keluarga == 'SMA' ? 'selected' : '' }}>SMA</option>
-                                <option value="Diploma" {{ $riwayat->pendidikan_keluarga == 'Diploma' ? 'selected' : '' }}>Diploma</option>
-                                <option value="Sarjana" {{ $riwayat->pendidikan_keluarga == 'Sarjana' ? 'selected' : '' }}>Sarjana</option>
-                                <option value="Lainnya" {{ $riwayat->pendidikan_keluarga == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                            </select>
+                            <label for="jenis_data{{ $riwayat->id }}" class="form-label">Jenis Data</label>
+                            <input type="text" class="form-control" id="jenis_data{{ $riwayat->id }}" name="jenis_data" value="{{ $riwayat->jenis_data }}" placeholder="KTP/KK/Surat nikah, dsb">
                         </div>
                         <div class="mb-3">
                             <label for="dokumen" class="form-label">Dokumen</label>

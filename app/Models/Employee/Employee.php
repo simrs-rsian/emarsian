@@ -15,7 +15,7 @@ class Employee extends Authenticatable
         'nik_karyawan', 'nip_karyawan', 'photo', 'password', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir',
         'tanggal_lahir', 'tmt', 'tmta', 'masa_kerja', 'pendidikan','jurusan', 'profesi',
         'pendidikan_diakui', 'status_karyawan', 'status_keluarga', 'jabatan_struktural',
-        'golongan', 'alamat_lengkap', 'telepon', 'photo', 'kelompok_usia', 'umur', 'telepon', 'golongan_darah', 'bpjs_kesehatan', 'bpjs_ketenagakerjaan', 'npwp'
+        'golongan', 'alamat_lengkap', 'telepon', 'photo', 'kelompok_usia', 'umur', 'telepon', 'golongan_darah', 'bpjs_kesehatan', 'bpjs_ketenagakerjaan', 'npwp', 'email'
     ];
     protected $dates = ['deleted_at'];
 

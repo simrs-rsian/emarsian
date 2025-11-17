@@ -45,8 +45,7 @@
                                     <th scope="col">No</th>
                                     <th scope="col">Nama Lengkap</th>
                                     <th scope="col">Status Keluarga</th>
-                                    <th scope="col">Pekerjaan</th>
-                                    <th scope="col">Pendidikan Terkahir</th>
+                                    <th scope="col">Jenis Data</th>
                                     <th scope="col">Dokumen</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
@@ -55,10 +54,9 @@
                                 @foreach($riwayatKeluargas as $key => $riwayatKeluarga)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $riwayatKeluarga->nama_keluarga }}</td>
-                                        <td>{{ $riwayatKeluarga->status_keluarga }}</td>
-                                        <td>{{ $riwayatKeluarga->pekerjaan_keluarga }}</td>
-                                        <td>{{ $riwayatKeluarga->pendidikan_keluarga }}</td>
+                                        <td>{{ $riwayatKeluarga->nama_keluarga ?? '-' }}</td>
+                                        <td>{{ $riwayatKeluarga->status_keluarga ?? '-' }}</td>
+                                        <td>{{ $riwayatKeluarga->jenis_data ?? '-' }}</td>
                                         <td>
                                             @if($riwayatKeluarga->dokumen)
                                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenKeluargaModal{{ $riwayatKeluarga->id }}">
@@ -150,22 +148,10 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="pekerjaan_keluarga" class="form-label">Pekerjaan</label>
-                                    <input type="text" class="form-control" id="pekerjaan_keluarga" name="pekerjaan_keluarga" required>
+                                    <label for="jenis_data" class="form-label">Jenis Data</label>
+                                    <input type="text" class="form-control" id="jenis_data" name="jenis_data" placeholder="KTP/KK/Surat nikah, dsb">
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="pendidikan_keluarga" class="form-label">Pendidikan Terakhir</label>
-                                    <select name="pendidikan_keluarga" id="pendidikan_keluarga" class="form-control" required>
-                                        <option value="">Pilih Pendidikan</option>
-                                        <option value="SD">SD</option>
-                                        <option value="SMP">SMP</option>
-                                        <option value="SMA">SMA</option>
-                                        <option value="Diploma">Diploma</option>
-                                        <option value="Sarjana">Sarjana</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
-                                </div>
                                 <div class="mb-3">
                                     <label for="dokumen" class="form-label">Dokumen</label>
                                     <input type="file" class="form-control" id="dokumen" name="dokumen">

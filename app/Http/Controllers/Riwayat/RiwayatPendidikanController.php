@@ -31,6 +31,7 @@ class RiwayatPendidikanController extends Controller
             'nama_sekolah' => 'required',
             'lokasi' => 'required',
             'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+            'jenis_data' => 'nullable|string',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
@@ -67,6 +68,7 @@ class RiwayatPendidikanController extends Controller
             'tahun_lulus' => 'required|string',
             'nama_sekolah' => 'required|string',
             'lokasi' => 'required|string',
+            'jenis_data' => 'nullable|string',
             'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
         ]);
 

@@ -35,10 +35,11 @@
                                     <th>Profesi</th>
                                     <th>Status Karyawan</th>
                                     <th>Status Keluarga</th>
-                                    <th>Jabatan Struktural</th>
+                                    <th>Jabatan</th>
                                     <th>Golongan</th>
                                     <th>Alamat Lengkap</th>
                                     <th>Telepon</th>
+                                    <th>Email</th>
                                     <th>Kelompok Usia</th>
                                     <th>Umur</th>
                                 </tr>
@@ -71,6 +72,7 @@
                                         <td>{{ $employee->nama_golongan ?? '-' }}</td>
                                         <td>{{ $employee->alamat_lengkap }}</td>
                                         <td>{{ $employee->telepon ?? '-' }}</td>
+                                        <td>{{ $employee->email ?? '-' }}</td>
                                         <td>{{ $employee->nama_kelompok }}</td>
                                         <td>{{ $employee->umur }} Tahun</td>
                                     </tr>

@@ -117,6 +117,15 @@
 
                     <div class="col-md-6">
                         <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Email</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="email" class="form-control" placeholder="email@gmail.com" value="{{ old('email') }}" required/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Golongan Darah</label>
                             <div class="col-sm-9">
                                 <select class="form-select " style="color: black;"   name="golongan_darah" required>

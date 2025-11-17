@@ -176,11 +176,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Edit Button -->
-            <div class="text-left mt-4">
-                <a href="{{ route('pegawai.editProfile') }}" class="btn btn-primary">Edit Data</a> &nbsp;&nbsp;
-            </div>
         </div>
     </div>
 </div>

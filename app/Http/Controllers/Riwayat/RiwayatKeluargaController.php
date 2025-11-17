@@ -27,9 +27,8 @@ class RiwayatKeluargaController extends Controller
         $request->validate([
             'nama_keluarga' => 'required|string',
             'status_keluarga' => 'required|string',
-            'pekerjaan_keluarga' => 'required|string',
-            'pendidikan_keluarga' => 'required|string',
             'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+            'jenis_data' => 'nullable|string',
             'id_employee' => 'required|exists:employees,id',
         ]);
 
@@ -62,8 +61,7 @@ class RiwayatKeluargaController extends Controller
         $request->validate([
             'nama_keluarga' => 'required|string',
             'status_keluarga' => 'required|string',
-            'pekerjaan_keluarga' => 'required|string',
-            'pendidikan_keluarga' => 'required|string',
+            'jenis_data' => 'nullable|string',
             'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
         ]);
         // dd($request->all());

@@ -47,6 +47,7 @@
                                     <th scope="col">Tahun Lulus</th>
                                     <th scope="col">Sekolah/Universitas</th>
                                     <th scope="col">Lokasi</th>
+                                    <th scope="col">Jenis Data</th>
                                     <th scope="col">Dokumen</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
@@ -55,10 +56,11 @@
                                 @foreach($riwayatPendidikans as $key => $riwayatPendidikan)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $riwayatPendidikan->tahun_masuk }}</td>
-                                        <td>{{ $riwayatPendidikan->tahun_lulus }}</td>
-                                        <td>{{ $riwayatPendidikan->nama_sekolah }}</td>
-                                        <td>{{ $riwayatPendidikan->lokasi }}</td>
+                                        <td>{{ $riwayatPendidikan->tahun_masuk ?? '-' }}</td>
+                                        <td>{{ $riwayatPendidikan->tahun_lulus ?? '-' }}</td>
+                                        <td>{{ $riwayatPendidikan->nama_sekolah ?? '-' }}</td>
+                                        <td>{{ $riwayatPendidikan->lokasi ?? '-' }}</td>
+                                        <td>{{ $riwayatPendidikan->jenis_data ?? '-' }}</td>
                                         <td>
                                             @if($riwayatPendidikan->dokumen)
                                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewDokumenPendidikanModal{{ $riwayatPendidikan->id }}">
@@ -146,6 +148,14 @@
                                 <div class="mb-3">
                                     <label for="lokasi" class="form-label">Lokasi</label>
                                     <input type="text" class="form-control" id="lokasi" name="lokasi" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lokasi" class="form-label">Jenis Data</label>
+                                    <select name="jenis_data" id="jenis_data" class="form-control">
+                                        <option value="">-- Pilih Jenis --</option>
+                                        <option value="Transkip">Transkip</option>
+                                        <option value="Ijazah">Ijazah</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="dokumen" class="form-label">Dokumen</label>

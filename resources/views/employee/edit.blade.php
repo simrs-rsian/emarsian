@@ -108,6 +108,15 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Email</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="email" class="form-control" placeholder="email@gmail.com" value="{{ $employee->email }}" />
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Input untuk Upload photo -->
                     <div class="col-md-6">
                         <div class="form-group row">

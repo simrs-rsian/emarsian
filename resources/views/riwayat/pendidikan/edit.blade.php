@@ -31,6 +31,14 @@
                             <input type="text" class="form-control" id="lokasi" name="lokasi" value="{{ $riwayat->lokasi }}" required>
                         </div>
                         <div class="mb-3">
+                            <label for="jenis_data" class="form-label">Jenis Data</label>
+                            <select name="jenis_data" id="jenis_data" class="form-control">
+                                <option value="">-- Pilih Jenis --</option>
+                                <option value="Transkip" {{  $riwayat->jenis_data == 'Transkip' ? 'selected' : ''  }}>Transkip</option>
+                                <option value="Ijazah" {{  $riwayat->jenis_data == 'Ijazah' ? 'selected' : ''  }}>{{ $riwayat->jenis_data }}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label for="dokumen" class="form-label">Dokumen</label>
                             <input type="file" class="form-control" id="dokumen" name="dokumen">
                             * Silahkan Upload file dengan extention .pdf/.jpg/.png <br>
