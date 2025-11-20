@@ -167,6 +167,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">NBM Karyawan</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="nbm" class="form-control" value="{{ $employee->nbm }}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Pendidikan</label>
                             <div class="col-sm-9">
                                 <select class="form-select select2-pendidikan" style="color: black;" name="pendidikan">
@@ -180,6 +188,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
 
                     <div class="col-md-6">
                         <div class="form-group row">

@@ -98,6 +98,26 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Email</label>
+                        <div class="col-sm-9">
+                            <p class="form-control-static">{{ $employee->email }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Umur</label>
+                        <div class="col-sm-9">
+                            <p class="form-control-static">{{ $employee->umur }} Tahun</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <p class="card-description"><h3>Informasi Karyawan</h3></p>
 
             <div class="row">
@@ -115,6 +135,26 @@
                         <label class="col-sm-3 col-form-label">Status Keluarga</label>
                         <div class="col-sm-9">
                             <p class="form-control-static">{{ $employee->namastatuskel }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">NBM Karyawan</label>
+                        <div class="col-sm-9">
+                            <p class="form-control-static">{{ $employee->nbm }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">NPWP</label>
+                        <div class="col-sm-9">
+                            <p class="form-control-static">{{ $employee->npwp }}</p>
                         </div>
                     </div>
                 </div>

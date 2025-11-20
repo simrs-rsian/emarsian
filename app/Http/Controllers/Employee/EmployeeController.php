@@ -79,6 +79,7 @@ class EmployeeController extends Controller
             'bpjs_kesehatan' => 'nullable',
             'bpjs_ketenagakerjaan' => 'nullable',
             'npwp' => 'nullable',
+            'nbm' => 'nullable',
         ], [
             'nip_karyawan.required' => 'NIP Karyawan harus diisi.',
             'nik_karyawan.unique' => 'NIK Karyawan sudah digunakan.',
@@ -220,6 +221,7 @@ class EmployeeController extends Controller
             'bpjs_kesehatan' => 'nullable',
             'bpjs_ketenagakerjaan' => 'nullable',
             'npwp' => 'nullable',
+            'nbm' => 'nullable',
         ], [
             // Custom error messages
             'nik_karyawan.required' => 'NIK Karyawan harus diisi.',
@@ -287,7 +289,7 @@ class EmployeeController extends Controller
         // Memperbarui data karyawan
         $employee->update($employeeData);
 
-        return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil diperbarui');
+        return redirect()->route('employee.show', $employee->id)->with('success', 'Data karyawan berhasil diperbarui');
     }
 
     // Menentukan kelompok usia berdasarkan umur
