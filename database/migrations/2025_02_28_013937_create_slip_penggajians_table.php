@@ -11,23 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('slip_penggajians', function (Blueprint $table) {
-            $table->id();
-            $table->integer('bulan');
-            $table->integer('tahun');
-            $table->bigInteger('total_gaji');
-            $table->bigInteger('total_potongan');
-            $table->bigInteger('total_terima');
-            $table->foreignId('employee_id')->constrained('employees');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('slip_penggajians')) {
+            Schema::create('slip_penggajians', function (Blueprint $table) {
+                $table->id();
+                $table->integer('bulan');
+                $table->integer('tahun');
+                $table->bigInteger('total_gaji');
+                $table->bigInteger('total_potongan');
+                $table->bigInteger('total_terima');
+
+                // Tambahkan FK hanya jika tabel employees ada
+                if (Schema::hasTable('employees')) {
+                    $table->foreignId('employee_id')->constrained('employees');
+                } else {
+                    $table->unsignedBigInteger('employee_id');
+                }
+
+                $table->timestamps();
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('slip_penggajians');
+        if (Schema::hasTable('slip_penggajians')) {
+            Schema::dropIfExists('slip_penggajians');
+        }
     }
+
 };

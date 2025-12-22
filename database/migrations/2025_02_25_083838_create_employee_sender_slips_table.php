@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employee_sender_slips', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama');
-            $table->string('jabatan');
-            $table->string('bagian_ruang');
-            $table->string('nip');
-            $table->string('no_wa');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('employee_sender_slips')) {
+            Schema::create('employee_sender_slips', function (Blueprint $table) {
+                $table->id();
+                $table->string('nama');
+                $table->string('jabatan');
+                $table->string('bagian_ruang');
+                $table->string('nip');
+                $table->string('no_wa');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

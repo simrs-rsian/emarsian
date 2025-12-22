@@ -11,29 +11,56 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Ubah nama tabel
-        Schema::rename('slip_potongans', 'rincian_slip_potongans');
+        // Rename tabel hanya jika tujuan belum ada
+        if (Schema::hasTable('slip_potongans') && !Schema::hasTable('rincian_slip_potongans')) {
+            Schema::rename('slip_potongans', 'rincian_slip_potongans');
+        }
 
-        // Ubah nama kolom dan hapus kolom
-        Schema::table('rincian_slip_potongans', function (Blueprint $table) {
-            $table->renameColumn('employee_id', 'slip_penggajian_id'); // Ubah nama kolom
-            $table->dropColumn(['bulan', 'tahun']); // Hapus kolom
-        });
+        // Pastikan tabel tujuan ada
+        if (Schema::hasTable('rincian_slip_potongans')) {
+            Schema::table('rincian_slip_potongans', function (Blueprint $table) {
+                
+                // Rename kolom jika kolom asal ada dan kolom tujuan belum ada
+                if (Schema::hasColumn('rincian_slip_potongans', 'employee_id') &&
+                    !Schema::hasColumn('rincian_slip_potongans', 'slip_penggajian_id')) {
+                    $table->renameColumn('employee_id', 'slip_penggajian_id');
+                }
+
+                // Hapus kolom hanya jika kolomnya memang ada
+                if (Schema::hasColumn('rincian_slip_potongans', 'bulan')) {
+                    $table->dropColumn('bulan');
+                }
+                if (Schema::hasColumn('rincian_slip_potongans', 'tahun')) {
+                    $table->dropColumn('tahun');
+                }
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        // Kembalikan perubahan nama tabel
-        Schema::rename('rincian_slip_potongans', 'slip_potongans');
+        // Kembalikan nama tabel jika kondisi memungkinkan
+        if (Schema::hasTable('rincian_slip_potongans') && !Schema::hasTable('slip_potongans')) {
+            Schema::rename('rincian_slip_potongans', 'slip_potongans');
+        }
 
-        // Kembalikan perubahan nama kolom dan tambahkan kembali kolom yang dihapus
-        Schema::table('slip_potongans', function (Blueprint $table) {
-            $table->renameColumn('slip_penggajian_id', 'employee_id'); // Kembalikan nama kolom
-            $table->integer('bulan'); // Tambahkan kembali kolom bulan
-            $table->integer('tahun'); // Tambahkan kembali kolom tahun
-        });
+        if (Schema::hasTable('slip_potongans')) {
+            Schema::table('slip_potongans', function (Blueprint $table) {
+
+                if (Schema::hasColumn('slip_potongans', 'slip_penggajian_id') &&
+                    !Schema::hasColumn('slip_potongans', 'employee_id')) {
+                    $table->renameColumn('slip_penggajian_id', 'employee_id');
+                }
+
+                // Tambahkan kolom jika belum ada
+                if (!Schema::hasColumn('slip_potongans', 'bulan')) {
+                    $table->integer('bulan');
+                }
+                if (!Schema::hasColumn('slip_potongans', 'tahun')) {
+                    $table->integer('tahun');
+                }
+            });
+        }
     }
+
 };

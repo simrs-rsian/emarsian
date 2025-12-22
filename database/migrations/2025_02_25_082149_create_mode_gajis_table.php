@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mode_gajis', function (Blueprint $table) {
-            $table->id();
-            $table->string('mode_nama');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('mode_gajis')) {
+            Schema::create('mode_gajis', function (Blueprint $table) {
+                $table->id();
+                $table->string('mode_nama');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

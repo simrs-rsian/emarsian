@@ -20,6 +20,10 @@ use App\Http\Controllers\Keuangan\SlipGajiController;
 use App\Http\Controllers\Navmenus\NavmenuController;
 use App\Http\Controllers\Pelatihan\JenisPelatihanController;
 use App\Http\Controllers\Pelatihan\PelatihanController;
+use App\Http\Controllers\Perizinan\Cuti\SettingCutiController;
+use App\Http\Controllers\Perizinan\Cuti\DataCutiController;
+use App\Http\Controllers\Perizinan\Cuti\PegawaiCutiController;
+use App\Http\Controllers\Perizinan\Cuti\RiwayatCutiController;
 use App\Http\Controllers\Presensi\PresensiController;
 use App\Http\Controllers\Riwayat\RiwayatEkkController;
 use App\Http\Controllers\Riwayat\RiwayatJabatanController;
@@ -93,6 +97,27 @@ Route::middleware(['auth.check:admin', 'dynamic.role'])->group(function () {
     Route::resource('riwayat/riwayat_ekk', RiwayatEkkController::class)->parameters(['riwayat_ekk' => 'riwayat_ekk']);
     Route::resource('riwayat/riwayat_pelatihan', RiwayatPelatihanController::class);
     Route::post('/pelatihan/pelatihan/direct-store', [PelatihanController::class, 'directstore'])->name('pelatihan.directstore'); 
+    
+    //perizinan
+    // Cuti
+    Route::get('perizinan/cuti/export-cuti', [DataCutiController::class, 'exportEmployeeCuti'])->name('perizinan.cuti.exportEmployeeCuti');
+    Route::post('perizinan/cuti/import-cuti', [DataCutiController::class, 'importEmployeeCuti'])->name('perizinan.cuti.importEmployeeCuti');
+    Route::resource(
+    'perizinan/cuti',
+        DataCutiController::class
+    )->names('perizinan.cuti.pegawai');
+    
+    Route::post('perizinan/riwayat/cuti/ttdMengetahui', [RiwayatCutiController::class, 'ttdMengetahui'])->name('perizinan.riwayat.cuti.ttdMengetahui');
+    Route::post('perizinan/riwayat/cuti/ttdMenyetujui', [RiwayatCutiController::class, 'ttdMenyetujui'])->name('perizinan.riwayat.cuti.ttdMenyetujui'); 
+    Route::post('perizinan/riwayat/cuti/ttdPencatat', [RiwayatCutiController::class, 'ttdPencatat'])->name('perizinan.riwayat.cuti.ttdPencatat');
+    Route::post('perizinan/riwayat/cuti/ttdPemohon', [RiwayatCutiController::class, 'ttdPemohon'])->name('perizinan.riwayat.cuti.ttdPemohon'); 
+    Route::post('perizinan/riwayat/cuti/ttdPengganti', [RiwayatCutiController::class, 'ttdPengganti'])->name('perizinan.riwayat.cuti.ttdPengganti');
+    Route::put('perizinan/riwayat/cuti/{kodeCuti}/nullTtd', [RiwayatCutiController::class, 'nullTtd'])->name('perizinan.riwayat.cuti.nullTtd'); 
+    Route::get('perizinan/riwayat/cuti/{kodeCuti}/download', [RiwayatCutiController::class, 'download'])->name('perizinan.riwayat.cuti.download');
+    Route::prefix('perizinan/riwayat/')->name('perizinan.riwayat.')->group(function () {
+        Route::resource('cuti', RiwayatCutiController::class)
+            ->only(['index', 'store', 'edit', 'update', 'destroy', 'show']);
+    });
 
     //presensi
     Route::resource('presensi/presensi', PresensiController::class);
@@ -161,6 +186,19 @@ Route::middleware(['auth.check:pegawai', 'check.default.password'])->group(funct
     Route::put('/pegawai/{id}/update-presensi', [PegawaiController::class, 'updatePresensi'])->name('pegawai.update_presensi');
     Route::get('pegawai/gaji', [PegawaiController::class, 'gaji'])->name('pegawai.gaji');
     // Route::get('actionlogout', [EmployeeAuthController::class, 'actionlogout'])->name('actionlogout');
+
+    // data cuti
+    Route::get('pegawai/cuti', [PegawaiCutiController::class, 'index'])->name('pegawai.cuti.index');
+    Route::post('pegawai/cuti/store', [PegawaiCutiController::class, 'store'])->name('pegawai.cuti.store');
+    Route::get('pegawai/cuti/show/{id}', [PegawaiCutiController::class, 'show'])->name('pegawai.cuti.show');
+    Route::get('pegawai/cuti/edit/{id}', [PegawaiCutiController::class, 'edit'])->name('pegawai.cuti.edit');
+    Route::put('pegawai/cuti/update/{id}', [PegawaiCutiController::class, 'update'])->name('pegawai.cuti.update');
+    Route::delete('pegawai/cuti/destroy/{id}', [PegawaiCutiController::class, 'destroy'])->name('pegawai.cuti.destroy');
+    Route::post('pegawai/cuti/ttdMenyetujui', [PegawaiCutiController::class, 'ttdMenyetujui'])->name('pegawai.cuti.ttdMenyetujui');
+    Route::post('pegawai/cuti/ttdPemohon', [PegawaiCutiController::class, 'ttdPemohon'])->name('pegawai.cuti.ttdPemohon'); 
+    Route::post('pegawai/cuti/ttdPengganti', [PegawaiCutiController::class, 'ttdPengganti'])->name('pegawai.cuti.ttdPengganti');
+    Route::get('pegawai/cuti/{kodeCuti}/download', [PegawaiCutiController::class, 'download'])->name('pegawai.cuti.download');
+    Route::put('pegawai/cuti/{kodeCuti}/nullTtd', [PegawaiCutiController::class, 'nullTtd'])->name('pegawai.cuti.nullTtd');
 });
 // Tambahkan route untuk halaman ganti password
 Route::get('pegawai/ganti-password', [PegawaiController::class, 'showChangePasswordForm'])->name('pegawai.ganti_password');

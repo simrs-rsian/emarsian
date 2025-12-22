@@ -11,18 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('employees', function (Blueprint $table) {
-            $table->softDeletes(); // Menambahkan kolom deleted_at
-        });
+        if (Schema::hasTable('employees')) {
+            Schema::table('employees', function (Blueprint $table) {
+                if (!Schema::hasColumn('employees', 'deleted_at')) {
+                    $table->softDeletes(); // Menambahkan kolom deleted_at
+                }
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('employees', function (Blueprint $table) {
-            $table->dropSoftDeletes(); // Menghapus kolom deleted_at jika rollback
-        });
+        if (Schema::hasTable('employees')) {
+            Schema::table('employees', function (Blueprint $table) {
+                if (Schema::hasColumn('employees', 'deleted_at')) {
+                    $table->dropSoftDeletes(); // Menghapus kolom deleted_at
+                }
+            });
+        }
     }
 };

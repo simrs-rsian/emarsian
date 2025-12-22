@@ -11,18 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('history_sender_slips', function (Blueprint $table) {
-            $table->string('status_downloader')->after('link');
-        });
+        if (Schema::hasTable('history_sender_slips')) {
+            Schema::table('history_sender_slips', function (Blueprint $table) {
+                if (!Schema::hasColumn('history_sender_slips', 'status_downloader')) {
+                    $table->string('status_downloader')->after('link');
+                }
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('history_sender_slips', function (Blueprint $table) {
-            $table->dropColumn('status_downloader');
-        });
+        if (Schema::hasTable('history_sender_slips')) {
+            Schema::table('history_sender_slips', function (Blueprint $table) {
+                if (Schema::hasColumn('history_sender_slips', 'status_downloader')) {
+                    $table->dropColumn('status_downloader');
+                }
+            });
+        }
     }
+
 };

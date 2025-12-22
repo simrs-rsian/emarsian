@@ -142,6 +142,29 @@
             </div>
         </li>
 
+        <li class="sidebar-item has-sub {{ request()->is('pegawai/cuti*') ? 'active' : '' }}">
+            <a href="#" class="sidebar-link toggle-menu" data-bs-toggle="collapse" data-bs-target="#menu-izin" aria-expanded="{{ request()->is('pegawai/cuti*') ? 'true' : 'false' }}">
+                <span class="aside-icon p-2 bg-light-success rounded-3">
+                    <i class="ti ti-calendar-check fs-7 text-success"></i>
+                </span>
+                <span class="hide-menu ms-2 ps-1">Perizinan</span>
+                <i class="ti ti-chevron-down float-end"></i>
+            </a>
+
+            <div id="menu-izin" class="collapse submenu {{ request()->is('pegawai/cuti*') ? 'show' : '' }}">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item ms-3 {{ request()->is('pegawai/cuti') ? 'active' : '' }}">
+                        <a href="{{ route('pegawai.cuti.index') }}" class="sidebar-link primary-hover-bg">
+                            <span class="aside-icon p-2 me-2 bg-light-success rounded-3">
+                                <i class="ti ti-menu fs-7 text-success"></i>
+                            </span>
+                            <span class="dropdown-item">Cuti</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
         <li class="sidebar-item">
             <a class="sidebar-link sidebar-link success-hover-bg" href="{{ route('feature.maintenance') }}" aria-expanded="false">
                 <span class="aside-icon p-2 bg-light-success rounded-3">

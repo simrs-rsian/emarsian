@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('default_gajis', function (Blueprint $table) {
-            $table->id();
-            $table->string('gaji_nama');
-            $table->foreignId('mode_id')->constrained('mode_gajis');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('default_gajis')) {
+            Schema::create('default_gajis', function (Blueprint $table) {
+                $table->id();
+                $table->string('gaji_nama');
+                $table->foreignId('mode_id')->constrained('mode_gajis');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

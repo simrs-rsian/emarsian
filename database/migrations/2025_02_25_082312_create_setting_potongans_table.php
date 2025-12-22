@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('setting_potongans', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('default_gaji_id')->constrained('default_gajis');
-            $table->integer('employee_id');
-            $table->integer('nominal');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('setting_potongans')) {
+            Schema::create('setting_potongans', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('default_gaji_id')->constrained('default_gajis');
+                $table->integer('employee_id');
+                $table->integer('nominal');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

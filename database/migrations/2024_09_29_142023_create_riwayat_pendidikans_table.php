@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('riwayat_pendidikans', function (Blueprint $table) {
-            $table->id();
-            $table->integer('id_employee');
-            $table->string('tahun_masuk');
-            $table->string('tahun_lulus');
-            $table->string('nama_sekolah');
-            $table->string('lokasi');
-            $table->string('dokumen');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('riwayat_pendidikans')) {
+            Schema::create('riwayat_pendidikans', function (Blueprint $table) {
+                $table->id();
+                $table->integer('id_employee');
+                $table->string('tahun_masuk');
+                $table->string('tahun_lulus');
+                $table->string('nama_sekolah');
+                $table->string('lokasi');
+                $table->string('dokumen');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -11,18 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('web_settings', function (Blueprint $table) {
-            $table->string('name')->nullable()->after('id');
-        });
+        if (Schema::hasTable('web_settings')) {
+            Schema::table('web_settings', function (Blueprint $table) {
+                if (!Schema::hasColumn('web_settings', 'name')) {
+                    $table->string('name')->nullable()->after('id');
+                }
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('web_settings', function (Blueprint $table) {
-            $table->dropColumn('name');
-        });
+        if (Schema::hasTable('web_settings')) {
+            Schema::table('web_settings', function (Blueprint $table) {
+                if (Schema::hasColumn('web_settings', 'name')) {
+                    $table->dropColumn('name');
+                }
+            });
+        }
     }
+
 };

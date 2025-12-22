@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('slip_potongans', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_potongan');
-            $table->integer('nominal_potongan');
-            $table->integer('employee_id');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('slip_potongans')) {
+            Schema::create('slip_potongans', function (Blueprint $table) {
+                $table->id();
+                $table->string('nama_potongan');
+                $table->integer('nominal_potongan');
+                $table->integer('employee_id');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

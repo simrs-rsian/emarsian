@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('riwayat_keluargas', function (Blueprint $table) {
-            $table->id();
-            $table->integer('id_employee');
-            $table->string('nama_keluarga');
-            $table->string('status_keluarga');
-            $table->string('dokumen');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('riwayat_keluargas')) {
+            Schema::create('riwayat_keluargas', function (Blueprint $table) {
+                $table->id();
+                $table->integer('id_employee');
+                $table->string('nama_keluarga');
+                $table->string('status_keluarga');
+                $table->string('dokumen');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

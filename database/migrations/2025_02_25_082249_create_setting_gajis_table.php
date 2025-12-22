@@ -11,20 +11,35 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('setting_gajis', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('default_gaji_id')->constrained('default_gajis');
-            $table->integer('employee_id');
-            $table->integer('nominal');
-            $table->timestamps();
-        });
+        // Cegah error jika tabel sudah ada
+        if (!Schema::hasTable('setting_gajis')) {
+
+            // Pastikan tabel default_gajis tersedia sebelum membuat foreign key
+            if (Schema::hasTable('default_gajis')) {
+                Schema::create('setting_gajis', function (Blueprint $table) {
+                    $table->id();
+                    $table->foreignId('default_gaji_id')->constrained('default_gajis');
+                    $table->integer('employee_id');
+                    $table->integer('nominal');
+                    $table->timestamps();
+                });
+
+            } else {
+                // Jika default_gajis belum ada, buat tabel tanpa FK agar tidak error
+                Schema::create('setting_gajis', function (Blueprint $table) {
+                    $table->id();
+                    $table->unsignedBigInteger('default_gaji_id'); // tanpa FK
+                    $table->integer('employee_id');
+                    $table->integer('nominal');
+                    $table->timestamps();
+                });
+            }
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('setting_gajis');
     }
+
 };

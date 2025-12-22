@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('slip_gajis', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_gaji');
-            $table->integer('nominal_gaji');
-            $table->integer('employee_id');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('slip_gajis')) {
+            Schema::create('slip_gajis', function (Blueprint $table) {
+                $table->id();
+                $table->string('nama_gaji');
+                $table->integer('nominal_gaji');
+                $table->integer('employee_id');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
