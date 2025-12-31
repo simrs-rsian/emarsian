@@ -22,6 +22,12 @@
                         <button type="button" class="btn btn-sm btn-info mb-3" data-bs-toggle="modal" data-bs-target="#createCutiModal">
                             Tambah Data Cuti Pegawai
                         </button>
+
+                        <!-- modal export data pilihan perbulan per tahun -->
+                        <button type="button" class="btn btn-sm btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#exportDataModal">
+                            Export Data Cuti Pegawai
+                        </button>
+
                         <div class="modal fade" id="importDataModal" tabindex="-1" role="dialog" aria-labelledby="importExcelLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl" role="document">
                                 <div class="modal-content">
@@ -119,6 +125,55 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- End Modal -->
+                        <div class="modal fade" id="exportDataModal" tabindex="-1" aria-labelledby="exportDataModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exportDataModalLabel">Export Data Cuti Pegawai</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ route('perizinan.cuti.exportEmployeeCutiFiltered') }}" method="GET">
+                                            <div class="mb-3">
+                                                <label for="tahun" class="form-label">Tahun</label>
+                                                <select name="tahun" id="tahun" class="form-control">
+                                                    @for ($year = now()->year - 5; $year <= now()->year + 1; $year++)
+                                                        <option value="{{ $year }}"
+                                                            {{ request('tahun', now()->year) == $year ? 'selected' : '' }}>
+                                                            {{ $year }}
+                                                        </option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="bulan" class="form-label">Bulan</label>
+                                                <select name="bulan" id="bulan" class="form-control" required>
+                                                    <option value="1" {{ now()->month == 1 ? 'selected' : '' }}>Januari</option>
+                                                    <option value="2" {{ now()->month == 2 ? 'selected' : '' }}>Februari</option>
+                                                    <option value="3" {{ now()->month == 3 ? 'selected' : '' }}>Maret</option>
+                                                    <option value="4" {{ now()->month == 4 ? 'selected' : '' }}>April</option>
+                                                    <option value="5" {{ now()->month == 5 ? 'selected' : '' }}>Mei</option>
+                                                    <option value="6" {{ now()->month == 6 ? 'selected' : '' }}>Juni</option>
+                                                    <option value="7" {{ now()->month == 7 ? 'selected' : '' }}>Juli</option>
+                                                    <option value="8" {{ now()->month == 8 ? 'selected' : '' }}>Agustus</option>
+                                                    <option value="9" {{ now()->month == 9 ? 'selected' : '' }}>September</option>
+                                                    <option value="10" {{ now()->month == 10 ? 'selected' : '' }}>Oktober</option>
+                                                    <option value="11" {{ now()->month == 11 ? 'selected' : '' }}>November</option>
+                                                    <option value="12" {{ now()->month == 12 ? 'selected' : '' }}>Desember</option>
+                                                </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Export</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Modal -->
+
                         @if (session('success'))
                             <div class="alert alert-success">
                                 {{ session('success') }}

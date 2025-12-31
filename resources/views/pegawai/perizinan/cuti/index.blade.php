@@ -32,7 +32,13 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <button class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#createCutiModal">Buat Cuti</button>
+                        @if($employeeCuti == null)
+                            <div class="alert alert-warning">
+                                <strong>Peringatan!</strong> Data cuti tahunan Anda belum tersedia. Silakan hubungi bagian HRD untuk mengatur data cuti tahunan Anda.
+                            </div>
+                        @else
+                            <button class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#createCutiModal">Buat Cuti</button>
+                        @endif
                     </div>
                     <br>
                     <div class="table-responsive" data-simplebar>
@@ -47,6 +53,7 @@
                                     <th scope="col">Tahun (Periode)</th>
                                 </tr>
                             </thead>
+                            @if ($riwayatCuti != null)
                             <tbody id="tabel">
                                 @foreach ($riwayatCuti as $cuti)
                                     <tr>
@@ -96,6 +103,7 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            @endif
                         </table>
                     </div>
                 </div>
@@ -103,7 +111,7 @@
         </div>
     </div>
 </div>
-
+@if($employeeCuti != null)
 <!-- Modal Tambah Data Cuti -->
 <div class="modal fade" id="createCutiModal" tabindex="-1" aria-labelledby="createCutiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -201,6 +209,7 @@
         </div>
     </div>
 </div>
+@endif
 <!-- Javascritp  -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {

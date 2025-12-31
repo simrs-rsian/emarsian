@@ -136,7 +136,7 @@
                                             </button>
                                         </form>
                                     @else
-                                        <button class="btn btn-primary open-modal-btn btn-sm" data-modal-title="TTD Mengetahui Ka. Subbag SDI" data-canvas-id="mengetahui-pad" data-input-name="Nama Yang Mengetahui">
+                                        <button class="btn btn-primary open-modal-btn btn-sm" data-modal-title="TTD Mengetahui Ka. Subbag SDI" data-canvas-id="mengetahui-pad" data-input-name="Nama Yang Mengetahui" data-user-name="Hendro Dwi Margono" >
                                         Ttd Mengetahui
                                         </button>
                                     @endif
@@ -214,7 +214,7 @@
                                             </button>
                                         </form>
                                     @else
-                                        <button class="btn btn-primary open-modal-btn btn-sm" data-modal-title="TTD Pencatat" data-canvas-id="menyetujui-pad" data-input-name="Nama Pencatat">
+                                        <button class="btn btn-primary open-modal-btn btn-sm" data-modal-title="TTD Pencatat" data-canvas-id="menyetujui-pad" data-input-name="Nama Pencatat" data-user-name="Mayang Widya Saputri">
                                         Ttd Menyetujui
                                         </button>
                                     @endif
@@ -270,27 +270,33 @@
     let signaturePad;
 
     document.querySelectorAll('.open-modal-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
+
             const modalTitle = button.getAttribute('data-modal-title');
-            const inputName = button.getAttribute('data-input-name');
+            const inputName  = button.getAttribute('data-input-name');
+            const userName   = button.getAttribute('data-user-name'); // 🔑 ambil nama user
 
             document.getElementById('universalModalLabel').textContent = modalTitle;
 
             const inputContainer = document.getElementById('dynamic-input-container');
-            const inputField = document.getElementById('dynamic-input');
+            const inputField     = document.getElementById('dynamic-input');
+            const inputLabel     = document.getElementById('dynamic-label');
 
             if (inputName) {
                 inputContainer.style.display = 'block';
-                document.getElementById('dynamic-label').textContent = inputName;
-                inputField.setAttribute('placeholder', inputName);
-                inputField.setAttribute('name', inputName.toLowerCase().replace(/\s/g, '_'));
-                inputField.value = '';
+                inputLabel.textContent = inputName;
+                inputField.placeholder = inputName;
+                inputField.name = inputName.toLowerCase().replace(/\s/g, '_');
+
+                // ✅ isi otomatis dari tombol
+                inputField.value = userName || '';
+            } else {
+                inputContainer.style.display = 'none';
             }
 
+            // Reset canvas lama
             const existingCanvas = document.getElementById('dynamic-canvas');
-            if (existingCanvas) {
-                existingCanvas.remove();
-            }
+            if (existingCanvas) existingCanvas.remove();
 
             const newCanvas = document.createElement('canvas');
             newCanvas.id = 'dynamic-canvas';
@@ -304,20 +310,16 @@
 
             function resizeCanvas() {
                 const ratio = Math.max(window.devicePixelRatio || 1, 1);
-                newCanvas.width = newCanvas.offsetWidth * ratio;
+                newCanvas.width  = newCanvas.offsetWidth * ratio;
                 newCanvas.height = newCanvas.offsetHeight * ratio;
-
-                const context = newCanvas.getContext('2d');
-                context.scale(ratio, ratio);
-
+                newCanvas.getContext('2d').scale(ratio, ratio);
                 signaturePad.clear();
             }
 
-            const modal = new bootstrap.Modal(document.getElementById('universalModal'));
-            document.getElementById('universalModal').addEventListener('shown.bs.modal', () => {
-                resizeCanvas();
-            });
+            const modalEl = document.getElementById('universalModal');
+            const modal   = new bootstrap.Modal(modalEl);
 
+            modalEl.addEventListener('shown.bs.modal', resizeCanvas, { once: true });
             modal.show();
         });
     });

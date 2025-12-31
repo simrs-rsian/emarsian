@@ -102,6 +102,8 @@ Route::middleware(['auth.check:admin', 'dynamic.role'])->group(function () {
     // Cuti
     Route::get('perizinan/cuti/export-cuti', [DataCutiController::class, 'exportEmployeeCuti'])->name('perizinan.cuti.exportEmployeeCuti');
     Route::post('perizinan/cuti/import-cuti', [DataCutiController::class, 'importEmployeeCuti'])->name('perizinan.cuti.importEmployeeCuti');
+    // exportEmployeeCutiFiltered
+    Route::get('perizinan/cuti/export-cuti-filtered', [DataCutiController::class, 'exportEmployeeCutiFiltered'])->name('perizinan.cuti.exportEmployeeCutiFiltered');
     Route::resource(
     'perizinan/cuti',
         DataCutiController::class

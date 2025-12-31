@@ -71,8 +71,24 @@ class RiwayatCutiController extends Controller
         $riwayatCuti = DataCuti::leftJoin('jenis_cutis', 'data_cutis.id_jenis_cuti', '=', 'jenis_cutis.id')
             ->leftJoin('employee_cutis', 'data_cutis.id_employee_cuti', '=', 'employee_cutis.id')
             ->leftJoin('employees', 'employee_cutis.employee_id', '=', 'employees.id')
-            ->select('data_cutis.*', 'employees.nama_lengkap as employee_name', 'employees.nip_karyawan as employee_nip', 'jenis_cutis.nama_jenis_cuti', 'employee_cutis.tahun', 'employee_cutis.periode')
+            ->select(
+                'data_cutis.*',
+                'employees.nama_lengkap as employee_name',
+                'employees.nip_karyawan as employee_nip',
+                'jenis_cutis.nama_jenis_cuti',
+                'employee_cutis.tahun',
+                'employee_cutis.periode'
+            )
             ->where('data_cutis.id_employee_cuti', $employeeCuti->id)
+            ->orderByRaw("
+                CASE
+                    WHEN data_cutis.ttd_mengetahui IS NULL
+                    OR data_cutis.ttd_pencatat IS NULL
+                    THEN 0
+                    ELSE 1
+                END
+            ")
+            ->orderBy('data_cutis.kode_cuti', 'asc')
             ->get();
 
         $tanggal_cuti = DB::table('tanggal_cutis')->orderBy('tanggal_cuti', 'asc')->get();
@@ -142,7 +158,7 @@ class RiwayatCutiController extends Controller
     }
 
     public function update(Request $request, $id) {
-        dd($request->all());
+        // dd($request->all());
         
         $dataCuti = DataCuti::where('kode_cuti', $id)->first();
         $dataCuti->update($request->all());
@@ -169,15 +185,18 @@ class RiwayatCutiController extends Controller
         ->with('success', 'Cuti Berhasil diubah');
     }
 
-    public function destroy($id) {
-        // dd($id);
+    public function destroy(Request $request, $id) {
         $dataCuti = DataCuti::where('kode_cuti', $id)->first();
+        $id_jenis_cuti = $request->jenis_cuti;
 
-        $employeeCuti = EmployeeCuti::where('id', $dataCuti->id_employee_cuti)->first();
-        $employeeCuti->update([
-            'cuti_diambil' => $employeeCuti->cuti_diambil - $dataCuti->jumlah_hari_cuti,
-            'sisa_cuti' => $employeeCuti->sisa_cuti + $dataCuti->jumlah_hari_cuti
-        ]);
+        if ($id_jenis_cuti == 1) {
+            $employeeCuti = EmployeeCuti::where('id', $dataCuti->id_employee_cuti)->first();
+            // dd($employeeCuti);
+            $employeeCuti->update([
+                'cuti_diambil' => $employeeCuti->cuti_diambil - $dataCuti->jumlah_hari_cuti,
+                'sisa_cuti' => $employeeCuti->sisa_cuti + $dataCuti->jumlah_hari_cuti
+            ]);
+        }
 
         $dataCuti->delete();
         DB::table('tanggal_cutis')->where('kode_cuti', $id)->delete();
@@ -524,7 +543,6 @@ class RiwayatCutiController extends Controller
         $cuti_data->update($request->all());
         return redirect()->route('perizinan.riwayat.cuti.show', $kode_cuti)->with('success', 'Cuti Berhasil diubah');
     }
-
     
     public function download(string $id)
     {
@@ -641,5 +659,4 @@ class RiwayatCutiController extends Controller
 
         return $dompdf->stream('resume_' . $id . '.pdf', ['Attachment' => false]);
     }
-
 }

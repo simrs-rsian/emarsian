@@ -39,9 +39,10 @@ class PegawaiCutiController extends Controller
             : 0;
 
         // dd($employeeCuti);
-
-        $dataCuti = DataCuti::where('id_employee_cuti', $employeeCuti->id)
-            ->get();
+        
+        $dataCuti = $employeeCuti
+                    ? DataCuti::where('id_employee_cuti', $employeeCuti->id)->get()
+                    : null;
 
         // ===============================
         // GENERATE KODE CUTI OTOMATIS
@@ -69,12 +70,24 @@ class PegawaiCutiController extends Controller
         //tampilkan jenis cuti
         $jenisCuti = JenisCuti::get();
 
-        $riwayatCuti = DataCuti::leftJoin('jenis_cutis', 'data_cutis.id_jenis_cuti', '=', 'jenis_cutis.id')
-            ->leftJoin('employee_cutis', 'data_cutis.id_employee_cuti', '=', 'employee_cutis.id')
-            ->leftJoin('employees', 'employee_cutis.employee_id', '=', 'employees.id')
-            ->select('data_cutis.*', 'employees.nama_lengkap as employee_name', 'employees.nip_karyawan as employee_nip', 'jenis_cutis.nama_jenis_cuti', 'employee_cutis.tahun', 'employee_cutis.periode')
-            ->where('data_cutis.id_employee_cuti', $employeeCuti->id)
-            ->get();
+        if ($employeeCuti) {
+            $riwayatCuti = DataCuti::leftJoin('jenis_cutis', 'data_cutis.id_jenis_cuti', '=', 'jenis_cutis.id')
+                ->leftJoin('employee_cutis', 'data_cutis.id_employee_cuti', '=', 'employee_cutis.id')
+                ->leftJoin('employees', 'employee_cutis.employee_id', '=', 'employees.id')
+                ->select(
+                    'data_cutis.*',
+                    'employees.nama_lengkap as employee_name',
+                    'employees.nip_karyawan as employee_nip',
+                    'jenis_cutis.nama_jenis_cuti',
+                    'employee_cutis.tahun',
+                    'employee_cutis.periode'
+                )
+                ->where('data_cutis.id_employee_cuti', $employeeCuti->id)
+                ->get();
+        } else {
+            $riwayatCuti = null;
+        }
+
 
         $tanggal_cuti = DB::table('tanggal_cutis')->orderBy('tanggal_cuti', 'asc')->get();
 

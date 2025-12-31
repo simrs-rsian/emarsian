@@ -52,16 +52,36 @@
                                 @foreach ($riwayatCuti as $cuti)
                                     <tr>
                                         <td>
-                                            <!-- Tampilkan Data surat cuti -->
-                                            <a href="{{ route('perizinan.riwayat.cuti.show', $cuti->kode_cuti) }}" class="btn btn-info btn-sm">Detail</a>
-                                            <!-- edit data -->
-                                            <a href="{{ route('perizinan.riwayat.cuti.edit', $cuti->kode_cuti) }}" class="btn btn-warning btn-sm">Edit</a>
-                                            <!-- hapus data destroy -->
-                                            <form action="{{ route('perizinan.riwayat.cuti.destroy', $cuti->kode_cuti) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
-                                            </form>
+                                            @php
+                                                $belumValidasi = is_null($cuti->ttd_mengetahui) || is_null($cuti->ttd_pencatat);
+                                            @endphp
+
+                                            @if($belumValidasi)
+                                                <a href="{{ route('perizinan.riwayat.cuti.show', $cuti->kode_cuti) }}"
+                                                class="btn btn-secondary btn-sm position-relative">
+                                                    Belum Tervalidasi
+                                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                        !
+                                                    </span>
+                                                </a>
+                                            @else
+                                                <a href="{{ route('perizinan.riwayat.cuti.show', $cuti->kode_cuti) }}"
+                                                class="btn btn-info btn-sm">
+                                                    Detail
+                                                </a>
+                                            @endif
+                                                <a href="{{ route('perizinan.riwayat.cuti.edit', $cuti->kode_cuti) }}" class="btn btn-warning btn-sm">Edit</a>
+                                                <form action="{{ route('perizinan.riwayat.cuti.destroy', $cuti->kode_cuti) }}"
+                                                    method="POST"
+                                                    style="display:inline;"
+                                                    onsubmit="return confirm('Apakah anda yakin menghapus data cuti dengan kode {{ $cuti->kode_cuti }} ?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="jenis_cuti" value="{{ $cuti->id_jenis_cuti }}" hidden>
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        hapus
+                                                    </button>
+                                                </form>
                                         </td>
                                         <td>{{ $cuti->kode_cuti }}</td>
                                         <td>
@@ -208,7 +228,6 @@
         </div>
     </div>
 </div>
-<!-- Javascritp  -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 

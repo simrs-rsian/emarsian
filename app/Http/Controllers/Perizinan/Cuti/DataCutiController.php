@@ -9,6 +9,7 @@ use App\Models\Perizinan\Cuti\DataCuti;
 use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\DB;
 use App\Exports\EmployeeCutiExport;
+use App\Exports\EmployeeCutiDataExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\SettingCutiImport;
 use Illuminate\Support\Carbon;
@@ -140,5 +141,13 @@ class DataCutiController extends Controller
         Excel::import(new SettingCutiImport, $request->file('file'));
 
         return back()->with('success', 'Data Import Setting Cuti berhasil diimport.');
+    }
+
+    // exportEmployeeCutiFiltered
+    public function exportEmployeeCutiFiltered(Request $request)
+    {
+        
+        // dd('masuk');
+        return Excel::download(new EmployeeCutiDataExport, 'Export_Cuti.xlsx');
     }
 }
